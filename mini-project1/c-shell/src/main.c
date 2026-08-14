@@ -11,14 +11,20 @@
 
 int main() {
 
-    char homewd[MAXPATHLEN+5]; //found this in description of "man 2 getcwd"
+    char homewd[MAXPATHLEN+5]; //found this in description of "man getcwd"
     getcwd(homewd,MAXPATHLEN+5);
 
     
     while(1) {
         display_prompt(homewd);
         char input[MAX_USER_INPUT_ALLOWED+5];
-        fgets(input, sizeof(input), stdin); // used this instead if scanf, so that multi-word sentences can be taken easily as an input
+        
+        if (fgets(input, sizeof(input), stdin)==NULL) { // used this instead if scanf, so that multi-word sentences can be taken easily as an input
+                                                        // put "if" to bypass ctrl+d issue.
+            
+            printf("\n");
+            break;
+        }
         input[strcspn(input,"\n")] = '\0';  // removed trailing "\n" in the "input" string
 
     }

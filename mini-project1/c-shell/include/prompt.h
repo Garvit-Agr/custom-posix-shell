@@ -6,6 +6,4 @@
 void display_prompt(char *homewd);
 
 
-
-
 #endif
