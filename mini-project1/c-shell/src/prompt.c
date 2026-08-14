@@ -2,7 +2,6 @@
 #include <unistd.h>
 #include <sys/param.h> //included for "MAXPATHLEN"
 #include <string.h>
-#include <stdlib.h>
 
 #include "prompt.h"
 

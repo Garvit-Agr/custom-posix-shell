@@ -21,11 +21,14 @@ int main() {
         
         if (fgets(input, sizeof(input), stdin)==NULL) { // used this instead if scanf, so that multi-word sentences can be taken easily as an input
                                                         // put "if" to bypass ctrl+d issue.
-            
             printf("\n");
             break;
         }
-        input[strcspn(input,"\n")] = '\0';  // removed trailing "\n" in the "input" string
+        input[strcspn(input,"\n")] = '\0';  // replaced trailing "\n" in the "input" string with "\0"
+
+
+
+
 
     }
 
