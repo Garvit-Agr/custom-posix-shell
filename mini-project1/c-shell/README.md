@@ -11,4 +11,4 @@
 ---
 
 # Challenges faced:
-1) In coding lexer function in parser.c, the backslash (\) use is really confusing and lead to multiple reviews for checking that no error is left unnoticed.
+1) In coding lexer function in parser.c, the backslash ( \\ ) use is really confusing and lead to multiple reviews for checking that no error is left unnoticed.
