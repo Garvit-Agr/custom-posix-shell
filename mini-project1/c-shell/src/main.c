@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include "prompt.h"
+#include "parser.h"
 
 #define MAX_USER_INPUT_ALLOWED 50 //used because the max input length in not mentioned
 
@@ -26,9 +27,12 @@ int main() {
         }
         input[strcspn(input,"\n")] = '\0';  // replaced trailing "\n" in the "input" string with "\0"
 
+        tknll *head=lexer(input);
 
 
 
+
+        free_tkn_ll(head);
 
     }
 
