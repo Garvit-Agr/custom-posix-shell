@@ -2,6 +2,7 @@
 #define PARSER_H
 
 #include <stdio.h>
+#include <stdbool.h>
 
 typedef enum tkntype {
     OP_PIPE,
