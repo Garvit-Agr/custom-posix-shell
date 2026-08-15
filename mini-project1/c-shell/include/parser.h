@@ -23,6 +23,7 @@ typedef struct tknll {
 tknll* lexer(char *input);
 void free_tkn_ll(tknll *head);
 
+bool valid_grmr(tknll *head);
 
 
 

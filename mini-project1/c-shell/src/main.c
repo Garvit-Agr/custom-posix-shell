@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <sys/param.h> //included for "MAXPATHLEN"
 #include <string.h>
+#include <stdbool.h>
 
 #include "prompt.h"
 #include "parser.h"
@@ -28,6 +29,17 @@ int main() {
         input[strcspn(input,"\n")] = '\0';  // replaced trailing "\n" in the "input" string with "\0"
 
         tknll *head=lexer(input);
+
+        if(head==NULL) continue;
+
+        if(valid_grmr(head)==false) {
+            printf("cshell: invalid syntax\n");
+            free_tkn_ll(head);
+            continue;
+        }
+
+        
+
 
 
 
