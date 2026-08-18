@@ -7,6 +7,7 @@
 
 #include "prompt.h"
 #include "parser.h"
+#include "cmds.h"
 
 #define MAX_USER_INPUT_ALLOWED 50 //used because the max input length in not mentioned
 
@@ -15,7 +16,8 @@ int main() {
 
     char homewd[MAXPATHLEN+5]; //found this in description of "man getcwd"
     getcwd(homewd,MAXPATHLEN+5);
-
+    
+    char prevwd[MAXPATHLEN+5]={0}; //found this in description of "man getcwd"
     
     while(1) {
         display_prompt(homewd);
@@ -26,7 +28,7 @@ int main() {
             printf("\n");
             break;
         }
-        input[strcspn(input,"\n")] = '\0';  // replaced trailing "\n" in the "input" string with "\0"
+        input[strcspn(input,"\n")]='\0';  // replaced trailing "\n" in the "input" string with "\0"
 
         tknll *head=lexer(input);
 
@@ -38,6 +40,10 @@ int main() {
             continue;
         }
 
+
+        
+        if(strcmp(head->tkn,"hop")==0) cmd_hop(head, homewd, prevwd);
+        
         
 
 

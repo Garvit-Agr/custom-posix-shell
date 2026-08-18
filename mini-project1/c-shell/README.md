@@ -3,6 +3,7 @@
     * getlogin
     * gethostname
     * getcwd
+    * chdir (2nd section)
 
 2) cppreference.com
     * `string.h` library

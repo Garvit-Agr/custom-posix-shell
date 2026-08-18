@@ -109,7 +109,7 @@ void free_tkn_ll(tknll *head) {
     while(head!=NULL) {
         tknll *next=head->next;
 
-        if(head->tkn != NULL) free(head->tkn);
+        if(head->tkn!=NULL) free(head->tkn);
 
         free(head);
         head=next;
