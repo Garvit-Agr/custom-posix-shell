@@ -21,14 +21,15 @@ int main() {
     
     while(1) {
         display_prompt(homewd);
-        char input[MAX_USER_INPUT_ALLOWED+5];
-        
-        if (fgets(input, sizeof(input), stdin)==NULL) { // used this instead if scanf, so that multi-word sentences can be taken easily as an input
-                                                        // put "if" to bypass ctrl+d issue.
+        char *input = NULL;
+        size_t len = 0;
+
+        if (getline(&input, &len, stdin) == -1) {
             printf("\n");
+            free(input);
             break;
         }
-        input[strcspn(input,"\n")]='\0';  // replaced trailing "\n" in the "input" string with "\0"
+        input[strcspn(input,"\n")] = '\0';
 
         tknll *head=lexer(input);
 
@@ -51,7 +52,7 @@ int main() {
 
 
         free_tkn_ll(head);
-
+        free(input);
     }
 
 

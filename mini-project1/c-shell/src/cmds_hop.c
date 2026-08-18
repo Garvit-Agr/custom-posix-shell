@@ -206,6 +206,7 @@ void hop(tknll *head, char *homwd, char *prevwd) {
                     success=1;
                 } else {
                     printf("hop: no such directory\n");
+                    //return;
                 }
             }
         }
