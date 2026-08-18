@@ -7,7 +7,7 @@
 
 #include "prompt.h"
 #include "parser.h"
-#include "cmds.h"
+#include "cmds_hop.h"
 
 #define MAX_USER_INPUT_ALLOWED 50 //used because the max input length in not mentioned
 
@@ -42,7 +42,7 @@ int main() {
 
 
         
-        if(strcmp(head->tkn,"hop")==0) cmd_hop(head, homewd, prevwd);
+        if(strcmp(head->tkn,"hop")==0) hop(head, homewd, prevwd);
         
         
 

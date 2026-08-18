@@ -7,7 +7,7 @@
 #include <dirent.h> // used for DIR commands like opendir and closedir
 
 #include "parser.h"
-#include "cmds.h"
+#include "cmds_hop.h"
 
 void record_frecency(char *target_dir, char *homewd) {
     char db_path[MAXPATHLEN+25];
@@ -150,7 +150,7 @@ int resolve_frecency(char *name, char *best_match, char *homewd) {
 }
 
 
-void cmd_hop(tknll *head, char *homwd, char *prevwd) {
+void hop(tknll *head, char *homwd, char *prevwd) {
     tknll *ptr=head;
 
     if(strcmp(ptr->tkn, "hop")!=0) return;
