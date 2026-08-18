@@ -135,7 +135,7 @@ int resolve_frecency(char *name, char *best_match, char *homewd) {
                                 best_time=t;
                                 strcpy(best_match, curpath);
                             }
-                            else if (freq==best_freq && t > best_time) {
+                            else if (freq==best_freq && t>best_time) {
                                 best_time=t;
                                 strcpy(best_match, curpath);
                             }

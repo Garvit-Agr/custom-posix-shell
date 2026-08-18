@@ -8,6 +8,7 @@
 #include "prompt.h"
 #include "parser.h"
 #include "cmds_hop.h"
+#include "cmds_reveal.h"
 
 #define MAX_USER_INPUT_ALLOWED 50 //used because the max input length in not mentioned
 
@@ -21,15 +22,15 @@ int main() {
     
     while(1) {
         display_prompt(homewd);
-        char *input = NULL;
-        size_t len = 0;
+        char *input=NULL;
+        size_t len=0;
 
-        if (getline(&input, &len, stdin) == -1) {
+        if (getline(&input, &len, stdin)==-1) {
             printf("\n");
             free(input);
             break;
         }
-        input[strcspn(input,"\n")] = '\0';
+        input[strcspn(input,"\n")]='\0';
 
         tknll *head=lexer(input);
 
@@ -44,8 +45,13 @@ int main() {
 
         
         if(strcmp(head->tkn,"hop")==0) hop(head, homewd, prevwd);
+        else if(strcmp(head->tkn,"reveal")==0) reveal(head, homewd, prevwd);
         
+
         
+        else {
+            printf("You are in else block\n");
+        }
 
 
 
