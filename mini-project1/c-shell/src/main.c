@@ -9,6 +9,7 @@
 #include "parser.h"
 #include "cmds_hop.h"
 #include "cmds_reveal.h"
+#include "cmds_peek.h"
 
 #define MAX_USER_INPUT_ALLOWED 50 //used because the max input length in not mentioned
 
@@ -46,6 +47,7 @@ int main() {
         
         if(strcmp(head->tkn,"hop")==0) hop(head, homewd, prevwd);
         else if(strcmp(head->tkn,"reveal")==0) reveal(head, homewd, prevwd);
+        else if(strcmp(head->tkn,"peek")==0) peek(head, homewd, prevwd);
         
 
         
