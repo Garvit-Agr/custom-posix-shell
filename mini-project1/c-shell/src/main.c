@@ -58,7 +58,6 @@ int main() {
 
 
         free_tkn_ll(head);
-        free(input);
     }
 
 
