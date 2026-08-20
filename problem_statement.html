@@ -1,555 +1,35 @@
 <!DOCTYPE html>
-<!-- saved from url=(0085)https://cs3301.pages.dev/assignments/01#part-d-sequential-and-background-execution-25 -->
-<html lang="en" data-theme="dark" data-headlessui-focus-visible=""><plasmo-csui id="ff-overlay-container"><template shadowrootmode="open"><style>#plasmo-shadow-container > div {
-  pointer-events: none !important;
-  background: none !important;
-  position: fixed !important;
-  inset: 0 !important;
-}
-
-.main_top_container_ff {
-  width: 400px;
-}
-
-.popup_container_wrapper_ff {
-  background-color: #fff;
-}
-
-.popup_container_wrapper_ff * {
-  font-family: PoppinsRegular;
-}
-
-.popup_container_wrapper_ff img {
-  background-color: #0000;
-}
-
-.popup_container_ff {
-  box-shadow: 0 5px 20px #1e1e2212;
-}
-
-.popup_div_ff {
-  box-sizing: border-box;
-  background-color: #fff;
-  width: 100%;
-  padding: 24px;
-}
-
-.main_component_ff {
-  width: 100%;
-  padding-bottom: 0 !important;
-}
-
-.popup_top_icon_div_ff {
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-  display: flex;
-}
-
-.popup_top_icon_div_ff .btn_canvas_ff {
-  display: inline-flex;
-}
-
-.popup_top_icon_div_ff .ff_popup_top_image {
-  z-index: 0;
-  width: 100%;
-  height: auto;
-  position: absolute;
-  inset: 0 0 auto;
-}
-
-.popup_top_icon_btn_ff {
-  cursor: pointer;
-  z-index: 1;
-  background: none;
-  border: none;
-  justify-content: center;
-  align-items: center;
-  width: 20px;
-  height: 20px;
-  padding: 0;
-  font-size: 20px;
-  display: inline-flex;
-}
-
-.popup_top_icon_btn_ff img {
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  display: flex;
-}
-
-.popup_top_icon_btn_ff:focus {
-  outline: none;
-}
-
-.dot_ff {
-  background-color: red;
-  border-radius: 50%;
-  width: 15px;
-  height: 15px;
-}
-
-.dot_ff-top-right {
-  position: absolute;
-  top: 33%;
-  right: 16px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .dot_ff {
-    animation: none;
-  }
-}
-
-.topbar_cross_icon_ff {
-  cursor: pointer;
-  background: #eaeaea;
-  border: 2px solid #fff;
-  border-radius: 50%;
-  flex-shrink: 0;
-  justify-content: center;
-  align-items: center;
-  width: 20px;
-  height: 20px;
-  padding: 0;
-  display: flex;
-}
-
-.topbar_cross_icon_ff img {
-  width: 12px;
-  height: 12px;
-}
-
-.btn_canvas_ff .topbar_detail_submit_btn_ff {
-  cursor: pointer;
-  color: #6e75ff;
-  background: #f0f0ff;
-  border: none;
-  border-radius: 5px;
-  justify-content: center;
-  align-items: center;
-  min-width: 108px;
-  min-height: 40px;
-  margin: 0;
-  padding: 10px 30px;
-  font-family: PoppinsRegular;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 20px;
-  display: flex;
-}
-
-.btn_canvas_ff .topbar_detail_submit_btn_ff:hover {
-  box-shadow: none;
-  color: #fff;
-  cursor: pointer;
-  background: #6e75ff;
-  border: none;
-  outline: none;
-}
-
-.btn_canvas_ff .topbar_detail_okay_btn_ff {
-  cursor: pointer;
-  color: #555;
-  background: #eee;
-  border: none;
-  border-radius: 5px;
-  justify-content: center;
-  align-items: center;
-  min-width: 108px;
-  min-height: 40px;
-  margin: 0;
-  padding: 10px 30px;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 20px;
-  display: flex;
-}
-
-.btn_canvas_ff .topbar_detail_okay_btn_ff:hover, .btn_canvas_ff .topbar_detail_okay_btn_ff:focus {
-  box-shadow: none;
-  color: #eee;
-  cursor: pointer;
-  background: #555;
-  border: none;
-  outline: none;
-}
-
-.btn_canvas_ff .topbar_detail_submit_btn_ff:disabled, .btn_canvas_ff .topbar_detail_okay_btn_ff:disabled {
-  color: #696969 !important;
-  background-color: #d3d3d3 !important;
-}
-
-.spaced_icon_ff {
-  margin-left: 5px;
-  background-color: #0000 !important;
-}
-
-.toggle_btn_ff {
-  justify-content: center;
-  align-items: center;
-  padding: 6px 0 18px;
-  display: flex;
-  position: relative;
-}
-
-.create_notification_container_ff {
-  cursor: auto;
-  box-sizing: border-box;
-  z-index: 99999;
-  pointer-events: initial;
-  background-color: #fff;
-  border: none;
-  border-radius: 8px;
-  flex-direction: column;
-  align-items: flex-start;
-  width: 512px;
-  margin-top: 16px;
-  padding: 24px;
-  position: absolute;
-  inset: 20px 100px auto auto;
-  box-shadow: 0 0 10px;
-}
-
-plasmo-csui#ff-overlay-container, plasmo-csui#real-time-panel {
-  z-index: 999;
-  pointer-events: none;
-  position: absolute;
-  inset: 0;
-}
-
-.ff_input_container {
-  box-sizing: border-box;
-  background: none;
-  border: none;
-  border-radius: 4px;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-start;
-  width: 100%;
-  display: flex;
-}
-
-.ff_input_container .input_input {
-  box-sizing: border-box;
-  resize: none;
-  background: none;
-  border: 1px solid #f2f4f7;
-  border-radius: 8px;
-  width: 100%;
-  height: 20px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 20px;
-  box-shadow: none !important;
-  color: #475467 !important;
-  padding: 8px 16px !important;
-  font-family: Roboto !important;
-  font-size: 14px !important;
-}
-
-.ff_input_container .input_input:focus-visible {
-  outline: none;
-}
-
-.ff_input_container .input_label {
-  letter-spacing: -.01em;
-  color: #101828;
-  background-color: #0000;
-  padding-bottom: 8px;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 20px;
-}
-
-.ff_input_container .input_description {
-  letter-spacing: -.01em;
-  color: #878f97;
-  background-color: #0000;
-  margin: 0;
-  padding-bottom: 8px;
-  font-family: Roboto;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 400;
-}
-
-.input_icon_container {
-  box-sizing: border-box;
-  border: 1px solid #f2f4f7;
-  border-radius: 8px;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  padding-left: 16px;
-  display: flex;
-  border-bottom-right-radius: 0 !important;
-  border-bottom-left-radius: 0 !important;
-}
-
-.input_icon_container .input_input {
-  border: none;
-  padding-left: 0 !important;
-}
-
-.ff_select_container {
-  box-sizing: border-box;
-  background: none;
-  border: none;
-  border-radius: 4px;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-start;
-  width: 100%;
-  display: flex;
-  position: relative;
-}
-
-.ff_select_option_list_container {
-  box-sizing: border-box;
-  z-index: 1;
-  background: #fff;
-  border: 1px solid #f2f4f7;
-  border-top: 0;
-  border-radius: 0 0 8px 8px;
-  width: 100%;
-  max-height: 80px;
-  margin: 0;
-  padding: 10px;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  overflow-y: scroll;
-}
-
-.ff_select_option_list {
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  overflow-x: hidden;
-}
-
-.ff_select_option_item {
-  color: #475467;
-  text-overflow: ellipsis;
-  cursor: pointer;
-  align-self: stretch;
-  align-items: center;
-  gap: 8px;
-  min-height: 16px;
-  padding: 8px;
-  display: flex;
-  overflow: hidden;
-}
-
-.ff_select_option_item:hover, .ff_select_option_item:focus {
-  background: #f9fafb;
-  border-radius: 8px;
-}
-
-.ff_select_option_item span {
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  background: none;
-  overflow: hidden;
-}
-
-.ff_select_search {
-  border-bottom-right-radius: 0 !important;
-  border-bottom-left-radius: 0 !important;
-}
-
-.ff_select_dropdown_container {
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  width: 100%;
-  margin-top: 10px;
-  margin-bottom: 55px;
-  display: flex;
-  position: relative;
-}
-
-.topbar_heading_box_ff {
-  flex-direction: row;
-  flex-shrink: 0;
-  justify-content: center;
-  align-items: center;
-  display: flex;
-}
-
-.topbar_icon_ff {
-  justify-content: center;
-  align-items: center;
-  margin-right: 10px;
-  display: flex;
-}
-
-.topbar_middle_icon_ff {
-  justify-content: flex-start;
-  align-items: center;
-  margin-bottom: 1rem;
-  display: flex;
-}
-
-.topbar_detail_head_ff {
-  text-align: left;
-  letter-spacing: -.01em;
-  color: #22262a;
-  border: none;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  font-family: PoppinsRegular;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 24px;
-  font-family: PoppinsMedium !important;
-}
-
-.topbar_detail_body_ff {
-  letter-spacing: 0;
-  align-items: flex-start;
-  margin: 16px 0 17px;
-  padding: 0;
-  display: flex;
-}
-
-.topbar_detail_para_ff {
-  width: 100%;
-  margin: 0;
-}
-
-.topbar_detail_para_ff .topbar_detail_text {
-  color: #484f56;
-  letter-spacing: -.01em;
-  margin: 0;
-  padding: 0;
-  font-family: PoppinsRegular;
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 21px;
-}
-
-.topbar_detail_para_ff .topbar_detail_text_last {
-  color: #878f97;
-  letter-spacing: -.01em;
-  margin: 0;
-  padding-top: 8px;
-  padding-bottom: 2px;
-  font-family: PoppinsRegular;
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 18px;
-}
-
-.topbar_detail_static_arrow_ff {
-  position: absolute;
-  top: 24px;
-  right: 24px;
-}
-
-.topbar_detail_static_arrow_ff img {
-  width: 24px;
-  height: 26px;
-  display: inline;
-}
-
-.topbar_detail_btns_ff {
-  justify-content: space-between;
-  width: 100%;
-  display: flex;
-}
-
-.narrow_btns_ff {
-  width: 70% !important;
-}
-
-.review_btns_ff {
-  gap: 1rem;
-  justify-content: flex-start !important;
-  width: 70% !important;
-}
-
-.topbar_detail_submit_btn_ff, .topbar_detail_okay_btn_ff {
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  max-width: 150px;
-  overflow: hidden;
-}
-
-.dot_ff {
-  border-radius: 50%;
-  flex-shrink: 0;
-  justify-content: center;
-  align-items: center;
-  width: 8px;
-  height: 8px;
-  display: flex;
-}
-
-.success_dot_ff {
-  background-color: #12b76a !important;
-}
-
-.warning_dot_ff {
-  background-color: #f08c00 !important;
-}
-
-.error_dot_ff {
-  background-color: red !important;
-}
-
-.large_dot_ff {
-  width: 12px !important;
-  height: 12px !important;
-}
-
-.medium_dot_ff {
-  width: 10px !important;
-  height: 10px !important;
-}
-
-.small_dot_ff {
-  width: 6px !important;
-  height: 6px !important;
-}
-
-</style><div id="plasmo-shadow-container" style="z-index: 2147483647; position: relative;"><div id="plasmo-overlay-0" class="plasmo-csui-container" style="display: flex; position: absolute; top: 0px; left: 0px;"></div></div></template></plasmo-csui><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script type="module" src="./Mini Project 1 — CS3.301_files/beacon.min.js" data-cf-beacon="{&quot;token&quot;: &quot;f8cfaa60d0ef45228f4b8cc2722f8d36&quot;}"></script><!-- End Cloudflare Web Analytics -->
+<!-- saved from url=(0039)https://cs3301.pages.dev/assignments/01 -->
+<html lang="en" data-theme="dark"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script type="module" src="./Mini Project 1 — CS3.301_files/beacon.min.js" data-cf-beacon="{&quot;token&quot;: &quot;f8cfaa60d0ef45228f4b8cc2722f8d36&quot;}"></script><!-- End Cloudflare Web Analytics -->
 
 	
 		
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<script>try{const t=localStorage.getItem('cs3301-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(_){}</script>
-		<link href="https://cs3301.pages.dev/_app/immutable/entry/start.CozLn0P5.js" rel="modulepreload">
-		<link href="https://cs3301.pages.dev/_app/immutable/chunks/Bk_hZ0dU.js" rel="modulepreload">
+		<link href="https://cs3301.pages.dev/_app/immutable/entry/start.D4LifkKf.js" rel="modulepreload">
+		<link href="https://cs3301.pages.dev/_app/immutable/chunks/DF9hOrUw.js" rel="modulepreload">
 		<link href="https://cs3301.pages.dev/_app/immutable/chunks/DvFy0W4e.js" rel="modulepreload">
 		<link href="https://cs3301.pages.dev/_app/immutable/chunks/Dt-HX3Vu.js" rel="modulepreload">
-		<link href="https://cs3301.pages.dev/_app/immutable/entry/app.DUBRKlZc.js" rel="modulepreload">
+		<link href="https://cs3301.pages.dev/_app/immutable/entry/app.BrBLehBb.js" rel="modulepreload">
 		<link href="https://cs3301.pages.dev/_app/immutable/chunks/HclGiUj8.js" rel="modulepreload">
 		<link href="https://cs3301.pages.dev/_app/immutable/chunks/xihTtKlq.js" rel="modulepreload">
-		<link href="https://cs3301.pages.dev/_app/immutable/nodes/0.CgRjPBIx.js" rel="modulepreload">
-		<link href="https://cs3301.pages.dev/_app/immutable/chunks/BGmMOoIP.js" rel="modulepreload">
+		<link href="https://cs3301.pages.dev/_app/immutable/nodes/0.DNBLfmEy.js" rel="modulepreload">
+		<link href="https://cs3301.pages.dev/_app/immutable/chunks/9-QfZgfn.js" rel="modulepreload">
 		<link href="https://cs3301.pages.dev/_app/immutable/chunks/Byb-gfyI.js" rel="modulepreload">
 		<link href="https://cs3301.pages.dev/_app/immutable/chunks/DZSnzkbf.js" rel="modulepreload">
 		<link href="https://cs3301.pages.dev/_app/immutable/chunks/CKVHTN6E.js" rel="modulepreload">
-		<link href="https://cs3301.pages.dev/_app/immutable/chunks/BygGZVIC.js" rel="modulepreload">
+		<link href="https://cs3301.pages.dev/_app/immutable/chunks/DVJ0nTBL.js" rel="modulepreload">
 		<link href="https://cs3301.pages.dev/_app/immutable/chunks/CL-xGOdd.js" rel="modulepreload">
-		<link href="https://cs3301.pages.dev/_app/immutable/nodes/4.BNGZP-9g.js" rel="modulepreload">
+		<link href="https://cs3301.pages.dev/_app/immutable/nodes/4.BeXdw02c.js" rel="modulepreload">
 		<link href="https://cs3301.pages.dev/_app/immutable/chunks/B9Wl1eyc.js" rel="modulepreload">
 		<link href="https://cs3301.pages.dev/_app/immutable/chunks/xaN4O8T8.js" rel="modulepreload">
 		<link rel="icon" href="data:image/svg+xml,%3csvg%20xmlns=&#39;http://www.w3.org/2000/svg&#39;%20width=&#39;24&#39;%20height=&#39;24&#39;%20viewBox=&#39;0%200%2024%2024&#39;%20fill=&#39;%23D97757&#39;%20class=&#39;icon%20icon-tabler%20icons-tabler-filled%20icon-tabler-square-letter-o&#39;%3e%3cpath%20stroke=&#39;none&#39;%20d=&#39;M0%200h24v24H0z&#39;%20fill=&#39;none&#39;%20/%3e%3cpath%20d=&#39;M19%202a3%203%200%200%201%203%203v14a3%203%200%200%201%20-3%203h-14a3%203%200%200%201%20-3%20-3v-14a3%203%200%200%201%203%20-3zm-7%205a3%203%200%200%200%20-3%203v4a3%203%200%200%200%206%200v-4a3%203%200%200%200%20-3%20-3m0%202a1%201%200%200%201%201%201v4a1%201%200%200%201%20-2%200v-4a1%201%200%200%201%201%20-1&#39;%20/%3e%3c/svg%3e"> <link rel="preconnect" href="https://fonts.googleapis.com/"> <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="anonymous"> <link href="./Mini Project 1 — CS3.301_files/css2" rel="stylesheet"><!----><!----><title>Mini Project 1 — CS3.301</title>
 		<link href="./Mini Project 1 — CS3.301_files/0.CF6orWm9.css" rel="stylesheet">
 		<link href="./Mini Project 1 — CS3.301_files/prose.DHndC13e.css" rel="stylesheet">
 		<link href="./Mini Project 1 — CS3.301_files/4.C6CGe3qv.css" rel="stylesheet">
-	<link rel="modulepreload" as="script" crossorigin="" href="https://cs3301.pages.dev/_app/immutable/nodes/1.DrxGu3gM.js"><style>@font-face { font-family: DMSans; src: url('chrome-extension://meimoidfecamngeoanhnpdjjdcefoldn/assets/fonts/DMSans-Regular.ttf'); }@font-face { font-family: PoppinsMedium; src: url('chrome-extension://meimoidfecamngeoanhnpdjjdcefoldn/assets/fonts/Poppins-Medium.otf'); }@font-face { font-family: PoppinsRegular; src: url('chrome-extension://meimoidfecamngeoanhnpdjjdcefoldn/assets/fonts/Poppins-Regular.otf'); }@font-face { font-family: Roboto; src: url('chrome-extension://meimoidfecamngeoanhnpdjjdcefoldn/assets/fonts/Roboto-Regular.ttf'); }@font-face { font-family: Inter; src: url('chrome-extension://meimoidfecamngeoanhnpdjjdcefoldn/assets/fonts/Inter-VariableFont_opsz,wght.ttf'); }</style><style type="text/css" id="mytempCss">._8mqQwQ { display: none; } ._1TWLMK.icF5zO { opacity: 0.01; }</style><link rel="modulepreload" as="script" crossorigin="" href="https://cs3301.pages.dev/_app/immutable/nodes/3.D4v5AaU_.js"><link rel="stylesheet" crossorigin="" href="./Mini Project 1 — CS3.301_files/3.CPIovmfE.css"></head>
-	<body data-sveltekit-preload-data="hover" data-new-gr-c-s-check-loaded="14.1320.0" data-gr-ext-installed="" data-gr-ext-go-mode="" data-gr-aaa-loaded="14.1320.0" data-gr-aaa-notch-connection-id="1786714010395-0.991999891337467" data-gr-agent-presence-bridge-connection-id="1786714010397-0.5349129295526337">
-		<div style="display: contents"><!--[--><!--[0--><!--[--><div class="layout svelte-12qhfyh"><!--[-1--><!--]--><!----> <button class="search-btn svelte-12qhfyh" aria-label="Search (⌘K)"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="lucide-icon lucide lucide-search"><!--[--><!----><path d="m21 21-4.34-4.34"><!----></path><!----><!----><circle cx="11" cy="11" r="8"><!----></circle><!----><!--]--><!--[--><!--[--><!--]--><!--]--></svg><!----></button> <aside class="sidebar svelte-12qhfyh"><a href="https://cs3301.pages.dev/" class="course-link svelte-1bhwpv3"><div class="course-code svelte-1bhwpv3">CS3.301</div> <div class="course-name svelte-1bhwpv3">Operating Systems and Networks</div></a> <nav class="nav svelte-1bhwpv3"><!--[--><!--[1--><a href="https://cs3301.pages.dev/" class="nav-item  svelte-1bhwpv3">Home</a><!--]--><!--[1--><a href="https://cs3301.pages.dev/calendar" class="nav-item  svelte-1bhwpv3">Calendar</a><!--]--><!--[0--><div class="spacer svelte-1bhwpv3"></div><!--]--><!--[2--><a href="https://cs3301.pages.dev/lectures" class="nav-item group-header  svelte-1bhwpv3" aria-expanded="false"><span>Lectures</span> <span class="chevron svelte-1bhwpv3"><!----><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><!----></span></a> <div class="group-items svelte-1bhwpv3"><div class="group-items-inner svelte-1bhwpv3"><!--[--><a href="https://cs3301.pages.dev/lectures/01" class="nav-item nav-subitem  svelte-1bhwpv3">Introduction to OS</a><a href="https://cs3301.pages.dev/lectures/02" class="nav-item nav-subitem  svelte-1bhwpv3">Process Virtualization</a><a href="https://cs3301.pages.dev/lectures/03" class="nav-item nav-subitem  svelte-1bhwpv3">Process API</a><a href="https://cs3301.pages.dev/lectures/04" class="nav-item nav-subitem  svelte-1bhwpv3">Limited Direct Execution</a><a href="https://cs3301.pages.dev/lectures/05" class="nav-item nav-subitem  svelte-1bhwpv3">Scheduling</a><!--]--></div></div><!--]--><!--[2--><a href="https://cs3301.pages.dev/assignments" class="nav-item group-header active svelte-1bhwpv3" aria-expanded="true"><span>Mini-Projects</span> <span class="chevron svelte-1bhwpv3 open"><!----><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><!----></span></a> <div class="group-items svelte-1bhwpv3 open"><div class="group-items-inner svelte-1bhwpv3"><!--[--><a href="https://cs3301.pages.dev/assignments/01" class="nav-item nav-subitem active svelte-1bhwpv3">Mini Project 1</a><!--]--></div></div><!--]--><!--[2--><a href="https://cs3301.pages.dev/tutorials" class="nav-item group-header  svelte-1bhwpv3" aria-expanded="false"><span>Tutorials</span> <span class="chevron svelte-1bhwpv3"><!----><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><!----></span></a> <div class="group-items svelte-1bhwpv3"><div class="group-items-inner svelte-1bhwpv3"><!--[--><a href="https://cs3301.pages.dev/tutorials/01" class="nav-item nav-subitem  svelte-1bhwpv3">System Calls &amp; Intro to xv6</a><!--]--></div></div><!--]--><!--[2--><a href="https://cs3301.pages.dev/homework" class="nav-item group-header  svelte-1bhwpv3" aria-expanded="false"><span>Homework</span> <span class="chevron svelte-1bhwpv3"><!----><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><!----></span></a> <div class="group-items svelte-1bhwpv3"><div class="group-items-inner svelte-1bhwpv3"><!--[--><a href="https://cs3301.pages.dev/homework/00" class="nav-item nav-subitem  svelte-1bhwpv3">General Instructions</a><a href="https://cs3301.pages.dev/homework/01" class="nav-item nav-subitem  svelte-1bhwpv3">Processes &amp; Syscalls</a><!--]--></div></div><!--]--><!--[0--><div class="spacer svelte-1bhwpv3"></div><!--]--><!--[1--><a href="https://cs3301.pages.dev/project" class="nav-item  svelte-1bhwpv3">Course Project</a><!--]--><!--[0--><div class="spacer svelte-1bhwpv3"></div><!--]--><!--[2--><a href="https://cs3301.pages.dev/resources" class="nav-item group-header  svelte-1bhwpv3" aria-expanded="false"><span>Resources</span> <span class="chevron svelte-1bhwpv3"><!----><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><!----></span></a> <div class="group-items svelte-1bhwpv3"><div class="group-items-inner svelte-1bhwpv3"><!--[--><a href="https://cs3301.pages.dev/resources/textbooks" class="nav-item nav-subitem  svelte-1bhwpv3">Textbooks</a><a href="https://cs3301.pages.dev/resources/man-pages" class="nav-item nav-subitem  svelte-1bhwpv3">Man Pages</a><a href="https://cs3301.pages.dev/resources/xv6" class="nav-item nav-subitem  svelte-1bhwpv3">xv6</a><a href="https://cs3301.pages.dev/resources/git" class="nav-item nav-subitem  svelte-1bhwpv3">Git</a><!--]--></div></div><!--]--><!--[1--><a href="https://cs3301.pages.dev/policy" class="nav-item  svelte-1bhwpv3">Course Policy</a><!--]--><!--[1--><a href="https://cs3301.pages.dev/staff" class="nav-item  svelte-1bhwpv3">Staff</a><!--]--><!--]--></nav> <div class="sidebar-bottom svelte-1bhwpv3"><div class="footer svelte-1bhwpv3"><button class="icon-btn svelte-1bhwpv3" aria-label="Switch to light mode"><!--[0--><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="lucide-icon lucide lucide-sun"><!--[--><!----><circle cx="12" cy="12" r="4"><!----></circle><!----><!----><path d="M12 2v2"><!----></path><!----><!----><path d="M12 20v2"><!----></path><!----><!----><path d="m4.93 4.93 1.41 1.41"><!----></path><!----><!----><path d="m17.66 17.66 1.41 1.41"><!----></path><!----><!----><path d="M2 12h2"><!----></path><!----><!----><path d="M20 12h2"><!----></path><!----><!----><path d="m6.34 17.66-1.41 1.41"><!----></path><!----><!----><path d="m19.07 4.93-1.41 1.41"><!----></path><!----><!--]--><!--[--><!--[--><!--]--><!--]--></svg><!--]--></button> <a href="https://forms.cloud.microsoft/r/wPh7YEGdz5" target="_blank" rel="noopener" class="icon-btn svelte-1bhwpv3" aria-label="Feedback Form"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-message "><!--[--><!----><path d="M8 9h8"><!----></path><!----><!----><path d="M8 13h6"><!----></path><!----><!----><path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12"><!----></path><!----><!--]--><!--[--><!--[--><!--]--><!--]--></svg><!----></a></div></div><!----></aside> <div class="topbar svelte-12qhfyh"><button class="hamburger svelte-12qhfyh" aria-label="Toggle menu"><!--[-1--><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="lucide-icon lucide lucide-menu"><!--[--><!----><path d="M4 5h16"><!----></path><!----><!----><path d="M4 12h16"><!----></path><!----><!----><path d="M4 19h16"><!----></path><!----><!--]--><!--[--><!--[--><!--]--><!--]--></svg><!--]--></button> <span class="topbar-title svelte-12qhfyh">CS3.301 Operating Systems and Networks</span></div> <!--[-1--><!--]--> <div class="drawer  svelte-12qhfyh"><a href="https://cs3301.pages.dev/" class="course-link svelte-1bhwpv3"><div class="course-code svelte-1bhwpv3">CS3.301</div> <div class="course-name svelte-1bhwpv3">Operating Systems and Networks</div></a> <nav class="nav svelte-1bhwpv3"><!--[--><!--[1--><a href="https://cs3301.pages.dev/" class="nav-item  svelte-1bhwpv3">Home</a><!--]--><!--[1--><a href="https://cs3301.pages.dev/calendar" class="nav-item  svelte-1bhwpv3">Calendar</a><!--]--><!--[0--><div class="spacer svelte-1bhwpv3"></div><!--]--><!--[2--><a href="https://cs3301.pages.dev/lectures" class="nav-item group-header  svelte-1bhwpv3" aria-expanded="false"><span>Lectures</span> <span class="chevron svelte-1bhwpv3"><!----><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><!----></span></a> <div class="group-items svelte-1bhwpv3"><div class="group-items-inner svelte-1bhwpv3"><!--[--><a href="https://cs3301.pages.dev/lectures/01" class="nav-item nav-subitem  svelte-1bhwpv3">Introduction to OS</a><a href="https://cs3301.pages.dev/lectures/02" class="nav-item nav-subitem  svelte-1bhwpv3">Process Virtualization</a><a href="https://cs3301.pages.dev/lectures/03" class="nav-item nav-subitem  svelte-1bhwpv3">Process API</a><a href="https://cs3301.pages.dev/lectures/04" class="nav-item nav-subitem  svelte-1bhwpv3">Limited Direct Execution</a><a href="https://cs3301.pages.dev/lectures/05" class="nav-item nav-subitem  svelte-1bhwpv3">Scheduling</a><!--]--></div></div><!--]--><!--[2--><a href="https://cs3301.pages.dev/assignments" class="nav-item group-header active svelte-1bhwpv3" aria-expanded="true"><span>Mini-Projects</span> <span class="chevron svelte-1bhwpv3 open"><!----><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><!----></span></a> <div class="group-items svelte-1bhwpv3 open"><div class="group-items-inner svelte-1bhwpv3"><!--[--><a href="https://cs3301.pages.dev/assignments/01" class="nav-item nav-subitem active svelte-1bhwpv3">Mini Project 1</a><!--]--></div></div><!--]--><!--[2--><a href="https://cs3301.pages.dev/tutorials" class="nav-item group-header  svelte-1bhwpv3" aria-expanded="false"><span>Tutorials</span> <span class="chevron svelte-1bhwpv3"><!----><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><!----></span></a> <div class="group-items svelte-1bhwpv3"><div class="group-items-inner svelte-1bhwpv3"><!--[--><a href="https://cs3301.pages.dev/tutorials/01" class="nav-item nav-subitem  svelte-1bhwpv3">System Calls &amp; Intro to xv6</a><!--]--></div></div><!--]--><!--[2--><a href="https://cs3301.pages.dev/homework" class="nav-item group-header  svelte-1bhwpv3" aria-expanded="false"><span>Homework</span> <span class="chevron svelte-1bhwpv3"><!----><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><!----></span></a> <div class="group-items svelte-1bhwpv3"><div class="group-items-inner svelte-1bhwpv3"><!--[--><a href="https://cs3301.pages.dev/homework/00" class="nav-item nav-subitem  svelte-1bhwpv3">General Instructions</a><a href="https://cs3301.pages.dev/homework/01" class="nav-item nav-subitem  svelte-1bhwpv3">Processes &amp; Syscalls</a><!--]--></div></div><!--]--><!--[0--><div class="spacer svelte-1bhwpv3"></div><!--]--><!--[1--><a href="https://cs3301.pages.dev/project" class="nav-item  svelte-1bhwpv3">Course Project</a><!--]--><!--[0--><div class="spacer svelte-1bhwpv3"></div><!--]--><!--[2--><a href="https://cs3301.pages.dev/resources" class="nav-item group-header  svelte-1bhwpv3" aria-expanded="false"><span>Resources</span> <span class="chevron svelte-1bhwpv3"><!----><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><!----></span></a> <div class="group-items svelte-1bhwpv3"><div class="group-items-inner svelte-1bhwpv3"><!--[--><a href="https://cs3301.pages.dev/resources/textbooks" class="nav-item nav-subitem  svelte-1bhwpv3">Textbooks</a><a href="https://cs3301.pages.dev/resources/man-pages" class="nav-item nav-subitem  svelte-1bhwpv3">Man Pages</a><a href="https://cs3301.pages.dev/resources/xv6" class="nav-item nav-subitem  svelte-1bhwpv3">xv6</a><a href="https://cs3301.pages.dev/resources/git" class="nav-item nav-subitem  svelte-1bhwpv3">Git</a><!--]--></div></div><!--]--><!--[1--><a href="https://cs3301.pages.dev/policy" class="nav-item  svelte-1bhwpv3">Course Policy</a><!--]--><!--[1--><a href="https://cs3301.pages.dev/staff" class="nav-item  svelte-1bhwpv3">Staff</a><!--]--><!--]--></nav> <div class="sidebar-bottom svelte-1bhwpv3"><div class="footer svelte-1bhwpv3"><button class="icon-btn svelte-1bhwpv3" aria-label="Switch to light mode"><!--[0--><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="lucide-icon lucide lucide-sun"><!--[--><!----><circle cx="12" cy="12" r="4"><!----></circle><!----><!----><path d="M12 2v2"><!----></path><!----><!----><path d="M12 20v2"><!----></path><!----><!----><path d="m4.93 4.93 1.41 1.41"><!----></path><!----><!----><path d="m17.66 17.66 1.41 1.41"><!----></path><!----><!----><path d="M2 12h2"><!----></path><!----><!----><path d="M20 12h2"><!----></path><!----><!----><path d="m6.34 17.66-1.41 1.41"><!----></path><!----><!----><path d="m19.07 4.93-1.41 1.41"><!----></path><!----><!--]--><!--[--><!--[--><!--]--><!--]--></svg><!--]--></button> <a href="https://forms.cloud.microsoft/r/wPh7YEGdz5" target="_blank" rel="noopener" class="icon-btn svelte-1bhwpv3" aria-label="Feedback Form"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-message "><!--[--><!----><path d="M8 9h8"><!----></path><!----><!----><path d="M8 13h6"><!----></path><!----><!----><path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12"><!----></path><!----><!--]--><!--[--><!--[--><!--]--><!--]--></svg><!----></a></div></div><!----></div> <main class="main svelte-12qhfyh" data-pagefind-body=""><div class="content svelte-12qhfyh"><!--[--><div class="detail svelte-yfiv9r"><a href="https://cs3301.pages.dev/assignments" class="breadcrumb svelte-yfiv9r">Mini-Projects</a> <h1 class="title svelte-yfiv9r">Mini Project 1</h1> <div class="meta svelte-yfiv9r">Mini-Project 1 <!--[0-->· Released Aug 14, 2026 · Due Sep 14, 2026<!--]--></div> <!--[0--><p class="summary svelte-yfiv9r">Implement your very own C-Shell &amp; Implement the MLFQ scheduling policy for xv6.</p><!--]--> <div class="prose"><!--[--><h1 id="before-you-start" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#before-you-start"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>Before you start</h1> <p><strong>This is an individual assignment.</strong></p> <h3 id="deadlines" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#deadlines"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>Deadlines</h3> <p>There are two submissions for this assignment. You are expected to submit parts <a href="https://cs3301.pages.dev/assignments/01#part-a-shell-input-20">A</a> to <a href="https://cs3301.pages.dev/assignments/01#part-c-file-redirection-and-pipes-50">C</a> of C-Shell for the mid-submission, and remainder of the assignment for the end-submission.</p> <ul><li><strong>Mid-submission</strong>: August 24, 11:59 pm</li> <li><strong>End-submission</strong>: September 13, 11:59 pm</li></ul> <p>You may use your late days for both of the submissions.</p> <h3 id="submission" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#submission"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>Submission</h3> <p>The exact details about submission will be made clear shortly.</p> <p>However, you <strong>NEED</strong> to maintain a <code>git</code> repository for the duration of the project and commit iteratively as you go. Making a bunch of big commits right before the deadline may result in penalization.</p> <p>And before you ask: you <strong>DO NOT</strong> need a GitHub repo to maintain a <code>git</code> repo. You can initialize one locally and keep it there until we figure out submission.</p> <p>You can refer to the <a href="https://cs3301.pages.dev/resources/git">resource on git</a> for more details.</p> <p>Make sure your repository has the following structure:</p> <div class="code-block"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0"><code><span class="line"><span>mini-project1/</span></span>
+	<link rel="modulepreload" as="script" crossorigin="" href="https://cs3301.pages.dev/_app/immutable/nodes/1.CqGqaMjy.js"></head>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents"><!--[--><!--[0--><!--[--><div class="layout svelte-12qhfyh"><!--[-1--><!--]--><!----> <button class="search-btn svelte-12qhfyh" aria-label="Search (⌘K)"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="lucide-icon lucide lucide-search"><!--[--><!----><path d="m21 21-4.34-4.34"><!----></path><!----><!----><circle cx="11" cy="11" r="8"><!----></circle><!----><!--]--><!--[--><!--[--><!--]--><!--]--></svg><!----></button> <aside class="sidebar svelte-12qhfyh"><a href="https://cs3301.pages.dev/" class="course-link svelte-1bhwpv3"><div class="course-code svelte-1bhwpv3">CS3.301</div> <div class="course-name svelte-1bhwpv3">Operating Systems and Networks</div></a> <nav class="nav svelte-1bhwpv3"><!--[--><!--[1--><a href="https://cs3301.pages.dev/" class="nav-item  svelte-1bhwpv3">Home</a><!--]--><!--[1--><a href="https://cs3301.pages.dev/calendar" class="nav-item  svelte-1bhwpv3">Calendar</a><!--]--><!--[0--><div class="spacer svelte-1bhwpv3"></div><!--]--><!--[2--><a href="https://cs3301.pages.dev/lectures" class="nav-item group-header  svelte-1bhwpv3" aria-expanded="false"><span>Lectures</span> <span class="chevron svelte-1bhwpv3"><!----><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><!----></span></a> <div class="group-items svelte-1bhwpv3"><div class="group-items-inner svelte-1bhwpv3"><!--[--><a href="https://cs3301.pages.dev/lectures/01" class="nav-item nav-subitem  svelte-1bhwpv3">Introduction to OS</a><a href="https://cs3301.pages.dev/lectures/02" class="nav-item nav-subitem  svelte-1bhwpv3">Process Virtualization</a><a href="https://cs3301.pages.dev/lectures/03" class="nav-item nav-subitem  svelte-1bhwpv3">Process API</a><a href="https://cs3301.pages.dev/lectures/04" class="nav-item nav-subitem  svelte-1bhwpv3">Limited Direct Execution</a><a href="https://cs3301.pages.dev/lectures/05" class="nav-item nav-subitem  svelte-1bhwpv3">Scheduling</a><a href="https://cs3301.pages.dev/lectures/06" class="nav-item nav-subitem  svelte-1bhwpv3">MLFQ Scheduling</a><!--]--></div></div><!--]--><!--[2--><a href="https://cs3301.pages.dev/assignments" class="nav-item group-header active svelte-1bhwpv3" aria-expanded="true"><span>Mini-Projects</span> <span class="chevron svelte-1bhwpv3 open"><!----><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><!----></span></a> <div class="group-items svelte-1bhwpv3 open"><div class="group-items-inner svelte-1bhwpv3"><!--[--><a href="https://cs3301.pages.dev/assignments/01" class="nav-item nav-subitem active svelte-1bhwpv3">Mini Project 1</a><!--]--></div></div><!--]--><!--[2--><a href="https://cs3301.pages.dev/tutorials" class="nav-item group-header  svelte-1bhwpv3" aria-expanded="false"><span>Tutorials</span> <span class="chevron svelte-1bhwpv3"><!----><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><!----></span></a> <div class="group-items svelte-1bhwpv3"><div class="group-items-inner svelte-1bhwpv3"><!--[--><a href="https://cs3301.pages.dev/tutorials/01" class="nav-item nav-subitem  svelte-1bhwpv3">System Calls &amp; Intro to xv6</a><!--]--></div></div><!--]--><!--[2--><a href="https://cs3301.pages.dev/homework" class="nav-item group-header  svelte-1bhwpv3" aria-expanded="false"><span>Homework</span> <span class="chevron svelte-1bhwpv3"><!----><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><!----></span></a> <div class="group-items svelte-1bhwpv3"><div class="group-items-inner svelte-1bhwpv3"><!--[--><a href="https://cs3301.pages.dev/homework/00" class="nav-item nav-subitem  svelte-1bhwpv3">General Instructions</a><a href="https://cs3301.pages.dev/homework/01" class="nav-item nav-subitem  svelte-1bhwpv3">Processes &amp; Syscalls</a><!--]--></div></div><!--]--><!--[0--><div class="spacer svelte-1bhwpv3"></div><!--]--><!--[1--><a href="https://cs3301.pages.dev/project" class="nav-item  svelte-1bhwpv3">Course Project</a><!--]--><!--[0--><div class="spacer svelte-1bhwpv3"></div><!--]--><!--[2--><a href="https://cs3301.pages.dev/resources" class="nav-item group-header  svelte-1bhwpv3" aria-expanded="false"><span>Resources</span> <span class="chevron svelte-1bhwpv3"><!----><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><!----></span></a> <div class="group-items svelte-1bhwpv3"><div class="group-items-inner svelte-1bhwpv3"><!--[--><a href="https://cs3301.pages.dev/resources/textbooks" class="nav-item nav-subitem  svelte-1bhwpv3">Textbooks</a><a href="https://cs3301.pages.dev/resources/man-pages" class="nav-item nav-subitem  svelte-1bhwpv3">Man Pages</a><a href="https://cs3301.pages.dev/resources/xv6" class="nav-item nav-subitem  svelte-1bhwpv3">xv6</a><a href="https://cs3301.pages.dev/resources/git" class="nav-item nav-subitem  svelte-1bhwpv3">Git</a><!--]--></div></div><!--]--><!--[1--><a href="https://cs3301.pages.dev/policy" class="nav-item  svelte-1bhwpv3">Course Policy</a><!--]--><!--[1--><a href="https://cs3301.pages.dev/staff" class="nav-item  svelte-1bhwpv3">Staff</a><!--]--><!--]--></nav> <div class="sidebar-bottom svelte-1bhwpv3"><div class="footer svelte-1bhwpv3"><button class="icon-btn svelte-1bhwpv3" aria-label="Switch to light mode"><!--[0--><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="lucide-icon lucide lucide-sun"><!--[--><!----><circle cx="12" cy="12" r="4"><!----></circle><!----><!----><path d="M12 2v2"><!----></path><!----><!----><path d="M12 20v2"><!----></path><!----><!----><path d="m4.93 4.93 1.41 1.41"><!----></path><!----><!----><path d="m17.66 17.66 1.41 1.41"><!----></path><!----><!----><path d="M2 12h2"><!----></path><!----><!----><path d="M20 12h2"><!----></path><!----><!----><path d="m6.34 17.66-1.41 1.41"><!----></path><!----><!----><path d="m19.07 4.93-1.41 1.41"><!----></path><!----><!--]--><!--[--><!--[--><!--]--><!--]--></svg><!--]--></button> <a href="https://forms.cloud.microsoft/r/wPh7YEGdz5" target="_blank" rel="noopener" class="icon-btn svelte-1bhwpv3" aria-label="Feedback Form"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-message "><!--[--><!----><path d="M8 9h8"><!----></path><!----><!----><path d="M8 13h6"><!----></path><!----><!----><path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12"><!----></path><!----><!--]--><!--[--><!--[--><!--]--><!--]--></svg><!----></a></div></div><!----></aside> <div class="topbar svelte-12qhfyh"><button class="hamburger svelte-12qhfyh" aria-label="Toggle menu"><!--[-1--><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="lucide-icon lucide lucide-menu"><!--[--><!----><path d="M4 5h16"><!----></path><!----><!----><path d="M4 12h16"><!----></path><!----><!----><path d="M4 19h16"><!----></path><!----><!--]--><!--[--><!--[--><!--]--><!--]--></svg><!--]--></button> <span class="topbar-title svelte-12qhfyh">CS3.301 Operating Systems and Networks</span></div> <!--[-1--><!--]--> <div class="drawer  svelte-12qhfyh"><a href="https://cs3301.pages.dev/" class="course-link svelte-1bhwpv3"><div class="course-code svelte-1bhwpv3">CS3.301</div> <div class="course-name svelte-1bhwpv3">Operating Systems and Networks</div></a> <nav class="nav svelte-1bhwpv3"><!--[--><!--[1--><a href="https://cs3301.pages.dev/" class="nav-item  svelte-1bhwpv3">Home</a><!--]--><!--[1--><a href="https://cs3301.pages.dev/calendar" class="nav-item  svelte-1bhwpv3">Calendar</a><!--]--><!--[0--><div class="spacer svelte-1bhwpv3"></div><!--]--><!--[2--><a href="https://cs3301.pages.dev/lectures" class="nav-item group-header  svelte-1bhwpv3" aria-expanded="false"><span>Lectures</span> <span class="chevron svelte-1bhwpv3"><!----><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><!----></span></a> <div class="group-items svelte-1bhwpv3"><div class="group-items-inner svelte-1bhwpv3"><!--[--><a href="https://cs3301.pages.dev/lectures/01" class="nav-item nav-subitem  svelte-1bhwpv3">Introduction to OS</a><a href="https://cs3301.pages.dev/lectures/02" class="nav-item nav-subitem  svelte-1bhwpv3">Process Virtualization</a><a href="https://cs3301.pages.dev/lectures/03" class="nav-item nav-subitem  svelte-1bhwpv3">Process API</a><a href="https://cs3301.pages.dev/lectures/04" class="nav-item nav-subitem  svelte-1bhwpv3">Limited Direct Execution</a><a href="https://cs3301.pages.dev/lectures/05" class="nav-item nav-subitem  svelte-1bhwpv3">Scheduling</a><a href="https://cs3301.pages.dev/lectures/06" class="nav-item nav-subitem  svelte-1bhwpv3">MLFQ Scheduling</a><!--]--></div></div><!--]--><!--[2--><a href="https://cs3301.pages.dev/assignments" class="nav-item group-header active svelte-1bhwpv3" aria-expanded="true"><span>Mini-Projects</span> <span class="chevron svelte-1bhwpv3 open"><!----><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><!----></span></a> <div class="group-items svelte-1bhwpv3 open"><div class="group-items-inner svelte-1bhwpv3"><!--[--><a href="https://cs3301.pages.dev/assignments/01" class="nav-item nav-subitem active svelte-1bhwpv3">Mini Project 1</a><!--]--></div></div><!--]--><!--[2--><a href="https://cs3301.pages.dev/tutorials" class="nav-item group-header  svelte-1bhwpv3" aria-expanded="false"><span>Tutorials</span> <span class="chevron svelte-1bhwpv3"><!----><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><!----></span></a> <div class="group-items svelte-1bhwpv3"><div class="group-items-inner svelte-1bhwpv3"><!--[--><a href="https://cs3301.pages.dev/tutorials/01" class="nav-item nav-subitem  svelte-1bhwpv3">System Calls &amp; Intro to xv6</a><!--]--></div></div><!--]--><!--[2--><a href="https://cs3301.pages.dev/homework" class="nav-item group-header  svelte-1bhwpv3" aria-expanded="false"><span>Homework</span> <span class="chevron svelte-1bhwpv3"><!----><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><!----></span></a> <div class="group-items svelte-1bhwpv3"><div class="group-items-inner svelte-1bhwpv3"><!--[--><a href="https://cs3301.pages.dev/homework/00" class="nav-item nav-subitem  svelte-1bhwpv3">General Instructions</a><a href="https://cs3301.pages.dev/homework/01" class="nav-item nav-subitem  svelte-1bhwpv3">Processes &amp; Syscalls</a><!--]--></div></div><!--]--><!--[0--><div class="spacer svelte-1bhwpv3"></div><!--]--><!--[1--><a href="https://cs3301.pages.dev/project" class="nav-item  svelte-1bhwpv3">Course Project</a><!--]--><!--[0--><div class="spacer svelte-1bhwpv3"></div><!--]--><!--[2--><a href="https://cs3301.pages.dev/resources" class="nav-item group-header  svelte-1bhwpv3" aria-expanded="false"><span>Resources</span> <span class="chevron svelte-1bhwpv3"><!----><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><!----></span></a> <div class="group-items svelte-1bhwpv3"><div class="group-items-inner svelte-1bhwpv3"><!--[--><a href="https://cs3301.pages.dev/resources/textbooks" class="nav-item nav-subitem  svelte-1bhwpv3">Textbooks</a><a href="https://cs3301.pages.dev/resources/man-pages" class="nav-item nav-subitem  svelte-1bhwpv3">Man Pages</a><a href="https://cs3301.pages.dev/resources/xv6" class="nav-item nav-subitem  svelte-1bhwpv3">xv6</a><a href="https://cs3301.pages.dev/resources/git" class="nav-item nav-subitem  svelte-1bhwpv3">Git</a><!--]--></div></div><!--]--><!--[1--><a href="https://cs3301.pages.dev/policy" class="nav-item  svelte-1bhwpv3">Course Policy</a><!--]--><!--[1--><a href="https://cs3301.pages.dev/staff" class="nav-item  svelte-1bhwpv3">Staff</a><!--]--><!--]--></nav> <div class="sidebar-bottom svelte-1bhwpv3"><div class="footer svelte-1bhwpv3"><button class="icon-btn svelte-1bhwpv3" aria-label="Switch to light mode"><!--[0--><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="lucide-icon lucide lucide-sun"><!--[--><!----><circle cx="12" cy="12" r="4"><!----></circle><!----><!----><path d="M12 2v2"><!----></path><!----><!----><path d="M12 20v2"><!----></path><!----><!----><path d="m4.93 4.93 1.41 1.41"><!----></path><!----><!----><path d="m17.66 17.66 1.41 1.41"><!----></path><!----><!----><path d="M2 12h2"><!----></path><!----><!----><path d="M20 12h2"><!----></path><!----><!----><path d="m6.34 17.66-1.41 1.41"><!----></path><!----><!----><path d="m19.07 4.93-1.41 1.41"><!----></path><!----><!--]--><!--[--><!--[--><!--]--><!--]--></svg><!--]--></button> <a href="https://forms.cloud.microsoft/r/wPh7YEGdz5" target="_blank" rel="noopener" class="icon-btn svelte-1bhwpv3" aria-label="Feedback Form"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-message "><!--[--><!----><path d="M8 9h8"><!----></path><!----><!----><path d="M8 13h6"><!----></path><!----><!----><path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12"><!----></path><!----><!--]--><!--[--><!--[--><!--]--><!--]--></svg><!----></a></div></div><!----></div> <main class="main svelte-12qhfyh" data-pagefind-body=""><div class="content svelte-12qhfyh"><!--[--><div class="detail svelte-yfiv9r"><a href="https://cs3301.pages.dev/assignments" class="breadcrumb svelte-yfiv9r">Mini-Projects</a> <h1 class="title svelte-yfiv9r">Mini Project 1</h1> <div class="meta svelte-yfiv9r">Mini-Project 1 <!--[0-->· Released Aug 14, 2026 · Due Sep 13, 2026<!--]--></div> <!--[0--><p class="summary svelte-yfiv9r">Implement your very own C-Shell &amp; Implement the MLFQ scheduling policy for xv6.</p><!--]--> <div class="prose"><!--[--><h1 id="before-you-start" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#before-you-start"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>Before you start</h1> <p><strong>This is an individual assignment.</strong></p> <h3 id="deadlines" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#deadlines"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>Deadlines</h3> <p>There are two submissions for this assignment. You are expected to submit parts <a href="https://cs3301.pages.dev/assignments/01#part-a-shell-input-20">A</a> to <a href="https://cs3301.pages.dev/assignments/01#part-c-file-redirection-and-pipes-50">C</a> of C-Shell for the mid-submission, and remainder of the assignment for the end-submission.</p> <ul><li><strong>Mid-submission</strong>: August 24, 11:59 pm</li> <li><strong>End-submission</strong>: September 13, 11:59 pm</li></ul> <p>You may use your late days for both of the submissions.</p> <h3 id="submission" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#submission"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>Submission</h3> <p>The exact details about submission will be made clear shortly.</p> <p>However, you <strong>NEED</strong> to maintain a <code>git</code> repository for the duration of the project and commit iteratively as you go. Making a bunch of big commits right before the deadline may result in penalization.</p> <p>And before you ask: you <strong>DO NOT</strong> need a GitHub repo to maintain a <code>git</code> repo. You can initialize one locally and keep it there until we figure out submission.</p> <p>You can refer to the <a href="https://cs3301.pages.dev/resources/git">resource on git</a> for more details.</p> <p>Make sure your repository has the following structure:</p> <div class="code-block"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0"><code><span class="line"><span>mini-project1/</span></span>
 <span class="line"><span>├── c-shell/</span></span>
 <span class="line"><span>│   ├── src/</span></span>
 <span class="line"><span>│   ├── include/</span></span>
@@ -560,15 +40,16 @@ plasmo-csui#ff-overlay-container, plasmo-csui#real-time-panel {
 <span class="line"><span>│   ├── kernel/</span></span>
 <span class="line"><span>│   ├── Makefile</span></span>
 <span class="line"><span>│   └── report.md    # Or report.pdf</span></span>
-<span class="line"><span>└── README.md</span></span></code></pre><button class="copy-btn">Copy</button></div> <h3 id="grading" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#grading"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>Grading</h3> <p>You will be graded based on both your implementation and an in-person evaluation with a TA. You are expected to understand the code that you submit.</p> <h3 id="doubt-doc" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#doubt-doc"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>Doubt Doc</h3> <a class="resource-tile" href="https://hackmd.io/@m26-osn/rytKjKY8Mx"><span class="resource-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></span><span class="resource-label">Doubts</span></a> <a class="resource-tile" href="https://hackmd.io/@m26-osn/B1SZ2KKIMx"><span class="resource-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><polyline points="9 15 11 17 15 13"></polyline></svg></span><span class="resource-label">Answers</span></a> <blockquote><p>All the best! Have fun :)</p></blockquote> <h1 id="c-shell-200" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#c-shell-200"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>C Shell [200]</h1> <h3 id="general-requirements" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#general-requirements"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>General Requirements</h3> <ul><li>Break the project down into multiple <code>.c</code> and <code>.h</code> files based on functionality. Monolithic code will be penalized.</li> <li>Use only C POSIX library headers and functions. You can use <a href="https://pubs.opengroup.org/onlinepubs/9699919799/idx/head.html" rel="nofollow">this</a> for reference.</li> <li>Compile with the following flags for POSIX compliance:</li></ul> <div class="code-block"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0"><code><span class="line"><span style="color:var(--shiki-token-function)">gcc</span><span style="color:var(--shiki-token-string)"> -std=c99</span><span style="color:var(--shiki-foreground)"> \</span></span>
+<span class="line"><span>├── AI-usage.pdf</span></span>
+<span class="line"><span>└── README.md</span></span></code></pre><button class="copy-btn">Copy</button></div> <h3 id="ai-usage" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#ai-usage"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>AI Usage</h3> <p>You are allowed to use AI tools as long as you acknowledge and document it. Include the prompt you used and a screenshot of the output in a pdf called <code>AI-usage.pdf</code>. You are expected to understand any code you generate Improperly acknowledged AI use may be awarded a 0.</p> <h3 id="grading" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#grading"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>Grading</h3> <p>You will be graded based on both your implementation and an in-person evaluation with a TA. You are expected to understand the code that you submit.</p> <h3 id="doubt-doc" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#doubt-doc"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>Doubt Doc</h3> <a class="resource-tile" href="https://hackmd.io/@m26-osn/rytKjKY8Mx"><span class="resource-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></span><span class="resource-label">Doubts</span></a> <a class="resource-tile" href="https://hackmd.io/@m26-osn/B1SZ2KKIMx"><span class="resource-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><polyline points="9 15 11 17 15 13"></polyline></svg></span><span class="resource-label">Answers</span></a> <blockquote><p>All the best! Have fun :)</p></blockquote> <h1 id="c-shell-200" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#c-shell-200"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>C Shell [200]</h1> <h3 id="general-requirements" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#general-requirements"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>General Requirements</h3> <ul><li>Break the project down into multiple <code>.c</code> and <code>.h</code> files based on functionality. Monolithic code will be penalized.</li> <li>Use only C POSIX library headers and functions. You can use <a href="https://pubs.opengroup.org/onlinepubs/9699919799/idx/head.html" rel="nofollow">this</a> for reference.</li> <li>Compile with the following flags for POSIX compliance:</li></ul> <div class="code-block"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0"><code><span class="line"><span style="color:var(--shiki-token-function)">gcc</span><span style="color:var(--shiki-token-string)"> -std=c23</span><span style="color:var(--shiki-foreground)"> \</span></span>
 <span class="line"><span style="color:var(--shiki-token-string)">  -D_POSIX_C_SOURCE=200809L</span><span style="color:var(--shiki-foreground)"> \</span></span>
 <span class="line"><span style="color:var(--shiki-token-string)">  -D_XOPEN_SOURCE=700</span><span style="color:var(--shiki-foreground)"> \</span></span>
 <span class="line"><span style="color:var(--shiki-token-string)">  -Wall</span><span style="color:var(--shiki-token-string)"> -Wextra</span><span style="color:var(--shiki-token-string)"> -Werror</span><span style="color:var(--shiki-foreground)"> \</span></span>
 <span class="line"><span style="color:var(--shiki-token-string)">  -Wno-unused-parameter</span><span style="color:var(--shiki-foreground)"> \</span></span>
 <span class="line"><span style="color:var(--shiki-token-string)">  -fno-asm</span><span style="color:var(--shiki-foreground)"> \</span></span>
-<span class="line"><span style="color:var(--shiki-token-string)">  your_file.c</span></span></code></pre><button class="copy-btn">Copy</button></div> <ul><li>Final build must compile with <code>make all</code> in the shell directory, producing <code>shell.out</code> in that same directory.</li></ul> <h3 id="references" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#references"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>References</h3> <p>These could be helpful for you to understand things required to implement this section.</p> <ul><li><a href="https://pubs.opengroup.org/onlinepubs/9699919799/idx/head.html" rel="nofollow">POSIX.1-2017 spec</a></li> <li><code>man 2</code> pages for <code>fork</code>, <code>exec</code>, <code>wait</code>, <code>pipe</code>, <code>dup2</code>, <code>open</code>. These cover most of what you’ll need.</li> <li>Use the source of actual <a href="https://github.com/gitGNU/gnu_bash" rel="nofollow">bash</a> (will be helpful to understand how to do certain parts of the mini-project)</li></ul> <h2 id="part-a-shell-input-20" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#part-a-shell-input-20"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>Part A: Shell Input [20]</h2> <p>This is the base for the rest of your project.</p> <p><strong>Banned syscalls for Part A:</strong> <code>exec*</code> (any syscall that starts with exec)</p> <h3 id="a1-shell-prompt-3" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#a1-shell-prompt-3"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>A1: Shell Prompt [3]</h3> <p>Your shell should show a prompt so the user knows it’s ready for input.</p> <div class="code-block"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0"><code><span class="line"><span style="color:var(--shiki-token-keyword)">&lt;</span><span style="color:var(--shiki-foreground)">username@hostname:currentpath</span><span style="color:var(--shiki-token-keyword)">&gt;</span></span></code></pre><button class="copy-btn">Copy</button></div> <p><strong>Requirements:</strong></p> <ol><li>Display the prompt whenever the shell isn’t running a foreground process.</li> <li>The directory the shell is started in becomes its home directory.</li> <li>If the current working directory has the home directory as an ancestor (e.g. <code>/path/to/home/osn</code>), replace the home directory prefix with <code>~</code>. So the example becomes <code>~/osn</code>.</li> <li>If the current working directory does not have the home directory as an ancestor, show the absolute path as is.</li></ol> <p><strong>Example</strong></p> <div class="code-block"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0"><code><span class="line"><span>&lt;goatam@iiit:~/osnmp1/&gt; make</span></span>
+<span class="line"><span style="color:var(--shiki-token-string)">  your_file.c</span></span></code></pre><button class="copy-btn">Copy</button></div> <p>Final build must compile with <code>make all</code> in the shell directory, producing <code>shell.out</code> in that same directory.</p> <p>A reference <code>Makefile</code> is provided for your convenience:</p> <a class="resource-tile" href="https://cs3301.pages.dev/code/mp1/Makefile"><span class="resource-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg></span><span class="resource-label">Code</span><span class="resource-sub">Makefile</span></a> <h3 id="references" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#references"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>References</h3> <p>These could be helpful for you to understand things required to implement this section.</p> <ul><li><a href="https://pubs.opengroup.org/onlinepubs/9699919799/idx/head.html" rel="nofollow">POSIX.1-2017 spec</a></li> <li><code>man 2</code> pages for <code>fork</code>, <code>exec</code>, <code>wait</code>, <code>pipe</code>, <code>dup2</code>, <code>open</code>. These cover most of what you’ll need.</li> <li>Use the source of actual <a href="https://github.com/gitGNU/gnu_bash" rel="nofollow">bash</a> (will be helpful to understand how to do certain parts of the mini-project)</li> <li>Use the source of <a href="https://github.com/mirror/busybox/tree/master/shell" rel="nofollow">BusyBox Shell</a> for further refernce since it is a smaller implementation with more understandable code.</li></ul> <h2 id="part-a-shell-input-20" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#part-a-shell-input-20"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>Part A: Shell Input [20]</h2> <p>This is the base for the rest of your project.</p> <p><strong>Banned syscalls for Part A:</strong> <code>exec*</code> (any syscall that starts with exec)</p> <h3 id="a1-shell-prompt-3" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#a1-shell-prompt-3"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>A1: Shell Prompt [3]</h3> <p>Your shell should show a prompt so the user knows it’s ready for input.</p> <div class="code-block"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0"><code><span class="line"><span style="color:var(--shiki-token-keyword)">&lt;</span><span style="color:var(--shiki-foreground)">username@hostname:currentpath</span><span style="color:var(--shiki-token-keyword)">&gt;</span></span></code></pre><button class="copy-btn">Copy</button></div> <p><strong>Requirements:</strong></p> <ol><li>Display the prompt whenever the shell isn’t running a foreground process.</li> <li>The directory the shell is started in becomes its home directory.</li> <li>If the current working directory has the home directory as an ancestor (e.g. <code>/path/to/home/osn</code>), replace the home directory prefix with <code>~</code>. So the example becomes <code>~/osn</code>.</li> <li>If the current working directory does not have the home directory as an ancestor, show the absolute path as is.</li></ol> <p><strong>Example</strong></p> <div class="code-block"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0"><code><span class="line"><span>&lt;goatam@iiit:~/osnmp1/&gt; make</span></span>
 <span class="line"><span>&lt;goatam@iiit:~/osnmp1/&gt; ./shell.out</span></span>
-<span class="line"><span>&lt;goatam@iiit:~&gt;</span></span></code></pre><button class="copy-btn">Copy</button></div> <h3 id="a2-user-input-2" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#a2-user-input-2"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>A2: User Input [2]</h3> <p><strong>Requirements:</strong></p> <ol><li>The shell should allow a user to type input.</li> <li>On enter/return, the shell should consume the input.</li> <li>After consuming input, the shell should display the prompt again.</li></ol> <p><strong>Example</strong></p> <div class="code-block"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0"><code><span class="line"><span>&lt;goatam@iiit:~&gt; Hi there guys!</span></span>
+<span class="line"><span>&lt;goatam@iiit:~&gt;</span></span></code></pre><button class="copy-btn">Copy</button></div> <h3 id="a2-user-input-2" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#a2-user-input-2"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>A2: User Input [2]</h3> <p><strong>Requirements:</strong></p> <ol><li>The shell should allow a user to type input.</li> <li>On enter/return, the shell should consume the input.</li> <li>After consuming input, the shell should display the prompt again.</li> <li>You may assume that the user input shall be limited to a max of 1024 characters.</li></ol> <p><strong>Example</strong></p> <div class="code-block"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0"><code><span class="line"><span>&lt;goatam@iiit:~&gt; Hi there guys!</span></span>
 <span class="line"><span>&lt;goatam@iiit:~&gt; This shell is cool!</span></span>
 <span class="line"><span>&lt;goatam@iiit:~&gt;</span></span></code></pre><button class="copy-btn">Copy</button></div> <h3 id="a3-input-parsing-15" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#a3-input-parsing-15"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>A3: Input Parsing [15]</h3> <p>Your shell must scan and validate every line before executing anything. This section defines two layers: a lexer that turns characters into tokens, and a grammar that validates the token sequence. Validation must be performed.</p> <blockquote><p>Note: Since both Lexer and Parser follow a regular grammar, use your Automata Theory skills to the test.</p></blockquote> <p><strong>Lexer</strong>: The lexer reads the raw input line and produces a sequence of tokens, some specifications are given below. Whitespace (space, tab, newline, carriage return) separates tokens and is otherwise discarded - it is never itself a token.</p> <ul><li><strong>Character Classes</strong>:</li></ul> <div class="code-block"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0"><code><span class="line"><span>special   -&gt;  |  &amp;  &gt;  &lt;  ;</span></span>
 <span class="line"><span>quote     -&gt;  "  |  '</span></span>
@@ -593,7 +74,6 @@ plasmo-csui#ff-overlay-container, plasmo-csui#real-time-panel {
 The lexer must reject and print <code>cshell: invalid syntax</code> when:</p> <ul><li>A quote is opened and never closed before end of line.</li> <li>A <code>\</code> appears as the final character of the line.</li></ul> <blockquote><p>Note: There is no line continuation and no multi-line input.
 Hint: use EOF to your advantage.</p></blockquote> <p><strong>Grammar</strong>:</p> <p>Terminals are the token classes above. Start symbol is <code>LINE</code></p> <div class="code-block"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0"><code><span class="line"><span>LINE  -&gt;  ε</span></span>
 <span class="line"><span>      |   WORD ARG</span></span>
-<span class="line"><span></span></span>
 <span class="line"><span>ARG   -&gt;  ε</span></span>
 <span class="line"><span>      |   WORD    ARG</span></span>
 <span class="line"><span>      |   OP_LT   TGT</span></span>
@@ -602,11 +82,8 @@ Hint: use EOF to your advantage.</p></blockquote> <p><strong>Grammar</strong>:</
 <span class="line"><span>      |   OP_PIPE CMD</span></span>
 <span class="line"><span>      |   OP_SEMI CMD</span></span>
 <span class="line"><span>      |   OP_AMP  BG</span></span>
-<span class="line"><span></span></span>
 <span class="line"><span>CMD   -&gt;  WORD ARG</span></span>
-<span class="line"><span></span></span>
 <span class="line"><span>TGT   -&gt;  WORD ARG</span></span>
-<span class="line"><span></span></span>
 <span class="line"><span>BG    -&gt;  ε</span></span>
 <span class="line"><span>      |   WORD ARG</span></span></code></pre><button class="copy-btn">Copy</button></div> <blockquote><p>Note: This is a right linear grammar, enjoy.</p></blockquote> <p><code>TGT</code> is the name of a file or a redirection output, <code>CMD</code> is a valid command</p> <p><strong>Instructions</strong>:</p> <ul><li>You <strong>do not need</strong> a full AST, any structure you find convenient (like a Linked List) works. Just make sure you are representing enough information internally to allow further sections to be implemented.</li> <li>You can use any type of parser and lexer, as long as it conforms to the grammar provided.</li></ul> <p><strong>Requirements</strong></p> <ol><li>Verify whether an inputted command is valid or invalid per the grammar.</li> <li>If invalid, print <code>cshell: invalid syntax</code>.</li> <li>A line that is empty or contains only whitespace is valid: print a fresh prompt.</li> <li>Whitespace between tokens is ignored, in any amount. Whitespace inside quotes is preserved.</li></ol> <p><strong>Examples</strong>:</p> <div class="code-block"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0"><code><span class="line"><span>&lt;goatam@iiit:~/osnmp1&gt; cat meow.txt | meow; meow &gt; meow.txt &amp;</span></span>
 <span class="line"><span>&lt;goatam@iiit:~/osnmp1&gt; echo a &amp; echo b &amp;</span></span>
@@ -624,19 +101,17 @@ Hint: use EOF to your advantage.</p></blockquote> <p><strong>Grammar</strong>:</
 <span class="line"><span>cshell: invalid syntax</span></span>
 <span class="line"><span>&lt;goatam@iiit:~/osnmp1&gt; cat &lt;</span></span>
 <span class="line"><span>cshell: invalid syntax</span></span>
-<span class="line"><span>&lt;goatam@iiit:~/osnmp1&gt; cat &lt;&lt; f</span></span>
-<span class="line"><span>cshell: invalid syntax</span></span>
 <span class="line"><span>&lt;goatam@iiit:~/osnmp1&gt; | sort</span></span>
 <span class="line"><span>cshell: invalid syntax</span></span>
 <span class="line"><span>&lt;goatam@iiit:~/osnmp1&gt; echo "unclosed</span></span>
 <span class="line"><span>cshell: invalid syntax</span></span>
 <span class="line"><span>&lt;goatam@iiit:~/osnmp1&gt; echo trailing\</span></span>
 <span class="line"><span>cshell: invalid syntax</span></span>
-<span class="line"><span>&lt;goatam@iiit:~/osnmp1&gt;</span></span></code></pre><button class="copy-btn">Copy</button></div> <h2 id="part-b-shell-intrinsics-40" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#part-b-shell-intrinsics-40"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>Part B: Shell Intrinsics [40]</h2> <p>These are commands any shell worth its salt supports.</p> <p><strong>Banned syscalls for Part B:</strong> <code>exec*</code> (any syscall that starts with exec)</p> <h3 id="b1-hop-10" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#b1-hop-10"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>B1: hop [10]</h3> <p><strong>Syntax</strong>: <code>hop ((~ | . | .. | - | name)*)?</code></p> <p><strong>Purpose</strong>: The hop command changes the shell’s current working directory. Unlike a plain cd, hop falls back to a frecency lookup when a name doesn’t resolve directly, so you can jump to directories you visit often without typing the full path.</p> <p><strong>Requirements</strong></p> <p>Execute the following sequentially for each passed argument:</p> <ol><li>”~” or no arguments: change the CWD to the shell’s home directory.</li> <li>”.”: do nothing, stay in the same CWD.</li> <li>”..”: change the CWD to the parent directory of the CWD, or do nothing if the CWD has no parent.</li> <li>”-”: change the CWD to the previous CWD, or do nothing if there was no previous CWD.</li> <li>“name”: if this resolves to a valid relative or absolute path from the CWD, change to it directly.</li> <li>If “name” does not resolve directly, fall back to a frecency lookup as defined below.</li> <li>If neither a direct match nor a frecency match is found, output <code>hop: no such directory</code></li></ol> <p><strong>Frecency</strong></p> <p>Keep a persistent record of directories hopped into, across shell sessions.</p> <ol><li>Every successful hop updates that directory’s standing.</li> <li>Standing depends on both frequency and recency of visits.</li> <li>When “name” doesn’t resolve directly, hop into the highest ranked directory whose path contains “name” as a substring.</li> <li>If the top match no longer exists on disk, skip it and try the next best.</li></ol> <p>Scoring, decay, and storage are up to you, but must be deterministic.</p> <p><strong>Resource</strong>: same idea behind zoxide’s <code>cd</code> replacement: <a href="https://github.com/ajeetdsouza/zoxide/wiki/Algorithm" rel="nofollow">https://github.com/ajeetdsouza/zoxide/wiki/Algorithm</a></p> <p><strong>Example</strong></p> <div class="code-block"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0"><code><span class="line"><span>&lt;goatam@iiit:~/osnmp1&gt; hop ~</span></span>
+<span class="line"><span>&lt;goatam@iiit:~/osnmp1&gt;</span></span></code></pre><button class="copy-btn">Copy</button></div> <h2 id="part-b-shell-intrinsics-40" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#part-b-shell-intrinsics-40"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>Part B: Shell Intrinsics [40]</h2> <p>These are commands any shell worth its salt supports.</p> <p><strong>Banned syscalls for Part B:</strong> <code>exec*</code> (any syscall that starts with exec)</p> <h3 id="b1-hop-10" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#b1-hop-10"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>B1: hop [10]</h3> <p><strong>Syntax</strong>: <code>hop ((~ | . | .. | - | name)*)?</code></p> <p><strong>Purpose</strong>: The hop command changes the shell’s current working directory. Unlike a plain cd, hop falls back to a frecency lookup when a name doesn’t resolve directly, so you can jump to directories you visit often without typing the full path.</p> <p><strong>Requirements</strong></p> <p>Execute the following sequentially for each passed argument:</p> <ol><li>”~” or no arguments: change the CWD to the shell’s home directory.</li> <li>”.”: do nothing, stay in the same CWD.</li> <li>”..”: change the CWD to the parent directory of the CWD, or do nothing if the CWD has no parent.</li> <li>”-”: change the CWD to the previous CWD, or do nothing if there was no previous CWD.</li> <li>“name”: if this resolves to a valid relative or absolute path from the CWD, change to it directly.</li> <li>If “name” does not resolve directly, fall back to a frecency lookup as defined below.</li> <li>If neither a direct match nor a frecency match is found, output <code>hop: no such directory</code></li> <li><code>hop</code> should not restrict directory changes to just the shell’s home directory or its subdirectories. Valid absolute and relative paths that resolve outside the home directory must be allowed.</li></ol> <p><strong>Frecency</strong></p> <p>Keep a persistent record of directories hopped into, across shell sessions.</p> <ol><li>Every successful hop updates that directory’s standing.</li> <li>Standing depends on both frequency and recency of visits.</li> <li>When “name” doesn’t resolve directly, hop into the highest ranked directory whose path contains “name” as a substring.</li> <li>If the top match no longer exists on disk, skip it and try the next best.</li></ol> <p>Scoring, decay, and storage are up to you, but must be deterministic.</p> <p><strong>Resource</strong>: same idea behind zoxide’s <code>cd</code> replacement: <a href="https://github.com/ajeetdsouza/zoxide/wiki/Algorithm" rel="nofollow">https://github.com/ajeetdsouza/zoxide/wiki/Algorithm</a></p> <p><strong>Example</strong></p> <div class="code-block"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0"><code><span class="line"><span>&lt;goatam@iiit:~/osnmp1&gt; hop ~</span></span>
 <span class="line"><span>&lt;goatam@iiit:~&gt; hop ..</span></span>
 <span class="line"><span>&lt;goatam@iiit:/home/&gt; hop goatam/osnmp1 .. -</span></span>
 <span class="line"><span>&lt;goatam@iiit:~/osnmp1&gt; hop osn</span></span>
-<span class="line"><span>&lt;goatam@iiit:~/osnmp1&gt;</span></span></code></pre><button class="copy-btn">Copy</button></div> <h3 id="b2-reveal-10" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#b2-reveal-10"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>B2: reveal [10]</h3> <p><strong>Syntax</strong>: <code>reveal (-(a|t)*)* (~ | . | .. | - | name)?</code></p> <p><strong>Purpose</strong>: The reveal command lists the files and directories in a directory.</p> <p><strong>Requirements</strong></p> <ol><li>If no argument is passed, <code>reveal</code> lists the contents of the current working directory.</li> <li>“a”: reveal all files and directories, including hidden ones (starting with <code>.</code>). Default is to hide them.</li> <li>“t”: recursively reveal the contents of all subdirectories. the content of the subdirectory must be displayed after the directory itself (refer example below)</li> <li>When both flags are set, recursively show all files, hidden included, in the format given below.</li> <li>When neither flag is set, print entries in the format of <code>ls</code>.</li> <li>The argument passed resolves the same way as hop’s <code>~</code>, <code>.</code>, <code>..</code>, <code>-</code>, and direct path cases, except reveal lists directory contents instead of changing the CWD. There is no frecency fallback: if the argument does not resolve to an existing directory, print <code>reveal: no such directory</code>.</li> <li>Entries are always listed in lexicographic order, sorted by ASCII value.</li> <li>If reveal is passed too many arguments, print: <code>reveal: invalid syntax</code></li> <li>If <code>reveal -</code> is run before any hop has been run since shell start, print: <code>reveal: no such directory</code></li></ol> <p><strong>Example</strong></p> <div class="code-block"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0"><code><span class="line"><span>&lt;goatam@iiit:~&gt; reveal ~</span></span>
+<span class="line"><span>&lt;goatam@iiit:~/osnmp1&gt;</span></span></code></pre><button class="copy-btn">Copy</button></div> <h3 id="b2-reveal-10" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#b2-reveal-10"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>B2: reveal [10]</h3> <p><strong>Syntax</strong>: <code>reveal (-(a|t)*)* (~ | . | .. | - | name)?</code></p> <p><strong>Purpose</strong>: The reveal command lists the files and directories in a directory.</p> <p><strong>Requirements</strong></p> <ol><li>If no argument is passed, <code>reveal</code> lists the contents of the current working directory.</li> <li>“a”: reveal all files and directories, including hidden ones (starting with <code>.</code>). Default is to hide them.</li> <li>“t”: recursively reveal the contents of all subdirectories. the content of the subdirectory must be displayed after the directory itself (refer example below).</li> <li>When both flags are set, recursively show all files, hidden included, in the format given below.</li> <li>When neither flag is set, print entries in the format of <code>ls</code>.</li> <li>The argument passed resolves the same way as hop’s <code>~</code>, <code>.</code>, <code>..</code>, <code>-</code>, and direct path cases, except reveal lists directory contents instead of changing the CWD. There is no frecency fallback: if the argument does not resolve to an existing directory, print <code>reveal: no such directory</code>.</li> <li>Entries are always listed in lexicographic order, sorted by ASCII value. When the <code>-t</code> flag is passed, entries within each directory must also be listed in lexicographic order.</li> <li>If reveal is passed too many arguments, print: <code>reveal: invalid syntax</code></li> <li>If reveal is passed an invalid flag, print: <code>reveal: invalid syntax</code></li> <li>If <code>reveal -</code> is run before any hop has been run since shell start, print: <code>reveal: no such directory</code></li></ol> <p><strong>Example</strong></p> <div class="code-block"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0"><code><span class="line"><span>&lt;goatam@iiit:~&gt; reveal ~</span></span>
 <span class="line"><span>osnmp1</span></span>
 <span class="line"><span>&lt;goatam@iiit:~&gt; hop ..</span></span>
 <span class="line"><span>&lt;goatam@iiit:/home&gt; reveal</span></span>
@@ -671,28 +146,27 @@ Hint: use EOF to your advantage.</p></blockquote> <p><strong>Grammar</strong>:</
 <span class="line"><span>shell.out</span></span>
 <span class="line"><span>src/</span></span>
 <span class="line"><span>src/main.c</span></span>
-<span class="line"><span>src/parser.c</span></span></code></pre><button class="copy-btn">Copy</button></div> <h3 id="b3-peek-10" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#b3-peek-10"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>B3: peek [10]</h3> <p><strong>Syntax</strong> <code>peek (-(n|r)*)* filename*</code></p> <p><strong>Purpose</strong>: The peek command concatenates the contents of one or more given files (or standard input) and then prints it to the standard output.</p> <p><strong>Requirements:</strong></p> <ol><li>“n”: counts the number of non-empty lines in the input. The line number must be printed before the corresponding line.
-“r”: print the contents of the input in reverse line order. For seekable input (regular files), use lseek to read the file backwards in fixed-size chunks rather than loading it all into memory at once. For non-seekable input (pipes, standard input), buffering the full input before reversing is allowed.</li> <li>When both flags are set, print the contents of the file in reverse order, with its corresponding line number.</li> <li>When no flag is set, print the contents of the file as is.</li> <li>If more than one file is provided, concatenate their contents in the given order.</li> <li>When -r is combined with multiple files, each file’s lines are reversed independently before concatenation; the overall file order given on the command line is preserved.</li> <li>If no filename is provided, or when filename is -, read from standard input.</li> <li>If filename does not exist, print <code>peek: no such file or directory</code></li> <li>If filename is a directory, print <code>peek: is a directory</code></li></ol> <p><strong>Example</strong></p> <div class="code-block"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0"><code><span class="line"><span>&lt;goatam@iiit~/osnmp1&gt; cat README.md</span></span>
+<span class="line"><span>src/parser.c</span></span></code></pre><button class="copy-btn">Copy</button></div> <h3 id="b3-peek-10" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#b3-peek-10"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>B3: peek [10]</h3> <p><strong>Syntax</strong> <code>peek (-(n|r)*)* filename*</code></p> <p><strong>Purpose</strong>: The peek command concatenates the contents of one or more given files (or standard input) and then prints it to the standard output.</p> <p><strong>Requirements:</strong></p> <ol><li>“n”: counts the number of non-empty lines in the input. The line number must be printed before the corresponding line.</li> <li>“r”: print the contents of the input in reverse line order. For seekable input (regular files), use lseek to read the file backwards in fixed-size chunks rather than loading it all into memory at once. For non-seekable input (pipes, standard input), buffering the full input before reversing is allowed.</li> <li>When both flags are set, print the contents of the file in reverse order, with its corresponding line number.</li> <li>When no flag is set, print the contents of the file as is.</li> <li>If more than one file is provided, concatenate their contents in the given order.</li> <li>When -r is combined with multiple files, each file’s lines are reversed independently before concatenation; the overall file order given on the command line is preserved.</li> <li>If no filename is provided, or when filename is -, read from standard input.</li> <li>If filename does not exist, print <code>peek: no such file or directory</code></li> <li>If filename is a directory, print <code>peek: is a directory</code></li></ol> <p><strong>Example</strong></p> <div class="code-block"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0"><code><span class="line"><span>&lt;goatam@iiit:~/osnmp1&gt; peek README.md</span></span>
 <span class="line"><span># OSN MP1</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>This is OSN shell assignment.</span></span>
 <span class="line"><span></span></span>
-<span class="line"><span>&lt;goatam@iiit~/osnmp1&gt; peek -n README.md</span></span>
+<span class="line"><span>&lt;goatam@iiit:~/osnmp1&gt; peek -n README.md</span></span>
 <span class="line"><span>1 #OSN MP1</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>2 This is OSN shell assignment</span></span>
-<span class="line"><span>&lt;goatam@iiit~/osnmp1&gt; peek -r README.md</span></span>
+<span class="line"><span>&lt;goatam@iiit:~/osnmp1&gt; peek -r README.md</span></span>
 <span class="line"><span>This is OSN shell assignment</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span># OSN MP1</span></span>
-<span class="line"><span>&lt;goatam@iiit~/osnmp1&gt; peek -rn -rrrrnnnnn -nrnrnr README.md</span></span>
+<span class="line"><span>&lt;goatam@iiit:~/osnmp1&gt; peek -rn -rrrrnnnnn -nrnrnr README.md</span></span>
 <span class="line"><span>2 This is OSN shell assignment</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>1 #OSN MP1</span></span>
-<span class="line"><span>&lt;goatam@iiit~/osnmp1&gt; peek -</span></span>
+<span class="line"><span>&lt;goatam@iiit:~/osnmp1&gt; peek -</span></span>
 <span class="line"><span>meow</span></span>
 <span class="line"><span>meow</span></span>
-<span class="line"><span>&lt;goatam@iiit~/osnmp1&gt; peek README.md Makefile</span></span>
+<span class="line"><span>&lt;goatam@iiit:~/osnmp1&gt; peek README.md Makefile</span></span>
 <span class="line"><span>#OSN MP1</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>This is OSN shell assignment.</span></span>
@@ -701,7 +175,7 @@ Hint: use EOF to your advantage.</p></blockquote> <p><strong>Grammar</strong>:</
 <span class="line"><span></span></span>
 <span class="line"><span>Preprocessor definitions</span></span>
 <span class="line"><span>DEFINES = -D_POSIX_C_SOURCE=200809L</span></span>
-<span class="line"><span>-D_XOPEN_SOURCE=700</span></span></code></pre><button class="copy-btn">Copy</button></div> <h3 id="b4-locate-10" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#b4-locate-10"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>B4: locate [10]</h3> <p><strong>Syntax:</strong> <code>locate filename*</code></p> <p><strong>Purpose:</strong> The <code>locate</code> command returns the pathnames of the files (or links) which would be executed in the current environment, had its arguments been given as commands in a strictly POSIX-conformant shell.</p> <p><strong>Requirements:</strong></p> <ol><li>For each filename, first check the current working directory. If a match exists there, print its absolute path first. Then search each directory listed in <code>PATH</code>, in order, and print the absolute path of every match found. This means a name matching in both the cwd and two <code>PATH</code> entries prints three lines, in that order.</li> <li>The absolute path to the executable must be printed (even if the executable exists in the current working directory).</li> <li>If multiple arguments are provided, print the path for each one of them, in the order specified by the user.</li> <li>If multiple matching executable paths are found, print all the paths.</li> <li>If <code>filename</code> is not a valid executable, print: <code>locate: command not found (commandname)</code> and continue processing the remaining arguments.</li> <li>You may assume that file paths will not be passed as arguments.</li></ol> <p><strong>Example:</strong></p> <div class="code-block"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0"><code><span class="line"><span>&lt;goatam@iiit:~&gt; locate java</span></span>
+<span class="line"><span>-D_XOPEN_SOURCE=700</span></span></code></pre><button class="copy-btn">Copy</button></div> <h3 id="b4-locate-10" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#b4-locate-10"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>B4: locate [10]</h3> <p><strong>Syntax:</strong> <code>locate filename*</code></p> <p><strong>Purpose:</strong> The <code>locate</code> command returns the pathnames of the files (or links) which would be executed in the current environment, had its arguments been given as commands in a strictly POSIX-conformant shell.</p> <p><strong>Requirements:</strong></p> <ol><li>For each filename, first check the current working directory. If a match exists there, print its absolute path first. Then search each directory listed in <code>PATH</code>, in order, and print the absolute path of every match found. This means a name matching in both the cwd and two <code>PATH</code> entries prints three lines, in that order. Do not recursively search within the directories listed in <code>PATH</code>.</li> <li>The absolute path to the executable must be printed (even if the executable exists in the current working directory).</li> <li>If no arguments are provided, print <code>locate: invalid syntax</code></li> <li>If multiple arguments are provided, print the path for each one of them, in the order specified by the user.</li> <li>If multiple matching executable paths are found, print all the paths.</li> <li>If <code>filename</code> is not a valid executable, print: <code>locate: command not found (commandname)</code> and continue processing the remaining arguments.</li> <li>You may assume that file paths will not be passed as arguments.</li></ol> <p><strong>Example:</strong></p> <div class="code-block"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0"><code><span class="line"><span>&lt;goatam@iiit:~&gt; locate java</span></span>
 <span class="line"><span>/usr/bin/java</span></span>
 <span class="line"><span>&lt;goatam@iiit:~&gt; locate man java python nada</span></span>
 <span class="line"><span>/usr/bin/man</span></span>
@@ -710,7 +184,7 @@ Hint: use EOF to your advantage.</p></blockquote> <p><strong>Grammar</strong>:</
 <span class="line"><span>locate: command not found (nada)</span></span>
 <span class="line"><span>&lt;goatam@iiit:~&gt; locate sudo</span></span>
 <span class="line"><span>/usr/bin/sudo</span></span>
-<span class="line"><span>/bin/sudo</span></span></code></pre><button class="copy-btn">Copy</button></div> <h2 id="part-c-file-redirection-and-pipes-50" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#part-c-file-redirection-and-pipes-50"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>Part C: File Redirection and Pipes [50]</h2> <p>For this part, when processing commands with sequential (<code>;</code>) or background (<code>&amp;</code>) operators, you should only execute the first command group and ignore the rest.</p> <h3 id="c1-command-execution-8" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#c1-command-execution-8"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>C1: Command Execution [8]</h3> <p>You must allow execution of arbitrary commands, found either as a relative/absolute path to an executable, or by name.</p> <p><strong>Requirements</strong></p> <ol><li>If the command name contains a <code>/</code>, treat it as a literal path and execute it directly if it exists and is executable.</li> <li>If the command name does not contain a <code>/</code>, first check whether an executable with that name exists in the current working directory, and run it if so.</li> <li>If no such executable exists in the current working directory, search <code>PATH</code> as usual.</li> <li>To skip the current directory check and search <code>PATH</code> directly, prefix the command name with <code>%</code>. <code>%name</code> must always resolve via <code>PATH</code>, even if a matching executable exists in the current directory.</li> <li>If no executable is found by any of the above, output <code>cshell: command not found (commandname)</code>.</li></ol> <p><strong>Example</strong></p> <div class="code-block"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0"><code><span class="line"><span>&lt;goatam@iiit:~/proj&gt; echo hello</span></span>
+<span class="line"><span>/bin/sudo</span></span></code></pre><button class="copy-btn">Copy</button></div> <h2 id="part-c-file-redirection-and-pipes-50" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#part-c-file-redirection-and-pipes-50"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>Part C: File Redirection and Pipes [50]</h2> <p>For this part, when processing commands with sequential (<code>;</code>) or background (<code>&amp;</code>) operators, you should only execute the first command group and ignore the rest.</p> <p><strong>Banned syscalls for Part C:</strong> You are not allowed to use <code>system()</code> and <code>popen()</code> for file IO and piping.</p> <h3 id="c1-command-execution-8" data-anchored="1"><a class="anchor-link" href="https://cs3301.pages.dev/assignments/01#c1-command-execution-8"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>C1: Command Execution [8]</h3> <p>You must allow execution of arbitrary commands, found either as a relative/absolute path to an executable, or by name.</p> <p><strong>Requirements</strong></p> <ol><li>If the command name contains a <code>/</code>, treat it as a literal path and execute it directly if it exists and is executable.</li> <li>If the command name does not contain a <code>/</code>, first check whether an executable with that name exists in the current working directory, and run it if so.</li> <li>If no such executable exists in the current working directory, search <code>PATH</code> as usual.</li> <li>To skip the current directory check and search <code>PATH</code> directly, prefix the command name with <code>%</code>. <code>%name</code> must always resolve via <code>PATH</code>, even if a matching executable exists in the current directory.</li> <li>If no executable is found by any of the above, output <code>cshell: command not found (commandname)</code>.</li></ol> <p><strong>Example</strong></p> <div class="code-block"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0"><code><span class="line"><span>&lt;goatam@iiit:~/proj&gt; echo hello</span></span>
 <span class="line"><span>hello</span></span>
 <span class="line"><span>&lt;goatam@iiit:~/proj&gt; ls</span></span>
 <span class="line"><span>build.sh</span></span>
@@ -828,15 +302,15 @@ Hint: use EOF to your advantage.</p></blockquote> <p><strong>Grammar</strong>:</
 			
 			<script>
 				{
-					__sveltekit_tsjxb3 = {
+					__sveltekit_dg2po6 = {
 						base: new URL("..", location).pathname.slice(0, -1)
 					};
 
 					const element = document.currentScript.parentElement;
 
 					Promise.all([
-						import("../_app/immutable/entry/start.CozLn0P5.js"),
-						import("../_app/immutable/entry/app.DUBRKlZc.js")
+						import("../_app/immutable/entry/start.D4LifkKf.js"),
+						import("../_app/immutable/entry/app.BrBLehBb.js")
 					]).then(([kit, app]) => {
 						kit.start(app, element, {
 							node_ids: [0, 4],
@@ -850,25 +324,4 @@ Hint: use EOF to your advantage.</p></blockquote> <p><strong>Grammar</strong>:</
 		</div>
 	
 
-</body><grammarly-desktop-integration data-grammarly-shadow-root="true" style="visibility: visible !important;"><template shadowrootmode="open"><style>
-      div.grammarly-desktop-integration {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        white-space: nowrap;
-        border: 0;
-        -moz-user-select: none;
-        -webkit-user-select: none;
-        -ms-user-select:none;
-        user-select:none;
-      }
-
-      div.grammarly-desktop-integration:before {
-        content: attr(data-content);
-      }
-    </style><div aria-label="grammarly-integration" role="group" tabindex="-1" class="grammarly-desktop-integration" data-content="{&quot;mode&quot;:&quot;full&quot;,&quot;isActive&quot;:true,&quot;isUserDisabled&quot;:false}"></div></template></grammarly-desktop-integration><grammarly-assistant-notch-view role="presentation" data-grammarly-ignore-keyboard-events="true" data-grammarly-notch-instance-id="check:dc3572f2-cd23-40ab-9cef-6535f1b08284" data-grammarly-shadow-root="true" class="dnXmp" style="visibility: visible !important; --rem: 16;"><template shadowrootmode="open"><style>.ymqHP{visibility:hidden;position:fixed;}.ymqHP:after{content:'';position:absolute;visibility:visible;height:3px;bottom:0;border-radius:10px;background:#488cc8;animation:JQguZ 1.3s ease forwards}.ymqHP.ExcM8:after{animation:JQguZ .2s ease forwards}@keyframes JQguZ{0%{width:0%}100%{width:100%}}
-</style><div aria-label="grammarly-global-assistant-notch" role="group" tabindex="-1"></div><div data-gds-theme="light"><div data-origin-theme="superhuman" data-origin-mode="light"><link rel="stylesheet" type="text/css" href="chrome-extension://kbfnbcaeplbcioakkpcpgfkobkghlhen/src/css/designSystem.styles.css"><link rel="stylesheet" type="text/css" href="chrome-extension://kbfnbcaeplbcioakkpcpgfkobkghlhen/src/css/assistantUiKit.styles.css"><link rel="stylesheet" type="text/css" href="chrome-extension://kbfnbcaeplbcioakkpcpgfkobkghlhen/src/css/AAA-initAssistant.styles.css"><div data-testid="superhuman-go-theme-overrides" data-superhuman-go-theme="true"><fieldset class="_splitNotchContainer_1chB-_splitNotchContainer _rightEdge_0Goz6_rightEdge _draggable_yoTeb_draggable" data-testid="split-assistant-notch-container" style="--hidden-percent: 100%; z-index: 2147483647; top: 542.5px;"><legend class="_controlGroupLabel_HxzEn_controlGroupLabel">Assistant controls</legend><div data-testid="split-assistant-notch" class="_morphingNotch_okRag_morphingNotch _rightEdge_6-8Pa_rightEdge" style="overflow: visible; user-select: none; width: 42px; height: 84px; margin-top: 0px;"><div class="_layer_Uka8a_layer _collapsedLayer_HtbpB_collapsedLayer" style="right: 0px; pointer-events: auto; opacity: 1;"><input type="range" class="_moveControl_0f1WH_moveControl" aria-label="Move assistant" aria-orientation="vertical" aria-valuetext="50% from top" min="0" max="100" readonly="" tabindex="0" value="50"><button class="origin-button origin-button-tertiary _chatButton_SZgXC_chatButton origin-icon-button-medium" data-testid="split-notch-chat-button" type="button" aria-disabled="false" aria-label="Open chat" data-state="closed" data-tooltip-open="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 32 32" aria-hidden="true" data-icon="LogoGoMarkColorPrimary" stroke="transparent" focusable="false" role="img" stroke-width="1px" class="origin-icon"><path fill="var(--origin-color-logo-superhuman-primary)" d="M31.7 8.54A8.996 8.996 0 0 0 23.433.284 95 95 0 0 0 8.539.298a8.99 8.99 0 0 0-8.254 8.27A95 95 0 0 0 .298 23.46a8.996 8.996 0 0 0 8.27 8.254 95 95 0 0 0 14.892-.014 8.996 8.996 0 0 0 8.254-8.27c.384-4.957.38-9.934-.014-14.892M16.04 5.1a3.226 3.226 0 0 1 3.23 3.222 3.226 3.226 0 0 1-3.23 3.221 3.226 3.226 0 0 1-3.23-3.221 3.226 3.226 0 0 1 3.23-3.222m6.095 21.226h.003l-5.607-3.071a1.02 1.02 0 0 0-.982 0l-5.607 3.07c-.903.494-1.887-.507-1.367-1.39l6.589-11.163a1.017 1.017 0 0 1 1.75 0L23.5 24.935c.52.883-.461 1.884-1.367 1.39"></path></svg><input aria-hidden="true" tabindex="-1" style="position: absolute; inset: 0px; opacity: 0; cursor: inherit;"></button><button class="origin-button origin-button-tertiary _agentTrigger_la1AS_agentTrigger origin-icon-button-medium" data-testid="split-notch-agent-trigger" aria-expanded="false" aria-haspopup="dialog" type="button" aria-disabled="false" aria-label="Agents for writing" data-state="closed" data-tooltip-open="false"><svg aria-hidden="true" focusable="false" role="img" stroke-width="1px" width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" class="_notchStateIcon_qRsgT_notchStateIcon origin-icon" data-testid="notch-state-icon" data-notch-state="idle"><rect x="0" y="0" width="30" height="30" rx="10" class="_tileBackground_0SLOj_tileBackground"></rect><foreignobject x="0" y="0" width="30" height="30"><div class="_iconLayer_h3pb-_iconLayer"><svg data-testid="notch-state-icon-animation" width="26" height="26" viewBox="0 0 1000 1000" fill="none" aria-hidden="true" style="display: block; overflow: visible;"><g transform="translate(500 500) rotate(0) translate(-500 -500)"><g transform="translate(330 330) rotate(0) scale(40 40) translate(-14.25 -5.75)" opacity="1"><g transform="translate(14.25 5.75) rotate(0) scale(1 1) translate(0 0)"><path d="M2.5 -0.5L1.75 -0.5L1.75 0.5L2.5 0.5L3.25 0.5L3.25 -0.5L2.5 -0.5ZM0.5 2.5L0.5 1.75L-0.5 1.75L-0.5 2.5L-0.5 3.25L0.5 3.25L0.5 2.5ZM-2.5 0.5L-1.75 0.5L-1.75 -0.5L-2.5 -0.5L-3.25 -0.5L-3.25 0.5L-2.5 0.5ZM-0.5 -2.5L-0.5 -1.75L0.5 -1.75L0.5 -2.5L0.5 -3.25L-0.5 -3.25L-0.5 -2.5ZM-2.5 -0.5L-1.75 -0.5C-1.75 -1.19 -1.19 -1.75 -0.5 -1.75L-0.5 -2.5L-0.5 -3.25C-2.019 -3.25 -3.25 -2.019 -3.25 -0.5L-2.5 -0.5ZM-0.5 2.5L-0.5 1.75C-1.19 1.75 -1.75 1.19 -1.75 0.5L-2.5 0.5L-3.25 0.5C-3.25 2.019 -2.019 3.25 -0.5 3.25L-0.5 2.5ZM2.5 0.5L1.75 0.5C1.75 1.19 1.19 1.75 0.5 1.75L0.5 2.5L0.5 3.25C2.019 3.25 3.25 2.019 3.25 0.5L2.5 0.5ZM2.5 -0.5L3.25 -0.5C3.25 -2.019 2.019 -3.25 0.5 -3.25L0.5 -2.5L0.5 -1.75C1.19 -1.75 1.75 -1.19 1.75 -0.5L2.5 -0.5Z" fill="currentColor" fill-rule="nonzero" clip-rule="nonzero"></path></g></g><g transform="translate(669 330) rotate(0) scale(40 40) translate(-14.25 -5.75)" opacity="1"><g transform="translate(14.25 5.75) rotate(0) scale(1 1) translate(0 0)"><path d="M2.5 -0.5L1.75 -0.5L1.75 0.5L2.5 0.5L3.25 0.5L3.25 -0.5L2.5 -0.5ZM0.5 2.5L0.5 1.75L-0.5 1.75L-0.5 2.5L-0.5 3.25L0.5 3.25L0.5 2.5ZM-2.5 0.5L-1.75 0.5L-1.75 -0.5L-2.5 -0.5L-3.25 -0.5L-3.25 0.5L-2.5 0.5ZM-0.5 -2.5L-0.5 -1.75L0.5 -1.75L0.5 -2.5L0.5 -3.25L-0.5 -3.25L-0.5 -2.5ZM-2.5 -0.5L-1.75 -0.5C-1.75 -1.19 -1.19 -1.75 -0.5 -1.75L-0.5 -2.5L-0.5 -3.25C-2.019 -3.25 -3.25 -2.019 -3.25 -0.5L-2.5 -0.5ZM-0.5 2.5L-0.5 1.75C-1.19 1.75 -1.75 1.19 -1.75 0.5L-2.5 0.5L-3.25 0.5C-3.25 2.019 -2.019 3.25 -0.5 3.25L-0.5 2.5ZM2.5 0.5L1.75 0.5C1.75 1.19 1.19 1.75 0.5 1.75L0.5 2.5L0.5 3.25C2.019 3.25 3.25 2.019 3.25 0.5L2.5 0.5ZM2.5 -0.5L3.25 -0.5C3.25 -2.019 2.019 -3.25 0.5 -3.25L0.5 -2.5L0.5 -1.75C1.19 -1.75 1.75 -1.19 1.75 -0.5L2.5 -0.5Z" fill="currentColor" fill-rule="nonzero" clip-rule="nonzero"></path></g></g><g transform="translate(330 670) rotate(0) scale(40 40) translate(-14.25 -5.75)" opacity="1"><g transform="translate(14.25 5.75) rotate(0) scale(1 1) translate(0 0)"><path d="M2.5 -0.5L1.75 -0.5L1.75 0.5L2.5 0.5L3.25 0.5L3.25 -0.5L2.5 -0.5ZM0.5 2.5L0.5 1.75L-0.5 1.75L-0.5 2.5L-0.5 3.25L0.5 3.25L0.5 2.5ZM-2.5 0.5L-1.75 0.5L-1.75 -0.5L-2.5 -0.5L-3.25 -0.5L-3.25 0.5L-2.5 0.5ZM-0.5 -2.5L-0.5 -1.75L0.5 -1.75L0.5 -2.5L0.5 -3.25L-0.5 -3.25L-0.5 -2.5ZM-2.5 -0.5L-1.75 -0.5C-1.75 -1.19 -1.19 -1.75 -0.5 -1.75L-0.5 -2.5L-0.5 -3.25C-2.019 -3.25 -3.25 -2.019 -3.25 -0.5L-2.5 -0.5ZM-0.5 2.5L-0.5 1.75C-1.19 1.75 -1.75 1.19 -1.75 0.5L-2.5 0.5L-3.25 0.5C-3.25 2.019 -2.019 3.25 -0.5 3.25L-0.5 2.5ZM2.5 0.5L1.75 0.5C1.75 1.19 1.19 1.75 0.5 1.75L0.5 2.5L0.5 3.25C2.019 3.25 3.25 2.019 3.25 0.5L2.5 0.5ZM2.5 -0.5L3.25 -0.5C3.25 -2.019 2.019 -3.25 0.5 -3.25L0.5 -2.5L0.5 -1.75C1.19 -1.75 1.75 -1.19 1.75 -0.5L2.5 -0.5Z" fill="currentColor" fill-rule="nonzero" clip-rule="nonzero"></path></g></g><g transform="translate(612.059 602.38) rotate(0) scale(40 40) translate(-12.801 -12.559)" opacity="1"><g transform="translate(15.28 15.044) rotate(0) scale(1 1) translate(0 0)"><path d="M-2.263 2.99L-1.613 3.365L-1.611 3.361L-2.263 2.99ZM-0.78 0.386L-0.78 -0.364L-1.216 -0.364L-1.432 0.014L-0.78 0.386ZM2.459 -0.596L2.834 -1.246L2.459 -0.596ZM-2.462 -3.437L-2.837 -2.788L-2.462 -3.437ZM2.413 0.386L2.501 1.13L2.413 0.386ZM2.653 -0.48L3.102 -1.081L3.102 -1.081L2.653 -0.48ZM-2.379 3.184L-2.98 2.735L-2.98 2.735L-2.379 3.184ZM-3.276 2.944L-2.532 2.856L-3.276 2.944ZM-3.278 -3.09L-4.024 -3.161L-3.278 -3.09ZM-2.572 -3.498L-2.259 -4.18L-2.572 -3.498ZM-2.263 2.99L-1.611 3.361L-0.128 0.757L-0.78 0.386L-1.432 0.014L-2.915 2.618L-2.263 2.99ZM-0.78 0.386L-0.78 1.136L2.186 1.136L2.186 0.386L2.186 -0.364L-0.78 -0.364L-0.78 0.386ZM-3.28 -2.965L-4.03 -2.965L-4.03 2.717L-3.28 2.717L-2.53 2.717L-2.53 -2.965L-3.28 -2.965ZM2.459 -0.596L2.834 -1.246L-2.087 -4.087L-2.462 -3.437L-2.837 -2.788L2.084 0.053L2.459 -0.596ZM2.186 0.386L2.186 1.136C2.246 1.136 2.289 1.137 2.329 1.137C2.347 1.137 2.371 1.137 2.394 1.137C2.413 1.137 2.454 1.136 2.501 1.13L2.413 0.386L2.325 -0.359C2.344 -0.361 2.358 -0.363 2.364 -0.363C2.368 -0.363 2.369 -0.363 2.371 -0.363C2.372 -0.363 2.373 -0.363 2.373 -0.363L2.374 -0.363L2.373 -0.363C2.373 -0.363 2.373 -0.363 2.372 -0.363C2.371 -0.363 2.368 -0.363 2.366 -0.363C2.361 -0.363 2.355 -0.363 2.347 -0.363C2.314 -0.363 2.258 -0.364 2.186 -0.364L2.186 0.386ZM2.459 -0.596L2.084 0.053C2.143 0.087 2.18 0.109 2.207 0.125C2.22 0.133 2.227 0.137 2.229 0.138C2.233 0.14 2.222 0.134 2.205 0.121L2.653 -0.48L3.102 -1.081C3.032 -1.133 2.916 -1.198 2.834 -1.246L2.459 -0.596ZM2.413 0.386L2.501 1.13C3.592 1.001 4.031 -0.387 3.102 -1.081L2.653 -0.48L2.205 0.121C2.175 0.099 2.139 0.056 2.119 -0.004C2.1 -0.061 2.101 -0.118 2.115 -0.168C2.145 -0.275 2.238 -0.349 2.325 -0.359L2.413 0.386ZM-2.263 2.99L-2.912 2.615C-2.946 2.674 -2.968 2.711 -2.984 2.738C-2.992 2.751 -2.996 2.758 -2.997 2.76C-2.999 2.764 -2.993 2.752 -2.98 2.735L-2.379 3.184L-1.778 3.633C-1.726 3.563 -1.661 3.447 -1.613 3.365L-2.263 2.99ZM-3.28 2.717L-4.03 2.717C-4.03 2.812 -4.031 2.945 -4.021 3.032L-3.276 2.944L-2.532 2.856C-2.529 2.877 -2.529 2.89 -2.529 2.885C-2.529 2.883 -2.529 2.875 -2.529 2.86C-2.529 2.829 -2.53 2.785 -2.53 2.717L-3.28 2.717ZM-2.379 3.184L-2.98 2.735C-2.845 2.554 -2.559 2.632 -2.532 2.856L-3.276 2.944L-4.021 3.032C-3.888 4.154 -2.454 4.538 -1.778 3.633L-2.379 3.184ZM-3.28 -2.965L-2.53 -2.965C-2.53 -2.982 -2.53 -2.996 -2.53 -3.008C-2.53 -3.02 -2.53 -3.028 -2.53 -3.034C-2.53 -3.04 -2.53 -3.041 -2.53 -3.039C-2.53 -3.037 -2.53 -3.031 -2.531 -3.02L-3.278 -3.09L-4.024 -3.161C-4.03 -3.093 -4.03 -3.011 -4.03 -2.965L-3.28 -2.965ZM-2.462 -3.437L-2.087 -4.087C-2.127 -4.11 -2.197 -4.151 -2.259 -4.18L-2.572 -3.498L-2.884 -2.816C-2.894 -2.82 -2.9 -2.824 -2.902 -2.825C-2.903 -2.826 -2.902 -2.825 -2.897 -2.822C-2.892 -2.819 -2.884 -2.815 -2.874 -2.809C-2.864 -2.803 -2.852 -2.797 -2.837 -2.788L-2.462 -3.437ZM-3.278 -3.09L-2.531 -3.02C-2.547 -2.849 -2.728 -2.744 -2.884 -2.816L-2.572 -3.498L-2.259 -4.18C-3.041 -4.538 -3.943 -4.017 -4.024 -3.161L-3.278 -3.09Z" fill="currentColor" fill-rule="nonzero" clip-rule="nonzero"></path></g><g transform="translate(15.148 14.996) rotate(0) scale(1 1) translate(0 0)"><path d="M-0.648 0.433L-2.131 3.037C-2.197 3.151 -2.229 3.208 -2.247 3.232C-2.517 3.594 -3.091 3.44 -3.144 2.991C-3.147 2.962 -3.148 2.897 -3.148 2.765L-3.148 -2.918C-3.148 -2.986 -3.147 -3.02 -3.145 -3.043C-3.113 -3.386 -2.752 -3.593 -2.439 -3.45C-2.418 -3.44 -2.389 -3.424 -2.33 -3.39L2.591 -0.549C2.705 -0.483 2.762 -0.45 2.786 -0.432C3.148 -0.162 2.994 0.38 2.545 0.433C2.516 0.436 2.45 0.433 2.318 0.433L-0.648 0.433Z" fill="currentColor" fill-rule="nonzero" clip-rule="nonzero"></path></g></g></g></svg></div></foreignobject></svg></button></div><div class="_layer_Uka8a_layer _openLayer_wz5Cz_openLayer" inert="" style="right: 0px; pointer-events: none; opacity: 0;"><div class="origin-box" data-testid="agent-management-panel" style="padding-left: var(--origin-space-2); padding-right: var(--origin-space-2); padding-top: var(--origin-space-1); padding-bottom: var(--origin-space-2);"><div class="origin-flex" style="gap: var(--origin-space-1); align-items: center; justify-content: space-between; padding-left: var(--origin-space-2); padding-right: var(--origin-space-0); padding-top: var(--origin-space-2); padding-bottom: var(--origin-space-0);"><p class="origin-typography origin-text origin-text-small" id=":r8:" style="font-weight: var(--origin-font-weight-semibold);">Agents for writing</p><div class="origin-flex" style="gap: var(--origin-space-1);"><div class="origin-menu-container"><button class="origin-button origin-button-tertiary origin-icon-button-small" data-testid="agent-management-settings" id="react-aria7161867633-:r9:" aria-label="Manage" aria-haspopup="true" aria-expanded="false" aria-controls="react-aria7161867633-:ra:" type="button" aria-disabled="false" data-state="closed" data-tooltip-open="false"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 20 20" aria-hidden="true" data-icon="Gear" stroke="transparent" focusable="false" role="img" stroke-width="1px" class="origin-icon origin-icon-inherit"><path fill="#141413" d="M10 6a4 4 0 1 1 0 8 4 4 0 0 1 0-8m0 1.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5"></path><path fill="#141413" d="M10.982 1a1.75 1.75 0 0 1 1.69 1.299l.372 1.397q.466.225.889.514l1.401-.376a1.75 1.75 0 0 1 1.97.815l.981 1.7a1.75 1.75 0 0 1-.28 2.115L16.98 9.486q.02.252.022.514-.002.26-.023.51l1.029 1.025a1.75 1.75 0 0 1 .346 1.984l-.068.13-.981 1.7a1.75 1.75 0 0 1-1.97.816h-.001l-1.4-.379q-.441.302-.927.534l-.338 1.354A1.75 1.75 0 0 1 10.97 19H9.03a1.75 1.75 0 0 1-1.697-1.325l-.34-1.356a7 7 0 0 1-.963-.557l-1.342.384a1.75 1.75 0 0 1-1.998-.806l-.97-1.679a1.75 1.75 0 0 1 .3-2.133l1.003-.971a7 7 0 0 1 0-1.114l-1.003-.97a1.75 1.75 0 0 1-.3-2.133l.97-1.679.08-.126a1.75 1.75 0 0 1 1.917-.681l1.342.383q.439-.304.923-.54L7.327 2.3l.044-.14A1.75 1.75 0 0 1 9.02 1zM9.019 2.5a.25.25 0 0 0-.208.11l-.035.076-.464 1.74-.095.357-.34.142a5.5 5.5 0 0 0-1.242.726l-.301.233-2.059-.59a.25.25 0 0 0-.232.053l-.054.064-.968 1.679a.25.25 0 0 0 .043.305l1.539 1.488-.051.375q-.05.368-.051.742l.014.373q.012.185.037.368l.05.376-1.538 1.49a.25.25 0 0 0-.043.304l.97 1.679a.25.25 0 0 0 .284.115l2.061-.59.3.233c.39.302.82.553 1.282.742l.352.144.52 2.076c.027.111.127.19.241.19h1.939a.25.25 0 0 0 .243-.19l.519-2.076.351-.144c.45-.184.868-.426 1.25-.716l.293-.224.357.097 1.74.469a.25.25 0 0 0 .282-.116l.981-1.7.03-.078a.25.25 0 0 0-.069-.224l-1.539-1.536.046-.365q.046-.35.047-.697l-.012-.349a6 6 0 0 0-.035-.35l-.046-.366L16.946 7.4a.25.25 0 0 0 .04-.301l-.981-1.7a.25.25 0 0 0-.281-.117l-2.099.565-.293-.224a5.5 5.5 0 0 0-1.21-.7l-.34-.142-.095-.357-.463-1.74-.034-.075a.25.25 0 0 0-.208-.11z"></path></svg></button></div><button class="origin-button origin-button-tertiary origin-icon-button-small" data-testid="agent-management-close" type="button" aria-disabled="false" aria-label="Close" data-state="closed" data-tooltip-open="false"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 20 20" aria-hidden="true" data-icon="X" stroke="transparent" focusable="false" role="img" stroke-width="1px" class="origin-icon origin-icon-inherit"><path fill="#141413" d="M16.53 4.53 11.06 10l5.47 5.47-1.06 1.06L10 11.06l-5.47 5.47-1.06-1.06L8.94 10 3.47 4.53l1.06-1.06L10 8.94l5.47-5.47z"></path></svg></button></div></div><div class="origin-flex origin-flex-direction-column" data-testid="agent-management-empty-state" style="gap: var(--origin-space-3); align-items: center; justify-content: center; padding-left: var(--origin-space-6); padding-right: var(--origin-space-6); padding-top: var(--origin-space-6); padding-bottom: var(--origin-space-6);"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 20 20" aria-hidden="true" data-icon="PencilSparkles" stroke="transparent" focusable="false" role="img" stroke-width="1px" class="origin-icon origin-icon-token" style="--origin-icon-color: var(--origin-color-icon-base-default);"><path fill="#141413" d="M11.35 4.128a2.75 2.75 0 0 1 3.757-1.006l1.516.875a2.75 2.75 0 0 1 1.006 3.756l-4.482 7.764a2.75 2.75 0 0 1-1.006 1.006l-.826.477H18v1.5H8.28a1.75 1.75 0 0 1-1.78-1.752v-3.481c0-.483.127-.957.368-1.375zm-3.183 8.514c-.11.19-.167.405-.167.625v3.481a.25.25 0 0 0 .375.217l3.016-1.741c.19-.11.347-.268.457-.457l3.231-5.599-3.68-2.126zm6.19-8.221a1.25 1.25 0 0 0-1.708.457l-.5.865 3.68 2.125.501-.865a1.25 1.25 0 0 0-.457-1.707zM3.5 8A1.5 1.5 0 0 0 5 9.5v1A1.5 1.5 0 0 0 3.5 12h-1A1.5 1.5 0 0 0 1 10.5v-1A1.5 1.5 0 0 0 2.5 8zM6.5 1A2.5 2.5 0 0 0 9 3.5v1A2.5 2.5 0 0 0 6.5 7h-1A2.5 2.5 0 0 0 3 4.5v-1A2.5 2.5 0 0 0 5.5 1z"></path></svg><p class="origin-typography origin-text origin-text-small" style="color: var(--origin-color-text-base-subdued); text-align: center;">Your agents are ready to help. Click a text field to work with them.</p></div></div></div></div></fieldset></div></div></div><div data-origin-mode="light" data-origin-theme="superhuman" data-gds-theme="light" style="position: fixed; top: 0px; left: 0px; width: 0px; height: 0px; z-index: 2147483647;"><div id=":r3:" data-floating-ui-portal=""></div><div id=":r7:" data-floating-ui-portal=""></div><div id=":rf:" data-floating-ui-portal=""></div><div id=":rj:" data-floating-ui-portal=""></div></div></template></grammarly-assistant-notch-view></html>
+</body></html>
