@@ -10,6 +10,7 @@
 #include "cmds_hop.h"
 #include "cmds_reveal.h"
 #include "cmds_peek.h"
+#include "cmds_locate.h"
 
 #define MAX_USER_INPUT_ALLOWED 1024
 
@@ -30,7 +31,7 @@ int main() {
             printf("\n");
             break;
         }
-        input[strcspn(input,"\n")] = '\0';
+        input[strcspn(input,"\n")]='\0';
 
         tknll *head=lexer(input);
 
@@ -47,6 +48,7 @@ int main() {
         if(strcmp(head->tkn,"hop")==0) hop(head, homewd, prevwd);
         else if(strcmp(head->tkn,"reveal")==0) reveal(head, homewd, prevwd);
         else if(strcmp(head->tkn,"peek")==0) peek(head, homewd, prevwd);
+        else if(strcmp(head->tkn,"locate")==0) locate(head, homewd, prevwd);
 
 
         else {

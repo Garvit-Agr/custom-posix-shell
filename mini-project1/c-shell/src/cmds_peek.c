@@ -258,8 +258,8 @@ void peek(tknll *head, char *homwd, char *prevwd) {
             process_file(fd, n, r);
         }
         else {
-            DIR *dir_check = opendir(file);
-            if(dir_check != NULL) {
+            DIR *dir_check=opendir(file);
+            if(dir_check!=NULL) {
                 printf("peek: is a directory\n");
                 closedir(dir_check);
                 continue;
