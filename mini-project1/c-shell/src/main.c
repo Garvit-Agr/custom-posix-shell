@@ -11,7 +11,7 @@
 #include "cmds_reveal.h"
 #include "cmds_peek.h"
 
-#define MAX_USER_INPUT_ALLOWED 50 //used because the max input length in not mentioned
+#define MAX_USER_INPUT_ALLOWED 1024
 
 
 int main() {
@@ -23,15 +23,14 @@ int main() {
     
     while(1) {
         display_prompt(homewd);
-        char *input=NULL;
-        size_t len=0;
-
-        if (getline(&input, &len, stdin)==-1) {
+        char input[MAX_USER_INPUT_ALLOWED+5];
+        
+        if (fgets(input, sizeof(input), stdin)==NULL) { // used this instead if scanf, so that multi-word sentences can be taken easily as an input
+                                                        // put "if" to bypass ctrl+d issue.
             printf("\n");
-            free(input);
             break;
         }
-        input[strcspn(input,"\n")]='\0';
+        input[strcspn(input,"\n")] = '\0';
 
         tknll *head=lexer(input);
 
@@ -48,9 +47,8 @@ int main() {
         if(strcmp(head->tkn,"hop")==0) hop(head, homewd, prevwd);
         else if(strcmp(head->tkn,"reveal")==0) reveal(head, homewd, prevwd);
         else if(strcmp(head->tkn,"peek")==0) peek(head, homewd, prevwd);
-        
 
-        
+
         else {
             printf("You are in else block\n");
         }
