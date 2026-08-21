@@ -26,7 +26,7 @@ void locate(tknll *head, char *homwd, char *prevwd) {
         char *tgt=ptr->tkn;
         int fnd=0;
         
-        char full_path[(2 * MAXPATHLEN) + 10]; 
+        char full_path[(2*MAXPATHLEN)+10]; 
 
         snprintf(full_path, sizeof(full_path), "%s/%s", cwd, tgt);
         

@@ -17,9 +17,9 @@ void record_frecency(char *target_dir, char *homewd) {
     
     int cap=10;
     int count=0;
-    char **paths=malloc(cap * sizeof(char*));
-    int *freqs=malloc(cap * sizeof(int));
-    time_t *timest=malloc(cap * sizeof(time_t));
+    char **paths=malloc(cap*sizeof(char*));
+    int *freqs=malloc(cap*sizeof(int));
+    time_t *timest=malloc(cap*sizeof(time_t));
     
     int fnd=0;
     time_t curtime=time(NULL);
@@ -42,13 +42,13 @@ void record_frecency(char *target_dir, char *homewd) {
                     
                     if (count>=cap) {
                         cap*=2;
-                        paths=realloc(paths, cap * sizeof(char*));
-                        freqs=realloc(freqs, cap * sizeof(int));
-                        timest=realloc(timest, cap * sizeof(time_t));
+                        paths=realloc(paths, cap*sizeof(char*));
+                        freqs=realloc(freqs, cap*sizeof(int));
+                        timest=realloc(timest, cap*sizeof(time_t));
                     }
                     
                     if (strcmp(stored_path, target_dir)==0) {
-                        freqs[count]=freq + 1;
+                        freqs[count]=freq+1;
                         timest[count]=curtime;
                         fnd=1;
                     }
@@ -67,9 +67,9 @@ void record_frecency(char *target_dir, char *homewd) {
     if (fnd==0) {
         if (count>=cap) {
             cap*=2;
-            paths=realloc(paths, cap * sizeof(char*));
-            freqs=realloc(freqs, cap * sizeof(int));
-            timest=realloc(timest, cap * sizeof(time_t));
+            paths=realloc(paths, cap*sizeof(char*));
+            freqs=realloc(freqs, cap*sizeof(int));
+            timest=realloc(timest, cap*sizeof(time_t));
         }
         paths[count]=strdup(target_dir);
         freqs[count]=1;
@@ -204,7 +204,7 @@ void hop(tknll *head, char *homwd, char *prevwd) {
             else {
                 char best[MAXPATHLEN+5];
                 if (resolve_frecency(ptr->tkn, best, homwd)) {
-                    if(chdir(best) == 0) {
+                    if(chdir(best)==0) {
                         strcpy(prevwd, curwd);
                         success=1;
                     }
