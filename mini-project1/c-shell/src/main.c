@@ -52,9 +52,7 @@ int main() {
         else if(strcmp(head->tkn,"locate")==0) locate(head, homewd, prevwd);
 
 
-        else {
-            printf("You are in else block\n");
-        }
+        else execute(head);
 
 
 
