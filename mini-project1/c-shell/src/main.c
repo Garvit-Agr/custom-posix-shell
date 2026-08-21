@@ -11,6 +11,7 @@
 #include "cmds_reveal.h"
 #include "cmds_peek.h"
 #include "cmds_locate.h"
+#include "exec.h"
 
 #define MAX_USER_INPUT_ALLOWED 1024
 
