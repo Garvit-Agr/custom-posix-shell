@@ -18,4 +18,4 @@
 ---
 
 # Pending Doubts:
-1) In `cmds_hop.c` line 209 => If in case of sequential any one fails, so to stop the entire sequence after that, or not?
+1) In `cmds_hop.c` line 214 => If in case of sequential any one fails, so to stop the entire sequence after that, or not?

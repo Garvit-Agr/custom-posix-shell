@@ -51,7 +51,8 @@ void record_frecency(char *target_dir, char *homewd) {
                         freqs[count]=freq + 1;
                         timest[count]=curtime;
                         fnd=1;
-                    } else {
+                    }
+                    else {
                         freqs[count]=freq;
                         timest[count]=t;
                     }
@@ -91,7 +92,7 @@ void record_frecency(char *target_dir, char *homewd) {
 }
 
 
-int resolve_frecency(char *name, char *best_match, char *homewd) {
+int resolve_frecency(char *name, char *best, char *homewd) {
     char db_path[MAXPATHLEN+25];
     snprintf(db_path, sizeof(db_path), "%s/.hop_history.csv", homewd);
 
@@ -127,17 +128,18 @@ int resolve_frecency(char *name, char *best_match, char *homewd) {
                         if (!matched) {
                             best_freq=freq;
                             best_time=t;
-                            strcpy(best_match, curpath);
+                            strcpy(best, curpath);
                             matched=1;
-                        } else {
+                        }
+                        else {
                             if (freq>best_freq) {
                                 best_freq=freq;
                                 best_time=t;
-                                strcpy(best_match, curpath);
+                                strcpy(best, curpath);
                             }
                             else if (freq==best_freq && t>best_time) {
                                 best_time=t;
-                                strcpy(best_match, curpath);
+                                strcpy(best, curpath);
                             }
                         }
                     }
@@ -159,8 +161,7 @@ void hop(tknll *head, char *homwd, char *prevwd) {
 
     if (ptr==NULL) {
         getcwd(prevwd, MAXPATHLEN+5);
-        chdir(homwd);
-        record_frecency(homwd, homwd);
+        if (chdir(homwd)==0) record_frecency(homwd, homwd);
         return;
     }
     
@@ -170,27 +171,29 @@ void hop(tknll *head, char *homwd, char *prevwd) {
         int success=0;
         
         if(strcmp(ptr->tkn, "~")==0) {
-            strcpy(prevwd, curwd);
-            chdir(homwd);
-            success=1;
+            if(chdir(homwd)==0) {
+                strcpy(prevwd, curwd);
+                success=1;
+            }
         }
         else if(strcmp(ptr->tkn, ".")==0) {
             success=1; 
         }
         else if(strcmp(ptr->tkn, "..")==0) {
-            strcpy(prevwd, curwd);
-            chdir("..");
-            success=1;
+            if(chdir("..")==0) {
+                strcpy(prevwd, curwd);
+                success=1;
+            }
         }
        else if(strcmp(ptr->tkn, "-")==0) {
             if(prevwd[0]!='\0') {
                 char target[MAXPATHLEN+5];
                 strcpy(target, prevwd);
-                
-                strcpy(prevwd, curwd);
-                
-                chdir(target);
-                success=1;
+
+                if (chdir(target)==0) {
+                    strcpy(prevwd, curwd);
+                    success=1;
+                }
             }
         }
         else {
@@ -199,14 +202,17 @@ void hop(tknll *head, char *homwd, char *prevwd) {
                 success=1;
             }
             else {
-                char best_match[MAXPATHLEN+5];
-                if (resolve_frecency(ptr->tkn, best_match, homwd)) {
-                    strcpy(prevwd, curwd);
-                    chdir(best_match);
-                    success=1;
-                } else {
+                char best[MAXPATHLEN+5];
+                if (resolve_frecency(ptr->tkn, best, homwd)) {
+                    if(chdir(best) == 0) {
+                        strcpy(prevwd, curwd);
+                        success=1;
+                    }
+                }
+                else {
                     printf("hop: no such directory\n");
                     //return;
+                    // Leaving this commented out to allow sequential processing of remaining arguments
                 }
             }
         }
