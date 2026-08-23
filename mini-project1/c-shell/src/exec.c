@@ -8,7 +8,8 @@
 
 #include "parser.h"
 #include "exec.h"
-#include "redir.h"
+#include "inp_redir.h"
+#include "out_redir.h"
 
 void execute(tknll *head) {
     if(head==NULL) return;
@@ -18,7 +19,7 @@ void execute(tknll *head) {
     int exp_redir=0;
     
     while(ptr!=NULL && ptr->type!=OP_PIPE && ptr->type!=OP_SEMI && ptr->type!=OP_AMP) {
-        if(ptr->type==OP_LT) exp_redir=1;
+        if(ptr->type==OP_LT || ptr->type==OP_GT || ptr->type==OP_GTGT) exp_redir=1;
         else if(ptr->type==WORD) {
             if(exp_redir) exp_redir=0;
             else argc++;
@@ -34,7 +35,7 @@ void execute(tknll *head) {
     int idx=0;
 
     while(ptr!=NULL && ptr->type!=OP_PIPE && ptr->type!=OP_SEMI && ptr->type!=OP_AMP) {
-        if(ptr->type==OP_LT) exp_redir=1;
+        if(ptr->type==OP_LT || ptr->type==OP_GT || ptr->type==OP_GTGT) exp_redir=1;
         else if(ptr->type==WORD) {
             if(exp_redir) exp_redir=0;
             else argv[idx++]=ptr->tkn;
@@ -43,10 +44,15 @@ void execute(tknll *head) {
     }
     argv[argc]=NULL;
 
-    pid_t helper_pid=-1;
-    int in_fd=inp_redir(head, &helper_pid);
+    pid_t in_pid=-1;
+    int in_fd=inp_redir(head, &in_pid);
+
+    pid_t out_pid=-1;
+    int out_fd=out_redir(head, &out_pid);
     
-    if(in_fd==-1 && helper_pid==-1) {
+    if(in_fd==-1 || out_fd==-1) {
+        if(in_fd!=-1 && in_fd!=STDIN_FILENO) close(in_fd);
+        if(out_fd!=-1 && out_fd!=STDOUT_FILENO) close(out_fd);
         free(argv);
         return;
     }
@@ -82,6 +88,7 @@ void execute(tknll *head) {
     if(pid==-1) {
         perror("fork");
         if(in_fd!=STDIN_FILENO) close(in_fd);
+        if(out_fd!=STDOUT_FILENO) close(out_fd);
         free(argv);
         return;
     }
@@ -90,6 +97,10 @@ void execute(tknll *head) {
         if(in_fd!=STDIN_FILENO) {
             dup2(in_fd, STDIN_FILENO);
             close(in_fd);
+        }
+        if(out_fd!=STDOUT_FILENO) {
+            dup2(out_fd, STDOUT_FILENO);
+            close(out_fd);
         }
 
         if(use_path!=0) execvp(cmd, argv);
@@ -101,13 +112,14 @@ void execute(tknll *head) {
     }
     else {
         if(in_fd!=STDIN_FILENO) close(in_fd);
+        if(out_fd!=STDOUT_FILENO) close(out_fd);
 
         int status;
         waitpid(pid, &status, 0);
 
-        if(helper_pid!=-1) waitpid(helper_pid, &status, 0);
+        if(in_pid!=-1) waitpid(in_pid, &status, 0);
+        if(out_pid!=-1) waitpid(out_pid, &status, 0);
 
         free(argv);
     }
 }
-
