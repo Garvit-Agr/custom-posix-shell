@@ -99,10 +99,11 @@ int resolve_frecency(char *name, char *best, char *homewd) {
     FILE *f=fopen(db_path, "r");
     if (f==NULL) return 0;
 
-    int best_freq=-1;
+    double best_score=-1;
     time_t best_time=0;
     int matched=0;
     char line[MAXPATHLEN+100];
+    time_t cur_time=time(NULL);
 
     while (fgets(line, sizeof(line), f)!=NULL) {
         line[strcspn(line, "\n")]='\0';
@@ -125,19 +126,27 @@ int resolve_frecency(char *name, char *best, char *homewd) {
                     if (dir!=NULL) {
                         closedir(dir);
                         
+                        //updating frecency algorithm to follow reference given in problem statement
+                        double score=(double)freq;
+                        double dt=difftime(cur_time, t);
+                        if(dt<3600) score*=4.0;
+                        else if(dt<86400) score*=2.0;
+                        else if(dt<604800) score/=2.0;
+                        else score/=4.0;
+                        
                         if (!matched) {
-                            best_freq=freq;
+                            best_score=score;
                             best_time=t;
                             strcpy(best, curpath);
                             matched=1;
                         }
                         else {
-                            if (freq>best_freq) {
-                                best_freq=freq;
+                            if (score>best_score) {
+                                best_score=score;
                                 best_time=t;
                                 strcpy(best, curpath);
                             }
-                            else if (freq==best_freq && t>best_time) {
+                            else if (score==best_score && t>best_time) {
                                 best_time=t;
                                 strcpy(best, curpath);
                             }

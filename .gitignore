@@ -58,3 +58,5 @@ dkms.conf
 
 .DS_Store
 push.sh
+test/
+doubt_doc.pdf
