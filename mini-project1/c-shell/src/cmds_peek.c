@@ -37,9 +37,8 @@ void print_line_bwd(char *line, int *tot_non_empty, int n) {
     }
 }
 
-void process_file(int fd, int n, int r) {
+void process_file(int fd, int n, int r, int *global_line_num) {
     if(r==0) {
-        int line_num=1;
         int line_cap=128;
         char *line_buf=malloc(line_cap);
         line_buf[0]='\0';
@@ -51,7 +50,7 @@ void process_file(int fd, int n, int r) {
         while((bytes=read(fd, buf, sizeof(buf)))>0) {
             for(int i=0;i<bytes;i++) {
                 if(buf[i]=='\n') {
-                    print_line_fwd(line_buf, &line_num, n);
+                    print_line_fwd(line_buf, global_line_num, n);
                     line_len=0;
                     line_buf[0]='\0';
                 }
@@ -65,7 +64,7 @@ void process_file(int fd, int n, int r) {
                 }
             }
         }
-        if(line_len>0) print_line_fwd(line_buf, &line_num, n);
+        if(line_len>0) print_line_fwd(line_buf, global_line_num, n);
         free(line_buf);
         
     } else {
@@ -90,6 +89,9 @@ void process_file(int fd, int n, int r) {
                 }
             }
             if(is_empty==0) tot_non_empty++;
+
+            int reverse_num=*global_line_num+tot_non_empty-1;
+            *global_line_num+=tot_non_empty;
 
             off_t pos=size;
             if(pos>0) {
@@ -120,7 +122,7 @@ void process_file(int fd, int n, int r) {
                             line_buf[k]=line_buf[line_len-1-k];
                             line_buf[line_len-1-k]=t;
                         }
-                        print_line_bwd(line_buf, &tot_non_empty, n);
+                        print_line_bwd(line_buf, &reverse_num, n);
                         line_len=0;
                         line_buf[0]='\0';
                     }
@@ -140,7 +142,7 @@ void process_file(int fd, int n, int r) {
                     line_buf[k]=line_buf[line_len-1-k];
                     line_buf[line_len-1-k]=t;
                 }
-                print_line_bwd(line_buf, &tot_non_empty, n);
+                print_line_bwd(line_buf, &reverse_num, n);
             }
             free(line_buf);
             
@@ -173,6 +175,9 @@ void process_file(int fd, int n, int r) {
             }
             if(is_empty==0) tot_non_empty++;
 
+            int reverse_num=*global_line_num+tot_non_empty-1;
+            *global_line_num+=tot_non_empty;
+
             int pos=full_len;
             if(pos>0 && full_buf[pos-1]=='\n') pos--;
 
@@ -188,7 +193,7 @@ void process_file(int fd, int n, int r) {
                         line_buf[k]=line_buf[line_len-1-k];
                         line_buf[line_len-1-k]=t;
                     }
-                    print_line_bwd(line_buf, &tot_non_empty, n);
+                    print_line_bwd(line_buf, &reverse_num, n);
                     line_len=0;
                     line_buf[0]='\0';
                 }
@@ -207,7 +212,7 @@ void process_file(int fd, int n, int r) {
                     line_buf[k]=line_buf[line_len-1-k];
                     line_buf[line_len-1-k]=t;
                 }
-                print_line_bwd(line_buf, &tot_non_empty, n);
+                print_line_bwd(line_buf, &reverse_num, n);
             }
             free(line_buf);
             free(full_buf);
@@ -249,13 +254,15 @@ void peek(tknll *head, char *homwd, char *prevwd) {
         file_cnt=1;
     }
 
+    //fixing peek -n line numbering across files, because of doubt doc q33
+    int global_line_num=1;
     for(int i=0;i<file_cnt;i++) {
         char *file=files[i];
         int fd;
         
         if(strcmp(file, "-")==0) {
             fd=STDIN_FILENO;
-            process_file(fd, n, r);
+            process_file(fd, n, r, &global_line_num);
         }
         else {
             DIR *dir_check=opendir(file);
@@ -267,7 +274,7 @@ void peek(tknll *head, char *homwd, char *prevwd) {
             
             fd=open(file, O_RDONLY);
             if(fd!=-1) {
-                process_file(fd, n, r);
+                process_file(fd, n, r, &global_line_num);
                 close(fd);
             }
             else {

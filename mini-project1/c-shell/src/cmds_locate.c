@@ -62,7 +62,7 @@ void locate(tknll *head, char *homwd, char *prevwd) {
             free(path_dup);
         }
 
-        if(fnd==0) printf("locate: command not fnd (%s)\n", tgt);
+        if(fnd==0) printf("locate: command not found (%s)\n", tgt);
 
         ptr=ptr->next;
     }

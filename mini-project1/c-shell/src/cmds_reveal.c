@@ -9,7 +9,17 @@
 #include "cmds_reveal.h"
 
 int cmp(const void *a, const void *b) {
-    return strcmp(*(const char**)a, *(const char**)b);
+    //fixing sort by bare name without trailing /, because of doubt doc q19
+    const char *sa=*(const char**)a;
+    const char *sb=*(const char**)b;
+    int la=strlen(sa);
+    int lb=strlen(sb);
+    if(la>0 && sa[la-1]=='/') la--;
+    if(lb>0 && sb[lb-1]=='/') lb--;
+    int min_len=la<lb?la:lb;
+    int r=strncmp(sa, sb, min_len);
+    if(r!=0) return r;
+    return la-lb;
 }
 
 void fetch_paths(char *base, char *rel, char ***lst, int *cnt, int *cap, int a, int t) {
@@ -136,7 +146,9 @@ void reveal(tknll *head, char *homwd, char *prevwd) {
     qsort(lst, cnt, sizeof(char*), cmp);
 
     for(int i=0;i<cnt;i++) {
-        printf("%s\n", lst[i]);
+        //fixing quoting filenames with spaces, because of doubt doc q30
+        if(strchr(lst[i], ' ')!=NULL) printf("'%s'\n", lst[i]);
+        else printf("%s\n", lst[i]);
         free(lst[i]);
     }
 
