@@ -1,5 +1,5 @@
-#ifndef REDIR_H
-#define REDIR_H
+#ifndef INP_REDIR_H
+#define INP_REDIR_H
 
 #include "parser.h"
 #include "unistd.h"
