@@ -92,10 +92,16 @@ void reveal(tknll *head, char *homwd, char *prevwd) {
     //fixing builtins ignoring operators, because of problem statement part A3
     while(ptr!=NULL && ptr->type!=OP_PIPE && ptr->type!=OP_SEMI && ptr->type!=OP_AMP && ptr->type!=OP_LT && ptr->type!=OP_GT && ptr->type!=OP_GTGT) {
         if(ptr->tkn[0]=='-' && strlen(ptr->tkn)>1 && strcmp(ptr->tkn, "-")!=0) {
-            for(int i=1;ptr->tkn[i]!='\0';i++) {
-                if(ptr->tkn[i]=='a') a=1;
-                else if(ptr->tkn[i]=='t') t=1;
-                else inv_syn=1;
+            //fixing reveal flags after path, because of doubt doc q18
+            if(tgt_set!=0) {
+                inv_syn=1;
+            }
+            else {
+                for(int i=1;ptr->tkn[i]!='\0';i++) {
+                    if(ptr->tkn[i]=='a') a=1;
+                    else if(ptr->tkn[i]=='t') t=1;
+                    else inv_syn=1;
+                }
             }
         }
         else {
