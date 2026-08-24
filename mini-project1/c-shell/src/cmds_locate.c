@@ -39,28 +39,31 @@ void locate(tknll *head, char *homwd, char *prevwd) {
                 fnd=1;
         }
 
-        char *path_env=getenv("PATH");
-        if(path_env!=NULL) {
-            char *path_dup=strdup(path_env);
-            char *dir=strtok(path_dup, ":");
+        if(!fnd) {
+            char *path_env=getenv("PATH");
+            if(path_env!=NULL) {
+                char *path_dup=strdup(path_env);
+                char *dir=strtok(path_dup, ":");
 
-            while(dir!=NULL) {
-                if(dir[0]=='/') snprintf(full_path, sizeof(full_path), "%s/%s", dir, tgt);
-                
-                else snprintf(full_path, sizeof(full_path), "%s/%s/%s", cwd, dir, tgt);
-                
+                while(dir!=NULL) {
+                    if(dir[0]=='/') snprintf(full_path, sizeof(full_path), "%s/%s", dir, tgt);
+                    
+                    else snprintf(full_path, sizeof(full_path), "%s/%s/%s", cwd, dir, tgt);
+                    
 
-                DIR *d_check=opendir(full_path);
-                if(d_check!=NULL) closedir(d_check);
+                    DIR *d_check=opendir(full_path);
+                    if(d_check!=NULL) closedir(d_check);
 
-                else if(access(full_path, X_OK)==0) {
-                        printf("%s\n", full_path);
-                        fnd=1;
+                    else if(access(full_path, X_OK)==0) {
+                            printf("%s\n", full_path);
+                            fnd=1;
+                            break;
+                    }
+                    
+                    dir=strtok(NULL, ":");
                 }
-                
-                dir=strtok(NULL, ":");
+                free(path_dup);
             }
-            free(path_dup);
         }
 
         if(fnd==0) printf("locate: command not found (%s)\n", tgt);
