@@ -10,8 +10,12 @@
 #include "exec.h"
 #include "inp_redir.h"
 #include "out_redir.h"
+#include "cmds_hop.h"
+#include "cmds_reveal.h"
+#include "cmds_peek.h"
+#include "cmds_locate.h"
 
-void execute(tknll *head) {
+void execute(tknll *head, char *homwd, char *prevwd) {
     if(head==NULL) return;
 
     int prev_pipe[2]={-1, -1};
@@ -144,6 +148,11 @@ void execute(tknll *head) {
             if(prev_pipe[1]!=-1) close(prev_pipe[1]);
             if(curr_pipe[0]!=-1) close(curr_pipe[0]);
             if(curr_pipe[1]!=-1) close(curr_pipe[1]);
+
+            if(strcmp(cmd, "hop")==0) { hop(pipe_st, homwd, prevwd); fflush(stdout); _exit(0); }
+            else if(strcmp(cmd, "reveal")==0) { reveal(pipe_st, homwd, prevwd); fflush(stdout); _exit(0); }
+            else if(strcmp(cmd, "peek")==0) { peek(pipe_st, homwd, prevwd); fflush(stdout); _exit(0); }
+            else if(strcmp(cmd, "locate")==0) { locate(pipe_st, homwd, prevwd); fflush(stdout); _exit(0); }
 
             if(use_path!=0) execvp(cmd, argv);
             else execv(exec_path, argv);

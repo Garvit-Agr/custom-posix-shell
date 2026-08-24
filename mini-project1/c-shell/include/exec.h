@@ -3,6 +3,6 @@
 
 #include "parser.h"
 
-void execute(tknll *head);
+void execute(tknll *head, char *homwd, char *prevwd);
 
 #endif

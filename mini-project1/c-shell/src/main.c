@@ -4,6 +4,7 @@
 #include <sys/param.h> //included for "MAXPATHLEN"
 #include <string.h>
 #include <stdbool.h>
+#include <sys/wait.h>
 
 #include "prompt.h"
 #include "parser.h"
@@ -12,6 +13,8 @@
 #include "cmds_peek.h"
 #include "cmds_locate.h"
 #include "exec.h"
+#include "inp_redir.h"
+#include "out_redir.h"
 
 #define MAX_USER_INPUT_ALLOWED 1024
 
@@ -46,13 +49,47 @@ int main() {
 
 
         
-        if(strcmp(head->tkn,"hop")==0) hop(head, homewd, prevwd);
-        else if(strcmp(head->tkn,"reveal")==0) reveal(head, homewd, prevwd);
-        else if(strcmp(head->tkn,"peek")==0) peek(head, homewd, prevwd);
-        else if(strcmp(head->tkn,"locate")==0) locate(head, homewd, prevwd);
+        int is_builtin=(strcmp(head->tkn,"hop")==0 || strcmp(head->tkn,"reveal")==0 || strcmp(head->tkn,"peek")==0 || strcmp(head->tkn,"locate")==0);
+        
+        int has_pipe=0;
+        tknll *tmp=head;
+        while(tmp!=NULL && tmp->type!=OP_SEMI && tmp->type!=OP_AMP) {
+            if(tmp->type==OP_PIPE) has_pipe=1;
+            tmp=tmp->next;
+        }
 
+        if (is_builtin && !has_pipe) {
+            pid_t in_pid=-1, out_pid=-1;
+            int in_fd=inp_redir(head, &in_pid);
+            int out_fd=out_redir(head, &out_pid);
+            
+            if (in_fd!=-1 && out_fd!=-1) {
+                int saved_stdin=dup(STDIN_FILENO);
+                int saved_stdout=dup(STDOUT_FILENO);
 
-        else execute(head);
+                if (in_fd!=STDIN_FILENO) dup2(in_fd, STDIN_FILENO);
+                if (out_fd!=STDOUT_FILENO) dup2(out_fd, STDOUT_FILENO);
+
+                if(strcmp(head->tkn,"hop")==0) hop(head, homewd, prevwd);
+                else if(strcmp(head->tkn,"reveal")==0) reveal(head, homewd, prevwd);
+                else if(strcmp(head->tkn,"peek")==0) peek(head, homewd, prevwd);
+                else if(strcmp(head->tkn,"locate")==0) locate(head, homewd, prevwd);
+
+                fflush(stdout);
+
+                dup2(saved_stdin, STDIN_FILENO);
+                dup2(saved_stdout, STDOUT_FILENO);
+                close(saved_stdin);
+                close(saved_stdout);
+            }
+            if(in_fd!=-1 && in_fd!=STDIN_FILENO) close(in_fd);
+            if(out_fd!=-1 && out_fd!=STDOUT_FILENO) close(out_fd);
+            if(in_pid!=-1) waitpid(in_pid, NULL, 0);
+            if(out_pid!=-1) waitpid(out_pid, NULL, 0);
+        }
+        else {
+            execute(head, homewd, prevwd);
+        }
 
 
 
