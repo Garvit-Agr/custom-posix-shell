@@ -150,7 +150,8 @@ void execute(tknll *head) {
 
             printf("cshell: command not found (%s)\n", cmd);
             free(argv);
-            exit(1);
+            //fixing exit issue in child process
+            _exit(1);
         }
         
         else {
