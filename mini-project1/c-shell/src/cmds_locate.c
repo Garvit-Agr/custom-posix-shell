@@ -22,7 +22,8 @@ void locate(tknll *head, char *homwd, char *prevwd) {
     char cwd[MAXPATHLEN+5];
     getcwd(cwd, MAXPATHLEN+5);
 
-    while(ptr!=NULL) {
+    //fixing builtins ignoring operators, because of problem statement part A3
+    while(ptr!=NULL && ptr->type!=OP_PIPE && ptr->type!=OP_SEMI && ptr->type!=OP_AMP && ptr->type!=OP_LT && ptr->type!=OP_GT && ptr->type!=OP_GTGT) {
         char *tgt=ptr->tkn;
         int fnd=0;
         

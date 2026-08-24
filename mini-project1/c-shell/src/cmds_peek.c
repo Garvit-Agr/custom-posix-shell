@@ -231,7 +231,8 @@ void peek(tknll *head, char *homwd, char *prevwd) {
     char *files[500];
     int file_cnt=0;
 
-    while(ptr!=NULL) {
+    //fixing builtins ignoring operators, because of problem statement part A3
+    while(ptr!=NULL && ptr->type!=OP_PIPE && ptr->type!=OP_SEMI && ptr->type!=OP_AMP && ptr->type!=OP_LT && ptr->type!=OP_GT && ptr->type!=OP_GTGT) {
         if(ptr->tkn[0]=='-' && strlen(ptr->tkn)>1) {
             int valid=1;
             for(int i=1;ptr->tkn[i]!='\0';i++) {

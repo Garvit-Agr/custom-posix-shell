@@ -178,7 +178,8 @@ void hop(tknll *head, char *homwd, char *prevwd) {
         return;
     }
     
-    while(ptr!=NULL) {
+    //fixing builtins ignoring operators, because of problem statement part A3
+    while(ptr!=NULL && ptr->type!=OP_PIPE && ptr->type!=OP_SEMI && ptr->type!=OP_AMP && ptr->type!=OP_LT && ptr->type!=OP_GT && ptr->type!=OP_GTGT) {
         char curwd[MAXPATHLEN+5];
         getcwd(curwd, MAXPATHLEN+5);
         int success=0;
