@@ -34,7 +34,8 @@ void fetch_paths(char *base, char *rel, char ***lst, int *cnt, int *cap, int a, 
     while((dir=readdir(d))!=NULL) {
         if(a==0 && dir->d_name[0]=='.') continue;
         
-        if(t!=0 && (strcmp(dir->d_name, ".")==0 || strcmp(dir->d_name, "..")==0)) continue;
+        //fixing . and .. exclusion for reveal -a, because of doubt doc q3
+        if(strcmp(dir->d_name, ".")==0 || strcmp(dir->d_name, "..")==0) continue;
 
         char rel2[MAXPATHLEN+5];
         if(rel[0]=='\0') strcpy(rel2, dir->d_name);

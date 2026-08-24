@@ -236,7 +236,7 @@ void peek(tknll *head, char *homwd, char *prevwd) {
         if(ptr->tkn[0]=='-' && strlen(ptr->tkn)>1) {
             //fixing peek flags after filenames, because of doubt doc q18 strict naming
             if(file_cnt>0) {
-                printf("peek: invalid syntax\n"); //used this because in q18 it is written to treat it as invalid syntax
+                printf("peek: invalid syntax\n");
                 return;
             }
             int valid=1;

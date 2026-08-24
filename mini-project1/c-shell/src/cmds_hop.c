@@ -126,7 +126,6 @@ int resolve_frecency(char *name, char *best, char *homewd) {
                     if (dir!=NULL) {
                         closedir(dir);
                         
-                        //updating frecency algorithm to follow reference given in problem statement
                         double score=(double)freq;
                         double dt=difftime(cur_time, t);
                         if(dt<3600) score*=4.0;
