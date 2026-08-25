@@ -224,8 +224,7 @@ void hop(tknll *head, char *homwd, char *prevwd) {
                 }
                 else {
                     printf("hop: no such directory\n");
-                    //return;
-                    // Leaving this commented out to allow sequential processing of remaining arguments
+                    return;
                 }
             }
         }

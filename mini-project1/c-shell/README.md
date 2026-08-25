@@ -15,7 +15,3 @@
 1) In coding lexer function in parser.c, the backslash ( \\ ) use is really confusing and lead to multiple reviews for checking that no error is left unnoticed.
 
 ---
----
-
-# Pending Doubts:
-1) In `cmds_hop.c` line 214 => If in case of sequential any one fails, so to stop the entire sequence after that, or not?
