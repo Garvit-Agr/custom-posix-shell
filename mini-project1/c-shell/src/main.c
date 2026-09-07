@@ -56,6 +56,20 @@ int main() {
                 curr_cmd=curr_cmd->next;
                 continue;
             }
+            if(curr_cmd->type==OP_AMP) {
+                curr_cmd=curr_cmd->next;
+                continue;
+            }
+
+            int bg=0;
+            tknll *check_bg=curr_cmd;
+            while(check_bg!=NULL && check_bg->type!=OP_SEMI) {
+                if(check_bg->type==OP_AMP) {
+                    bg=1;
+                    break;
+                }
+                check_bg=check_bg->next;
+            }
 
             int is_builtin=(strcmp(curr_cmd->tkn,"hop")==0 || strcmp(curr_cmd->tkn,"reveal")==0 || strcmp(curr_cmd->tkn,"peek")==0 || strcmp(curr_cmd->tkn,"locate")==0);
             
@@ -96,14 +110,14 @@ int main() {
                 if(out_pid!=-1) waitpid(out_pid, NULL, 0);
             }
             else {
-                execute(curr_cmd, homewd, prevwd);
+                execute(curr_cmd, homewd, prevwd, bg);
             }
 
             while(curr_cmd!=NULL && curr_cmd->type!=OP_SEMI && curr_cmd->type!=OP_AMP) {
                 curr_cmd=curr_cmd->next;
             }
             
-            if(curr_cmd!=NULL && curr_cmd->type==OP_SEMI) {
+            if(curr_cmd!=NULL && (curr_cmd->type==OP_SEMI || curr_cmd->type==OP_AMP)) {
                 curr_cmd=curr_cmd->next;
             }
         }
