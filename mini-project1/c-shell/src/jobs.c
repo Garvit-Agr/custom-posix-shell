@@ -12,6 +12,8 @@ void add_job(pid_t pid, char *cmd) {
     bg_jobs[job_cnt].pid=pid;
     strcpy(bg_jobs[job_cnt].cmd, cmd);
     bg_jobs[job_cnt].state=1;
+    bg_jobs[job_cnt].is_done=0;
+    bg_jobs[job_cnt].exit_status=0;
     job_cnt++;
 }
 

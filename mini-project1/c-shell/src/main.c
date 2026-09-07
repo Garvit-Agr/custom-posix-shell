@@ -20,21 +20,33 @@
 
 #define MAX_USER_INPUT_ALLOWED 1024
 
+int fg_running=0;
+char homewd[MAXPATHLEN+5]; // made global for sigchld prompt redraw
+
 void sigchld_handler(int sig) {
     int status;
     for(int i=0;i<job_cnt;i++) {
         pid_t pid=waitpid(bg_jobs[i].pid, &status, WNOHANG);
         if(pid>0) {
-            char first_word[1024];
-            sscanf(bg_jobs[i].cmd, "%s", first_word);
-            if(WIFEXITED(status) && WEXITSTATUS(status)==0) {
-                printf("\n%s with pid %d exited normally\n", first_word, pid);
+            bg_jobs[i].is_done=1;
+            if(WIFEXITED(status) && WEXITSTATUS(status)==0) bg_jobs[i].exit_status=0;
+            else bg_jobs[i].exit_status=1;
+
+            if(fg_running==0) {
+                char first_word[1024];
+                sscanf(bg_jobs[i].cmd, "%s", first_word);
+                if(bg_jobs[i].exit_status==0) {
+                    printf("\n%s with pid %d exited normally\n", first_word, pid);
+                }
+                else {
+                    printf("\n%s with pid %d exited abnormally\n", first_word, pid);
+                }
+                remove_job(pid);
+                i--; 
+                
+                display_prompt(homewd);
+                fflush(stdout);
             }
-            else {
-                printf("\n%s with pid %d exited abnormally\n", first_word, pid);
-            }
-            remove_job(pid);
-            i--; 
         }
     }
 }
@@ -44,19 +56,38 @@ int main() {
     
     signal(SIGCHLD, sigchld_handler);
 
-    char homewd[MAXPATHLEN+5]; //found this in description of "man getcwd"
     getcwd(homewd,MAXPATHLEN+5);
     
     char prevwd[MAXPATHLEN+5]={0}; //found this in description of "man getcwd"
     
     while(1) {
+
+        for(int i=0;i<job_cnt;i++) {
+            if(bg_jobs[i].is_done==1) {
+                char first_word[1024];
+                sscanf(bg_jobs[i].cmd, "%s", first_word);
+                if(bg_jobs[i].exit_status==0) {
+                    printf("%s with pid %d exited normally\n", first_word, bg_jobs[i].pid);
+                }
+                else {
+                    printf("%s with pid %d exited abnormally\n", first_word, bg_jobs[i].pid);
+                }
+                remove_job(bg_jobs[i].pid);
+                i--;
+            }
+        }
+
         display_prompt(homewd);
         char input[MAX_USER_INPUT_ALLOWED+5];
         
         if (fgets(input, sizeof(input), stdin)==NULL) { // used this instead if scanf, so that multi-word sentences can be taken easily as an input
                                                         // put "if" to bypass ctrl+d issue.
-            printf("\n");
-            break;
+            if(feof(stdin)) {
+                printf("\n");
+                break;
+            }
+            clearerr(stdin);
+            continue;
         }
         input[strcspn(input,"\n")]='\0';
 
@@ -106,6 +137,7 @@ int main() {
             int exec_res=0;
 
             if (is_builtin && !has_pipe) {
+                fg_running=1;
                 pid_t in_pid=-1, out_pid=-1;
                 int in_fd=inp_redir(curr_cmd, &in_pid);
                 int out_fd=out_redir(curr_cmd, &out_pid);
@@ -133,9 +165,12 @@ int main() {
                 if(out_fd!=-1 && out_fd!=STDOUT_FILENO) close(out_fd);
                 if(in_pid!=-1) waitpid(in_pid, NULL, 0);
                 if(out_pid!=-1) waitpid(out_pid, NULL, 0);
+                fg_running=0;
             }
             else {
+                if(bg==0) fg_running=1;
                 exec_res=execute(curr_cmd, homewd, prevwd, bg);
+                if(bg==0) fg_running=0;
             }
 
             if(exec_res==1) break;

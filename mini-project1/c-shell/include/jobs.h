@@ -8,6 +8,8 @@ typedef struct job {
     pid_t pid;
     char cmd[1024];
     int state; 
+    int is_done;
+    int exit_status;
 } job;
 
 extern job bg_jobs[100];
