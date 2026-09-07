@@ -49,46 +49,63 @@ int main() {
 
 
         
-        int is_builtin=(strcmp(head->tkn,"hop")==0 || strcmp(head->tkn,"reveal")==0 || strcmp(head->tkn,"peek")==0 || strcmp(head->tkn,"locate")==0);
-        
-        int has_pipe=0;
-        tknll *tmp=head;
-        while(tmp!=NULL && tmp->type!=OP_SEMI && tmp->type!=OP_AMP) {
-            if(tmp->type==OP_PIPE) has_pipe=1;
-            tmp=tmp->next;
-        }
+        tknll *curr_cmd=head;
 
-        if (is_builtin && !has_pipe) {
-            pid_t in_pid=-1, out_pid=-1;
-            int in_fd=inp_redir(head, &in_pid);
-            int out_fd=out_redir(head, &out_pid);
-            
-            if (in_fd!=-1 && out_fd!=-1) {
-                int saved_stdin=dup(STDIN_FILENO);
-                int saved_stdout=dup(STDOUT_FILENO);
-
-                if (in_fd!=STDIN_FILENO) dup2(in_fd, STDIN_FILENO);
-                if (out_fd!=STDOUT_FILENO) dup2(out_fd, STDOUT_FILENO);
-
-                if(strcmp(head->tkn,"hop")==0) hop(head, homewd, prevwd);
-                else if(strcmp(head->tkn,"reveal")==0) reveal(head, homewd, prevwd);
-                else if(strcmp(head->tkn,"peek")==0) peek(head, homewd, prevwd);
-                else if(strcmp(head->tkn,"locate")==0) locate(head, homewd, prevwd);
-
-                fflush(stdout);
-
-                dup2(saved_stdin, STDIN_FILENO);
-                dup2(saved_stdout, STDOUT_FILENO);
-                close(saved_stdin);
-                close(saved_stdout);
+        while(curr_cmd!=NULL) {
+            if(curr_cmd->type==OP_SEMI) {
+                curr_cmd=curr_cmd->next;
+                continue;
             }
-            if(in_fd!=-1 && in_fd!=STDIN_FILENO) close(in_fd);
-            if(out_fd!=-1 && out_fd!=STDOUT_FILENO) close(out_fd);
-            if(in_pid!=-1) waitpid(in_pid, NULL, 0);
-            if(out_pid!=-1) waitpid(out_pid, NULL, 0);
-        }
-        else {
-            execute(head, homewd, prevwd);
+
+            int is_builtin=(strcmp(curr_cmd->tkn,"hop")==0 || strcmp(curr_cmd->tkn,"reveal")==0 || strcmp(curr_cmd->tkn,"peek")==0 || strcmp(curr_cmd->tkn,"locate")==0);
+            
+            int has_pipe=0;
+            tknll *tmp=curr_cmd;
+            while(tmp!=NULL && tmp->type!=OP_SEMI && tmp->type!=OP_AMP) {
+                if(tmp->type==OP_PIPE) has_pipe=1;
+                tmp=tmp->next;
+            }
+
+            if (is_builtin && !has_pipe) {
+                pid_t in_pid=-1, out_pid=-1;
+                int in_fd=inp_redir(curr_cmd, &in_pid);
+                int out_fd=out_redir(curr_cmd, &out_pid);
+                
+                if (in_fd!=-1 && out_fd!=-1) {
+                    int saved_stdin=dup(STDIN_FILENO);
+                    int saved_stdout=dup(STDOUT_FILENO);
+
+                    if (in_fd!=STDIN_FILENO) dup2(in_fd, STDIN_FILENO);
+                    if (out_fd!=STDOUT_FILENO) dup2(out_fd, STDOUT_FILENO);
+
+                    if(strcmp(curr_cmd->tkn,"hop")==0) hop(curr_cmd, homewd, prevwd);
+                    else if(strcmp(curr_cmd->tkn,"reveal")==0) reveal(curr_cmd, homewd, prevwd);
+                    else if(strcmp(curr_cmd->tkn,"peek")==0) peek(curr_cmd, homewd, prevwd);
+                    else if(strcmp(curr_cmd->tkn,"locate")==0) locate(curr_cmd, homewd, prevwd);
+
+                    fflush(stdout);
+
+                    dup2(saved_stdin, STDIN_FILENO);
+                    dup2(saved_stdout, STDOUT_FILENO);
+                    close(saved_stdin);
+                    close(saved_stdout);
+                }
+                if(in_fd!=-1 && in_fd!=STDIN_FILENO) close(in_fd);
+                if(out_fd!=-1 && out_fd!=STDOUT_FILENO) close(out_fd);
+                if(in_pid!=-1) waitpid(in_pid, NULL, 0);
+                if(out_pid!=-1) waitpid(out_pid, NULL, 0);
+            }
+            else {
+                execute(curr_cmd, homewd, prevwd);
+            }
+
+            while(curr_cmd!=NULL && curr_cmd->type!=OP_SEMI && curr_cmd->type!=OP_AMP) {
+                curr_cmd=curr_cmd->next;
+            }
+            
+            if(curr_cmd!=NULL && curr_cmd->type==OP_SEMI) {
+                curr_cmd=curr_cmd->next;
+            }
         }
 
 
