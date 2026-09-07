@@ -16,8 +16,8 @@
 #include "cmds_locate.h"
 #include "jobs.h"
 
-void execute(tknll *head, char *homwd, char *prevwd, int bg) {
-    if(head==NULL) return;
+int execute(tknll *head, char *homwd, char *prevwd, int bg) {
+    if(head==NULL) return 0;
 
     int prev_pipe[2]={-1, -1};
     pid_t pids[100];
@@ -85,7 +85,7 @@ void execute(tknll *head, char *homwd, char *prevwd, int bg) {
             if(curr_pipe[0]!=-1) close(curr_pipe[0]);
             if(curr_pipe[1]!=-1) close(curr_pipe[1]);
             free(argv);
-            break;
+            return 1;
         }
 
         char *cmd=argv[0];
@@ -128,7 +128,7 @@ void execute(tknll *head, char *homwd, char *prevwd, int bg) {
             if(curr_pipe[0]!=-1) close(curr_pipe[0]);
             if(curr_pipe[1]!=-1) close(curr_pipe[1]);
             free(argv);
-            break;
+            return 1;
         }
 
         if(pid==0) {
@@ -185,10 +185,12 @@ void execute(tknll *head, char *homwd, char *prevwd, int bg) {
         else break;
     }
 
+    int failed=0;
     if(bg==0) {
         for(int i=0; i<num_cmds; i++) {
             int status;
             waitpid(pids[i], &status, 0);
+            if(WIFEXITED(status) && WEXITSTATUS(status)==1) failed=1;
         }
 
         for(int i=0; i<num_helpers; i++) {
@@ -206,4 +208,6 @@ void execute(tknll *head, char *homwd, char *prevwd, int bg) {
         }
         if(num_cmds>0) add_job(pids[0], full_cmd);
     }
+    
+    return failed;
 }

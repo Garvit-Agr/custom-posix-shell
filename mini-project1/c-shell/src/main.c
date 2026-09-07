@@ -80,6 +80,8 @@ int main() {
                 tmp=tmp->next;
             }
 
+            int exec_res=0;
+
             if (is_builtin && !has_pipe) {
                 pid_t in_pid=-1, out_pid=-1;
                 int in_fd=inp_redir(curr_cmd, &in_pid);
@@ -110,8 +112,10 @@ int main() {
                 if(out_pid!=-1) waitpid(out_pid, NULL, 0);
             }
             else {
-                execute(curr_cmd, homewd, prevwd, bg);
+                exec_res=execute(curr_cmd, homewd, prevwd, bg);
             }
+
+            if(exec_res==1) break;
 
             while(curr_cmd!=NULL && curr_cmd->type!=OP_SEMI && curr_cmd->type!=OP_AMP) {
                 curr_cmd=curr_cmd->next;
