@@ -206,7 +206,10 @@ int execute(tknll *head, char *homwd, char *prevwd, int bg) {
             strcat(full_cmd, " ");
             tmp=tmp->next;
         }
-        if(num_cmds>0) add_job(pids[0], full_cmd);
+        if(num_cmds>0) {
+            add_job(pids[0], full_cmd);
+            printf("[%d] %d\n", next_job_num-1, pids[0]);
+        }
     }
     
     return failed;

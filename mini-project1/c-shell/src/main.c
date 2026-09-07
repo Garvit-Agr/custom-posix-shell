@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <sys/wait.h>
+#include <signal.h>
 
 #include "prompt.h"
 #include "parser.h"
@@ -15,11 +16,33 @@
 #include "exec.h"
 #include "inp_redir.h"
 #include "out_redir.h"
+#include "jobs.h"
 
 #define MAX_USER_INPUT_ALLOWED 1024
 
+void sigchld_handler(int sig) {
+    int status;
+    for(int i=0;i<job_cnt;i++) {
+        pid_t pid=waitpid(bg_jobs[i].pid, &status, WNOHANG);
+        if(pid>0) {
+            char first_word[1024];
+            sscanf(bg_jobs[i].cmd, "%s", first_word);
+            if(WIFEXITED(status) && WEXITSTATUS(status)==0) {
+                printf("\n%s with pid %d exited normally\n", first_word, pid);
+            }
+            else {
+                printf("\n%s with pid %d exited abnormally\n", first_word, pid);
+            }
+            remove_job(pid);
+            i--; 
+        }
+    }
+}
+
 
 int main() {
+    
+    signal(SIGCHLD, sigchld_handler);
 
     char homewd[MAXPATHLEN+5]; //found this in description of "man getcwd"
     getcwd(homewd,MAXPATHLEN+5);
