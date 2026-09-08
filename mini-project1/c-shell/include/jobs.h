@@ -19,6 +19,7 @@ extern int job_cnt;
 extern int next_job_num;
 
 void add_job(pid_t lead_pid, pid_t *all_pids, int num_pids, char *cmd);
+void add_job_with_id(int j_num, pid_t lead_pid, pid_t *all_pids, int num_pids, char *cmd);
 void remove_job(pid_t pid);
 
 #endif

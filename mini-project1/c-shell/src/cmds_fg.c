@@ -77,7 +77,7 @@ void fg_cmd(tknll *head) {
     }
 
     if(stopped) {
-        add_job(fg_job.pid, fg_job.pids, fg_job.num_pids, fg_job.cmd);
-        printf("\n[%d] %d\n", next_job_num-1, fg_job.pid);
+        add_job_with_id(fg_job.job_num, fg_job.pid, fg_job.pids, fg_job.num_pids, fg_job.cmd);
+        printf("\n[%d] %d\n", fg_job.job_num, fg_job.pid);
     }
 }
