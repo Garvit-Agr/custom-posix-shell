@@ -211,8 +211,8 @@ int execute(tknll *head, char *homwd, char *prevwd, int bg) {
             waitpid(helpers[i], &status, WUNTRACED);
         }
         
-        tcsetpgrp(STDIN_FILENO, getpid());
-
+        tcsetpgrp(STDIN_FILENO, getpid()); 
+        
         if(stopped) {
             char full_cmd[1024]="";
             tknll *tmp=head;
@@ -221,15 +221,15 @@ int execute(tknll *head, char *homwd, char *prevwd, int bg) {
                 strcat(full_cmd, " ");
                 tmp=tmp->next;
             }
-            if(num_cmds>0) {
-                pid_t all_pids[300];
-                int tot_pids=0;
-                
-                for(int i=0; i<num_cmds; i++) all_pids[tot_pids++]=pids[i];
-                for(int i=0; i<num_helpers; i++) all_pids[tot_pids++]=helpers[i];
-                
-                add_job(pids[0], all_pids, tot_pids, full_cmd);
-            }
+            
+            pid_t all_pids[300];
+            int tot_pids=0;
+            
+            for(int i=0; i<num_cmds; i++) all_pids[tot_pids++]=pids[i];
+            for(int i=0; i<num_helpers; i++) all_pids[tot_pids++]=helpers[i];
+            
+            add_job(pids[0], all_pids, tot_pids, full_cmd);
+            printf("\n[%d] %d\n", next_job_num-1, pids[0]);
         }
     }
     else {
