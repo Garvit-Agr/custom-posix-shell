@@ -79,6 +79,7 @@ int main() {
     getcwd(homewd,MAXPATHLEN+5);
     
     char prevwd[MAXPATHLEN+5]={0}; //found this in description of "man getcwd"
+    int eof_warned=0;
     
     while(1) {
 
@@ -103,6 +104,38 @@ int main() {
         if (fgets(input, sizeof(input), stdin)==NULL) { // used this instead if scanf, so that multi-word sentences can be taken easily as an input
                                                         // put "if" to bypass ctrl+d issue.
             if(feof(stdin)) {
+                int has_stopped=0;
+                for(int i=0;i<job_cnt;i++) {
+                    if(bg_jobs[i].is_done==0) {
+                        char st_pth[256];
+                        snprintf(st_pth, sizeof(st_pth), "/proc/%d/stat", bg_jobs[i].pid);
+                        FILE *f=fopen(st_pth, "r");
+                        if(f!=NULL) {
+                            char buf[1024];
+                            if(fgets(buf, sizeof(buf), f)!=NULL) {
+                                char *cls=strrchr(buf, ')');
+                                if(cls!=NULL && *(cls+2)=='T') has_stopped=1;
+                            }
+                            fclose(f);
+                        }
+                    }
+                }
+
+                if(has_stopped==1 && eof_warned==0) {
+                    printf("\ncshell: There are stopped jobs.\n");
+                    eof_warned=1;
+                    clearerr(stdin);
+                    continue;
+                }
+
+                for(int i=0;i<job_cnt;i++) {
+                    if(bg_jobs[i].is_done==0) {
+                        for(int j=0;j<bg_jobs[i].num_pids;j++) {
+                            if(bg_jobs[i].pids[j]>0) kill(bg_jobs[i].pids[j], SIGKILL);
+                        }
+                    }
+                }
+
                 printf("\n");
                 break;
             }
@@ -110,6 +143,7 @@ int main() {
             continue;
         }
         input[strcspn(input,"\n")]='\0';
+        eof_warned=0;
 
         tknll *head=lexer(input);
 
