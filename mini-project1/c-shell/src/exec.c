@@ -198,18 +198,39 @@ int execute(tknll *head, char *homwd, char *prevwd, int bg) {
 
     int failed=0;
     if(bg==0) {
+        int stopped=0;
         for(int i=0; i<num_cmds; i++) {
             int status;
-            waitpid(pids[i], &status, 0);
+            waitpid(pids[i], &status, WUNTRACED);
             if(WIFEXITED(status) && WEXITSTATUS(status)==1) failed=1;
+            if(WIFSTOPPED(status)) stopped=1;
         }
 
         for(int i=0; i<num_helpers; i++) {
             int status;
-            waitpid(helpers[i], &status, 0);
+            waitpid(helpers[i], &status, WUNTRACED);
         }
         
         tcsetpgrp(STDIN_FILENO, getpid());
+
+        if(stopped) {
+            char full_cmd[1024]="";
+            tknll *tmp=head;
+            while(tmp!=NULL && tmp->type!=OP_SEMI && tmp->type!=OP_AMP) {
+                strcat(full_cmd, tmp->tkn);
+                strcat(full_cmd, " ");
+                tmp=tmp->next;
+            }
+            if(num_cmds>0) {
+                pid_t all_pids[300];
+                int tot_pids=0;
+                
+                for(int i=0; i<num_cmds; i++) all_pids[tot_pids++]=pids[i];
+                for(int i=0; i<num_helpers; i++) all_pids[tot_pids++]=helpers[i];
+                
+                add_job(pids[0], all_pids, tot_pids, full_cmd);
+            }
+        }
     }
     else {
         char full_cmd[1024]="";
