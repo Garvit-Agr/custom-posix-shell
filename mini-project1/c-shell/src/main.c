@@ -14,6 +14,7 @@
 #include "cmds_peek.h"
 #include "cmds_locate.h"
 #include "cmds_activities.h"
+#include "cmds_bg.h"
 #include "exec.h"
 #include "inp_redir.h"
 #include "out_redir.h"
@@ -209,6 +210,7 @@ int main() {
                     else if(strcmp(curr_cmd->tkn,"peek")==0) peek(curr_cmd, homewd, prevwd);
                     else if(strcmp(curr_cmd->tkn,"locate")==0) locate(curr_cmd, homewd, prevwd);
                     else if(strcmp(curr_cmd->tkn,"activities")==0) activities(curr_cmd);
+                    else if(strcmp(curr_cmd->tkn,"bg")==0) bg_cmd(curr_cmd);
 
                     fflush(stdout);
 
