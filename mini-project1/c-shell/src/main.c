@@ -68,6 +68,8 @@ int main() {
     
     signal(SIGTTOU, SIG_IGN);
     signal(SIGTTIN, SIG_IGN);
+    signal(SIGINT, SIG_IGN);
+    signal(SIGTSTP, SIG_IGN);
     signal(SIGCHLD, sigchld_handler);
     
     pid_t shell_pid=getpid();
