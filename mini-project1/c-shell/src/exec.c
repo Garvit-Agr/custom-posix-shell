@@ -14,6 +14,7 @@
 #include "cmds_reveal.h"
 #include "cmds_peek.h"
 #include "cmds_locate.h"
+#include "cmds_activities.h"
 #include "jobs.h"
 
 int execute(tknll *head, char *homwd, char *prevwd, int bg) {
@@ -154,6 +155,7 @@ int execute(tknll *head, char *homwd, char *prevwd, int bg) {
             else if(strcmp(cmd, "reveal")==0) { reveal(pipe_st, homwd, prevwd); fflush(stdout); _exit(0); }
             else if(strcmp(cmd, "peek")==0) { peek(pipe_st, homwd, prevwd); fflush(stdout); _exit(0); }
             else if(strcmp(cmd, "locate")==0) { locate(pipe_st, homwd, prevwd); fflush(stdout); _exit(0); }
+            else if(strcmp(cmd, "activities")==0) { activities(pipe_st); fflush(stdout); _exit(0); }
 
             if(use_path!=0) execvp(cmd, argv);
             else execv(exec_path, argv);

@@ -13,6 +13,7 @@
 #include "cmds_reveal.h"
 #include "cmds_peek.h"
 #include "cmds_locate.h"
+#include "cmds_activities.h"
 #include "exec.h"
 #include "inp_redir.h"
 #include "out_redir.h"
@@ -125,7 +126,8 @@ int main() {
                 check_bg=check_bg->next;
             }
 
-            int is_builtin=(strcmp(curr_cmd->tkn,"hop")==0 || strcmp(curr_cmd->tkn,"reveal")==0 || strcmp(curr_cmd->tkn,"peek")==0 || strcmp(curr_cmd->tkn,"locate")==0);
+            int is_builtin=(strcmp(curr_cmd->tkn,"hop")==0 || strcmp(curr_cmd->tkn,"reveal")==0 ||
+            strcmp(curr_cmd->tkn,"peek")==0 || strcmp(curr_cmd->tkn,"locate")==0 || strcmp(curr_cmd->tkn,"activities")==0);
             
             int has_pipe=0;
             tknll *tmp=curr_cmd;
@@ -153,6 +155,7 @@ int main() {
                     else if(strcmp(curr_cmd->tkn,"reveal")==0) reveal(curr_cmd, homewd, prevwd);
                     else if(strcmp(curr_cmd->tkn,"peek")==0) peek(curr_cmd, homewd, prevwd);
                     else if(strcmp(curr_cmd->tkn,"locate")==0) locate(curr_cmd, homewd, prevwd);
+                    else if(strcmp(curr_cmd->tkn,"activities")==0) activities(curr_cmd);
 
                     fflush(stdout);
 
