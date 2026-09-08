@@ -66,7 +66,13 @@ void sigchld_handler(int sig) {
 
 int main() {
     
+    signal(SIGTTOU, SIG_IGN);
+    signal(SIGTTIN, SIG_IGN);
     signal(SIGCHLD, sigchld_handler);
+    
+    pid_t shell_pid=getpid();
+    setpgid(shell_pid, shell_pid);
+    tcsetpgrp(STDIN_FILENO, shell_pid);
 
     getcwd(homewd,MAXPATHLEN+5);
     

@@ -27,6 +27,7 @@ int execute(tknll *head, char *homwd, char *prevwd, int bg) {
     int num_helpers=0;
     
     tknll *pipe_st=head;
+    pid_t lead_pgid=-1;
     
     while(pipe_st!=NULL && pipe_st->type!=OP_SEMI && pipe_st->type!=OP_AMP) {
         int argc=0;
@@ -133,6 +134,10 @@ int execute(tknll *head, char *homwd, char *prevwd, int bg) {
         }
 
         if(pid==0) {
+            if(lead_pgid==-1) lead_pgid=getpid();
+            setpgid(0, lead_pgid);
+            if(bg==0) tcsetpgrp(STDIN_FILENO, lead_pgid);
+
             if(prev_pipe[0]!=-1) dup2(prev_pipe[0], STDIN_FILENO);
             if(curr_pipe[1]!=-1) dup2(curr_pipe[1], STDOUT_FILENO);
 
@@ -167,6 +172,10 @@ int execute(tknll *head, char *homwd, char *prevwd, int bg) {
         }
         
         else {
+            if(lead_pgid==-1) lead_pgid=pid;
+            setpgid(pid, lead_pgid);
+            if(bg==0) tcsetpgrp(STDIN_FILENO, lead_pgid);
+
             pids[num_cmds++]=pid;
             if(in_pid!=-1) helpers[num_helpers++]=in_pid;
             if(out_pid!=-1) helpers[num_helpers++]=out_pid;
@@ -199,6 +208,8 @@ int execute(tknll *head, char *homwd, char *prevwd, int bg) {
             int status;
             waitpid(helpers[i], &status, 0);
         }
+        
+        tcsetpgrp(STDIN_FILENO, getpid());
     }
     else {
         char full_cmd[1024]="";
