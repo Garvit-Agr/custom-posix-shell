@@ -4,10 +4,22 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <errno.h>
 
 #include "parser.h"
 #include "cmds_fg.h"
 #include "jobs.h"
+
+pid_t fg_active_pid = -1;
+int fg_timed_out = 0;
+
+void fg_alarm_handler(int sig) {
+    if(fg_active_pid > 0) {
+        printf("\ncshell: fg job %d timed out after 15 seconds\n", fg_active_pid);
+        kill(-fg_active_pid, SIGKILL);
+        fg_timed_out = 1;
+    }
+}
 
 void fg_cmd(tknll *head) {
     if(head==NULL || head->next==NULL || head->next->type!=WORD) {
@@ -41,13 +53,28 @@ void fg_cmd(tknll *head) {
         perror("kill");
     }
 
+    fg_active_pid = fg_job.pid;
+    fg_timed_out = 0;
+    
+    void (*old_alrm)(int) = signal(SIGALRM, fg_alarm_handler);
+    alarm(15); 
+
     int stopped=0;
     int status;
     
-    waitpid(fg_job.pid, &status, WUNTRACED);
-    if(WIFSTOPPED(status)) stopped=1;
+    while(waitpid(fg_job.pid, &status, WUNTRACED) < 0) {
+        if(errno != EINTR) break; 
+    }
+
+    alarm(0); 
+    signal(SIGALRM, old_alrm);
+    fg_active_pid = -1;
 
     tcsetpgrp(STDIN_FILENO, getpid());
+
+    if(WIFSTOPPED(status) && fg_timed_out==0) {
+        stopped=1;
+    }
 
     if(stopped) {
         add_job(fg_job.pid, fg_job.pids, fg_job.num_pids, fg_job.cmd);
