@@ -27,26 +27,37 @@ char homewd[MAXPATHLEN+5]; // made global for sigchld prompt redraw
 void sigchld_handler(int sig) {
     int status;
     for(int i=0;i<job_cnt;i++) {
-        pid_t pid=waitpid(bg_jobs[i].pid, &status, WNOHANG);
-        if(pid>0) {
-            bg_jobs[i].is_done=1;
-            if(WIFEXITED(status) && WEXITSTATUS(status)==0) bg_jobs[i].exit_status=0;
-            else bg_jobs[i].exit_status=1;
+        
+        for(int j=0; j<bg_jobs[i].num_pids; j++) {
+            if(bg_jobs[i].pids[j]>0 && bg_jobs[i].pids[j]!=bg_jobs[i].pid) {
+                if(waitpid(bg_jobs[i].pids[j], &status, WNOHANG)>0) {
+                    bg_jobs[i].pids[j]=-1; 
+                }
+            }
+        }
+        
+        if(bg_jobs[i].is_done==0) {
+            pid_t pid=waitpid(bg_jobs[i].pid, &status, WNOHANG);
+            if(pid>0) {
+                bg_jobs[i].is_done=1;
+                if(WIFEXITED(status) && WEXITSTATUS(status)==0) bg_jobs[i].exit_status=0;
+                else bg_jobs[i].exit_status=1;
 
-            if(fg_running==0) {
-                char first_word[1024];
-                sscanf(bg_jobs[i].cmd, "%s", first_word);
-                if(bg_jobs[i].exit_status==0) {
-                    printf("\n%s with pid %d exited normally\n", first_word, pid);
+                if(fg_running==0) {
+                    char first_word[1024];
+                    sscanf(bg_jobs[i].cmd, "%s", first_word);
+                    if(bg_jobs[i].exit_status==0) {
+                        printf("\n%s with pid %d exited normally\n", first_word, pid);
+                    }
+                    else {
+                        printf("\n%s with pid %d exited abnormally\n", first_word, pid);
+                    }
+                    remove_job(pid);
+                    i--; 
+                    
+                    display_prompt(homewd);
+                    fflush(stdout);
                 }
-                else {
-                    printf("\n%s with pid %d exited abnormally\n", first_word, pid);
-                }
-                remove_job(pid);
-                i--; 
-                
-                display_prompt(homewd);
-                fflush(stdout);
             }
         }
     }

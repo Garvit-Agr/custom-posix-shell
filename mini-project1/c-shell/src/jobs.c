@@ -7,9 +7,15 @@ job bg_jobs[100];
 int job_cnt=0;
 int next_job_num=1;
 
-void add_job(pid_t pid, char *cmd) {
+void add_job(pid_t lead_pid, pid_t *all_pids, int num_pids, char *cmd) {
     bg_jobs[job_cnt].job_num=next_job_num++;
-    bg_jobs[job_cnt].pid=pid;
+    bg_jobs[job_cnt].pid=lead_pid;
+    
+    for(int i=0;i<num_pids;i++) {
+        bg_jobs[job_cnt].pids[i]=all_pids[i];
+    }
+    bg_jobs[job_cnt].num_pids=num_pids;
+    
     strcpy(bg_jobs[job_cnt].cmd, cmd);
     bg_jobs[job_cnt].state=1;
     bg_jobs[job_cnt].is_done=0;

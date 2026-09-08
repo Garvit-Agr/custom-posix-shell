@@ -6,6 +6,8 @@
 typedef struct job {
     int job_num;
     pid_t pid;
+    pid_t pids[200];
+    int num_pids;
     char cmd[1024];
     int state; 
     int is_done;
@@ -16,7 +18,7 @@ extern job bg_jobs[100];
 extern int job_cnt;
 extern int next_job_num;
 
-void add_job(pid_t pid, char *cmd);
+void add_job(pid_t lead_pid, pid_t *all_pids, int num_pids, char *cmd);
 void remove_job(pid_t pid);
 
 #endif
