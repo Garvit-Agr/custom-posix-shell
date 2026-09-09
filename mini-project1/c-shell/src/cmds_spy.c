@@ -18,9 +18,16 @@ void spy_cmd(tknll *head) {
     snprintf(stat_path, sizeof(stat_path), "/proc/%d/stat", target_pid);
 
     FILE *f = fopen(stat_path, "r");
+    if (f == NULL) {
+        perror("cshell: spy: could not read process stat (is /proc mounted?)");
+        return;
+    }
     
     char buf[1024];
-    fgets(buf, sizeof(buf), f);
+    if (fgets(buf, sizeof(buf), f)==NULL) {
+        fclose(f);
+        return;
+    }
     fclose(f);
 
     int pid;
@@ -34,21 +41,26 @@ void spy_cmd(tknll *head) {
     snprintf(statm_path, sizeof(statm_path), "/proc/%d/statm", target_pid);
     FILE *fm = fopen(statm_path, "r");
     long vmem_pages = 0;
-    fscanf(fm, "%ld", &vmem_pages);
-    fclose(fm);
+
+    if (fm != NULL) {
+        fscanf(fm, "%ld", &vmem_pages);
+        fclose(fm);
+    }
 
     char fd_path[256];
     snprintf(fd_path, sizeof(fd_path), "/proc/%d/fd", target_pid);
     DIR *d = opendir(fd_path);
-    struct dirent *dir;
     int fd_cnt = 0;
     
-    while ((dir = readdir(d)) != NULL) {
-        if (strcmp(dir->d_name, ".") != 0 && strcmp(dir->d_name, "..") != 0) {
-            fd_cnt++;
+    if (d != NULL) {
+        struct dirent *dir;
+        while ((dir = readdir(d)) != NULL) {
+            if (strcmp(dir->d_name, ".") != 0 && strcmp(dir->d_name, "..") != 0) {
+                fd_cnt++;
+            }
         }
+        closedir(d);
     }
-    closedir(d);
 
     printf("pid: %d\n", pid);
     printf("Process Status: %c\n", state);
