@@ -77,7 +77,6 @@ int out_redir(tknll *head, pid_t *helper_pid) {
         
         close(pfd[0]);
         for(int i=0; i<out_cnt; i++) close(fds[i]);
-        //fixing exit issue in child process
         _exit(0);
     }
 

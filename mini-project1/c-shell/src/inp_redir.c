@@ -73,7 +73,6 @@ int inp_redir(tknll *head, pid_t *helper_pid) {
             }
         }
         close(pfd[1]);
-        //fixing exit issue in child process
         _exit(0);
     }
 
