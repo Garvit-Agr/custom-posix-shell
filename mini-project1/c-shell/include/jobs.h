@@ -6,7 +6,7 @@
 typedef struct job {
     int job_num;
     pid_t pid;
-    pid_t pids[200];
+    pid_t pids[300];
     int num_pids;
     char cmd[1024];
     int state; 
