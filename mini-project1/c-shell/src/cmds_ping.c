@@ -13,7 +13,7 @@ void ping_cmd(tknll *head) {
     }
 
     int j_num=atoi(head->next->tkn);
-    int sig_num=atoi(head->next->next->tkn);
+    int sig_num=atoi(head->next->next->tkn)%32;
 
     int found_idx=-1;
 
@@ -31,9 +31,9 @@ void ping_cmd(tknll *head) {
 
     pid_t target_pid = bg_jobs[found_idx].pid;
 
-    if(kill(target_pid, sig_num) < 0) {
+    if(kill(-target_pid, sig_num)<0) {
         perror("cshell: ping");
     } else {
-        printf("Sent signal %d to process %d\n", sig_num, target_pid);
+        printf("Sent signal %d to process group %d\n", sig_num, target_pid);
     }
 }
