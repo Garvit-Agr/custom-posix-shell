@@ -18,6 +18,7 @@
 #include "cmds_fg.h"
 #include "cmds_ping.h"
 #include "cmds_spy.h"
+#include "cmds_snoop.h"
 #include "exec.h"
 #include "inp_redir.h"
 #include "out_redir.h"
@@ -186,7 +187,8 @@ int main() {
             int is_builtin=(strcmp(curr_cmd->tkn,"hop")==0 || strcmp(curr_cmd->tkn,"reveal")==0 ||
             strcmp(curr_cmd->tkn,"peek")==0 || strcmp(curr_cmd->tkn,"locate")==0 ||
             strcmp(curr_cmd->tkn,"activities")==0 || strcmp(curr_cmd->tkn,"bg")==0 ||
-            strcmp(curr_cmd->tkn,"fg")==0 || strcmp(curr_cmd->tkn,"ping")==0 || strcmp(curr_cmd->tkn,"spy"));
+            strcmp(curr_cmd->tkn,"fg")==0 || strcmp(curr_cmd->tkn,"ping")==0 ||
+            strcmp(curr_cmd->tkn,"spy")==0 || strcmp(curr_cmd->tkn,"snoop")==0);
             
             int has_pipe=0;
             tknll *tmp=curr_cmd;
@@ -219,6 +221,7 @@ int main() {
                     else if(strcmp(curr_cmd->tkn,"fg")==0) fg_cmd(curr_cmd);
                     else if(strcmp(curr_cmd->tkn,"ping")==0) ping_cmd(curr_cmd);
                     else if(strcmp(curr_cmd->tkn,"spy")==0) spy_cmd(curr_cmd);
+                    else if(strcmp(curr_cmd->tkn,"snoop")==0) snoop_cmd(curr_cmd);
 
                     fflush(stdout);
 
