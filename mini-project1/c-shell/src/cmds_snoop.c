@@ -16,6 +16,7 @@ typedef struct {
     unsigned long long id;
     int count;
     double total_time;
+    int first_occurrence;
 } syscall_stat;
 
 const char* get_syscall_name(unsigned long long id) {
@@ -39,39 +40,47 @@ const char* get_syscall_name(unsigned long long id) {
         case 59: return "execve";
         case 60: return "exit";
         case 231: return "exit_group";
-        default: return NULL;
+        default: return NULL; 
     }
 }
 
+int compare_syscalls(const void *a, const void *b) {
+    syscall_stat *statA=(syscall_stat *)a;
+    syscall_stat *statB=(syscall_stat *)b;
+
+    if(statB->count!=statA->count) return statB->count-statA->count;
+    return statA->first_occurrence-statB->first_occurrence;
+}
+
 void snoop_cmd(tknll *head) {
-    if(head == NULL || head->next == NULL) {
+    if(head==NULL || head->next==NULL) {
         printf("cshell: snoop: missing command to trace\n");
         return;
     }
 
-    int argc = 0;
-    tknll *tmp = head->next;
-    while(tmp != NULL && tmp->type == WORD) {
+    int argc=0;
+    tknll *tmp=head->next;
+    while(tmp!=NULL && tmp->type==WORD) {
         argc++;
-        tmp = tmp->next;
+        tmp=tmp->next;
     }
 
-    char **argv = malloc((argc + 1) * sizeof(char*));
-    tmp = head->next;
-    for(int i = 0; i < argc; i++) {
-        argv[i] = tmp->tkn;
-        tmp = tmp->next;
+    char **argv=malloc((argc+1)*sizeof(char*));
+    tmp=head->next;
+    for(int i=0;i<argc;i++) {
+        argv[i]=tmp->tkn;
+        tmp=tmp->next;
     }
-    argv[argc] = NULL;
+    argv[argc]=NULL;
 
-    pid_t pid = fork();
-    if (pid == -1) {
+    pid_t pid=fork();
+    if(pid==-1) {
         perror("fork");
         free(argv);
         return;
     }
 
-    if (pid == 0) {
+    if(pid==0) {
         ptrace(PTRACE_TRACEME, 0, NULL, NULL);
         execvp(argv[0], argv);
         perror("execvp");
@@ -84,50 +93,54 @@ void snoop_cmd(tknll *head) {
 
         syscall_stat stats[MAX_SYSCALLS];
         memset(stats, 0, sizeof(stats));
-        for(int i = 0; i < MAX_SYSCALLS; i++) {
-            stats[i].id = i;
+        for(int i=0;i<MAX_SYSCALLS;i++) {
+            stats[i].id=i;
+            stats[i].first_occurrence=-1;
         }
 
-        int in_syscall = 0;
-        unsigned long long curr_syscall = 0;
+        int in_syscall=0;
+        unsigned long long curr_syscall=0;
         struct timespec start_time, end_time;
+        int occurrence_counter=0;
 
-        while (1) {
+        while(1) {
             ptrace(PTRACE_SYSCALL, pid, NULL, NULL);
             waitpid(pid, &status, 0);
             
-            if (WIFEXITED(status) || WIFSIGNALED(status)) {
+            if(WIFEXITED(status) || WIFSIGNALED(status)) {
                 break;
             }
 
             struct user_regs_struct regs;
             ptrace(PTRACE_GETREGS, pid, NULL, &regs);
             
-            if (!in_syscall) {
-                curr_syscall = regs.orig_rax;
+            if(!in_syscall) {
+                curr_syscall=regs.orig_rax;
                 clock_gettime(CLOCK_MONOTONIC, &start_time);
-                in_syscall = 1;
+                in_syscall=1;
             } else {
                 clock_gettime(CLOCK_MONOTONIC, &end_time);
-                double elapsed = (end_time.tv_sec - start_time.tv_sec) + 
-                                 (end_time.tv_nsec - start_time.tv_nsec) / 1e9;
+                double elapsed=(end_time.tv_sec-start_time.tv_sec)+((end_time.tv_nsec-start_time.tv_nsec)/1e9);
                 
-                if (curr_syscall < MAX_SYSCALLS) {
+                if(curr_syscall<MAX_SYSCALLS) {
+                    if(stats[curr_syscall].count==0) stats[curr_syscall].first_occurrence=occurrence_counter++;
+
                     stats[curr_syscall].count++;
-                    stats[curr_syscall].total_time += elapsed;
+                    stats[curr_syscall].total_time+=elapsed;
                 }
-                in_syscall = 0;
+                in_syscall=0;
             }
         }
         free(argv);
 
+        qsort(stats, MAX_SYSCALLS, sizeof(syscall_stat), compare_syscalls);
+
         printf("%-14s%-8s%s\n", "syscall", "calls", "time");
-        for (int i = 0; i < MAX_SYSCALLS; i++) {
-            if (stats[i].count > 0) {
-                const char* name = get_syscall_name(stats[i].id);
-                if (name != NULL) {
-                    printf("%-14s%-8d%.3fs\n", name, stats[i].count, stats[i].total_time);
-                } else {
+        for(int i=0;i<MAX_SYSCALLS;i++) {
+            if(stats[i].count>0) {
+                const char* name=get_syscall_name(stats[i].id);
+                if(name!=NULL) printf("%-14s%-8d%.3fs\n", name, stats[i].count, stats[i].total_time);
+                else {
                     char unknown_name[32];
                     snprintf(unknown_name, sizeof(unknown_name), "syscall_%llu", stats[i].id);
                     printf("%-14s%-8d%.3fs\n", unknown_name, stats[i].count, stats[i].total_time);
