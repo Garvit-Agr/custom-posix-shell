@@ -5,9 +5,43 @@
 #include <sys/wait.h>
 #include <sys/ptrace.h>
 #include <sys/user.h>
+#include <time.h>
 
 #include "parser.h"
 #include "cmds_snoop.h"
+
+#define MAX_SYSCALLS 350
+
+typedef struct {
+    unsigned long long id;
+    int count;
+    double total_time;
+} syscall_stat;
+
+const char* get_syscall_name(unsigned long long id) {
+    switch(id) {
+        case 0: return "read";
+        case 1: return "write";
+        case 2: return "open";
+        case 3: return "close";
+        case 4: return "stat";
+        case 5: return "fstat";
+        case 8: return "lseek";
+        case 9: return "mmap";
+        case 10: return "mprotect";
+        case 11: return "munmap";
+        case 12: return "brk";
+        case 13: return "rt_sigaction";
+        case 14: return "rt_sigprocmask";
+        case 16: return "ioctl";
+        case 35: return "nanosleep";
+        case 39: return "getpid";
+        case 59: return "execve";
+        case 60: return "exit";
+        case 231: return "exit_group";
+        default: return NULL;
+    }
+}
 
 void snoop_cmd(tknll *head) {
     if(head == NULL || head->next == NULL) {
@@ -48,6 +82,16 @@ void snoop_cmd(tknll *head) {
         
         ptrace(PTRACE_SETOPTIONS, pid, 0, PTRACE_O_TRACESYSGOOD);
 
+        syscall_stat stats[MAX_SYSCALLS];
+        memset(stats, 0, sizeof(stats));
+        for(int i = 0; i < MAX_SYSCALLS; i++) {
+            stats[i].id = i;
+        }
+
+        int in_syscall = 0;
+        unsigned long long curr_syscall = 0;
+        struct timespec start_time, end_time;
+
         while (1) {
             ptrace(PTRACE_SYSCALL, pid, NULL, NULL);
             waitpid(pid, &status, 0);
@@ -59,11 +103,36 @@ void snoop_cmd(tknll *head) {
             struct user_regs_struct regs;
             ptrace(PTRACE_GETREGS, pid, NULL, &regs);
             
-            printf("Syscall ID: %llu\n", (unsigned long long)regs.orig_rax);
-            
-            ptrace(PTRACE_SYSCALL, pid, NULL, NULL);
-            waitpid(pid, &status, 0);
+            if (!in_syscall) {
+                curr_syscall = regs.orig_rax;
+                clock_gettime(CLOCK_MONOTONIC, &start_time);
+                in_syscall = 1;
+            } else {
+                clock_gettime(CLOCK_MONOTONIC, &end_time);
+                double elapsed = (end_time.tv_sec - start_time.tv_sec) + 
+                                 (end_time.tv_nsec - start_time.tv_nsec) / 1e9;
+                
+                if (curr_syscall < MAX_SYSCALLS) {
+                    stats[curr_syscall].count++;
+                    stats[curr_syscall].total_time += elapsed;
+                }
+                in_syscall = 0;
+            }
         }
         free(argv);
+
+        printf("%-14s%-8s%s\n", "syscall", "calls", "time");
+        for (int i = 0; i < MAX_SYSCALLS; i++) {
+            if (stats[i].count > 0) {
+                const char* name = get_syscall_name(stats[i].id);
+                if (name != NULL) {
+                    printf("%-14s%-8d%.3fs\n", name, stats[i].count, stats[i].total_time);
+                } else {
+                    char unknown_name[32];
+                    snprintf(unknown_name, sizeof(unknown_name), "syscall_%llu", stats[i].id);
+                    printf("%-14s%-8d%.3fs\n", unknown_name, stats[i].count, stats[i].total_time);
+                }
+            }
+        }
     }
 }
