@@ -467,6 +467,37 @@ scheduler(void)
     intr_off();
 
     int found = 0;
+
+#ifdef MLFQ
+    struct proc *best_p = 0;
+    int best_queue = 4;
+    int best_arrival = (1<<31)-1;
+
+    for (p = proc; p < &proc[NPROC]; p++) {
+      acquire(&p->lock);
+      if (p->state == RUNNABLE) {
+        if (p->curr_queue < best_queue || (p->curr_queue == best_queue && p->arrival_time < best_arrival)) {
+          best_queue = p->curr_queue;
+          best_arrival = p->arrival_time;
+          best_p = p;
+        }
+      }
+      release(&p->lock);
+    }
+
+    if (best_p != 0) {
+      acquire(&best_p->lock);
+      if (best_p->state == RUNNABLE && best_p->curr_queue == best_queue && best_p->arrival_time == best_arrival) {
+        best_p->state = RUNNING;
+        c->proc = best_p;
+        swtch(&c->context, &best_p->context);
+        mycpu()->intena = 0;
+        c->proc = 0;
+        found = 1;
+      }
+      release(&best_p->lock);
+    }
+#else
     for (p = proc; p < &proc[NPROC]; p++) {
       acquire(&p->lock);
       if (p->state == RUNNABLE) {
@@ -487,6 +518,8 @@ scheduler(void)
       }
       release(&p->lock);
     }
+#endif
+
     if (found == 0) {
       // nothing to run; stop running on this core until an interrupt.
       asm volatile("wfi");
@@ -528,6 +561,11 @@ yield(void)
   struct proc *p = myproc();
   acquire(&p->lock);
   p->state = RUNNABLE;
+#ifdef MLFQ
+  if (p->curr_queue == 3) {
+    p->arrival_time = ticks;
+  }
+#endif
   sched();
   release(&p->lock);
 }
