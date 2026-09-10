@@ -101,4 +101,12 @@ struct proc {
   struct file *ofile[NOFILE];  // Open files
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
+#ifdef MLFQ
+  int curr_queue;
+  int ticks_curr_slice;
+  int arrival_time;
+  int start_time;
+  int wait_time;
+  int run_time;
+#endif
 };
