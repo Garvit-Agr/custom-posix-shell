@@ -54,6 +54,20 @@ dkms.conf
 # debug information files
 *.dwo
 
+*~
+_*
+*.o
+*.d
+*.asm
+*.sym
+*.img
+/mkfs/mkfs
+/kernel/kernel
+/user/usys.S
+.gdbinit
+TAGS
+
+
 .hop_history.csv
 
 .DS_Store
