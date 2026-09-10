@@ -146,6 +146,15 @@ found:
   p->context.ra = (uint64)forkret;
   p->context.sp = p->kstack + PGSIZE;
 
+  #ifdef MLFQ
+    p->curr_queue = 0;
+    p->ticks_curr_slice = 0;
+    p->arrival_time = 0;
+    p->start_time = 0;
+    p->wait_time = 0;
+    p->run_time = 0;
+  #endif
+
   return p;
 }
 
