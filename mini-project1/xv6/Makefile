@@ -63,7 +63,16 @@ OBJDUMP = $(TOOLPREFIX)objdump
 # Deterministic builds.
 DETFLAGS = -ffile-prefix-map=$(CURDIR)=.
 
+ifndef SCHEDULER
+SCHEDULER := RR
+endif
+
 CFLAGS = -Wall -Werror -Wno-unknown-attributes -O -fno-omit-frame-pointer -ggdb -gdwarf-2
+
+ifeq ($(SCHEDULER),MLFQ)
+CFLAGS += -DMLFQ
+endif
+
 CFLAGS += $(DETFLAGS)
 CFLAGS += -march=rv64gc
 CFLAGS += -std=gnu99
