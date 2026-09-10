@@ -15,6 +15,12 @@ struct proc *initproc;
 int nextpid = 1;
 struct spinlock pid_lock;
 
+#ifdef MLFQ
+struct proc *mlfq[4][NPROC];
+int mlfq_head[4];
+int mlfq_tail[4];
+#endif
+
 extern void forkret(void);
 static void freeproc(struct proc *p);
 
@@ -56,6 +62,16 @@ procinit(void)
     p->state = UNUSED;
     p->kstack = KSTACK((int)(p - proc));
   }
+
+#ifdef MLFQ
+  for (int i = 0; i < 4; i++) {
+    mlfq_head[i] = 0;
+    mlfq_tail[i] = 0;
+    for (int j = 0; j < NPROC; j++) {
+      mlfq[i][j] = 0;
+    }
+  }
+#endif
 }
 
 // Must be called with interrupts disabled,
