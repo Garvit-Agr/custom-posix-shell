@@ -630,6 +630,9 @@ sleep(void)
   acquire(&p->lock);
   if (p->chan != 0) {
     p->state = SLEEPING;
+#ifdef MLFQ
+    p->ticks_curr_slice=0;
+#endif
     sched();
   }
   release(&p->lock);
@@ -652,6 +655,9 @@ wakeup(void *chan)
       // go to sleep, also set it back to RUNNING.
       if (p->state == SLEEPING) {
         p->state = RUNNABLE;
+#ifdef MLFQ
+        p->arrival_time=ticks;
+#endif
       }
     }
     release(&p->lock);
