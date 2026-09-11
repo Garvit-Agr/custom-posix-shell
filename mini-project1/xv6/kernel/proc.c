@@ -764,7 +764,11 @@ procdump(void)
       state = states[p->state];
     else
       state = "???";
+#ifdef MLFQ
+    printk("%d %s %s | Q: %d | slice_ticks: %d | arr: %d", p->pid, state, p->name, p->curr_queue, p->ticks_curr_slice, p->arrival_time);
+#else
     printk("%d %s %s", p->pid, state, p->name);
+#endif
     printk("\n");
   }
 }

@@ -9,6 +9,11 @@
 struct spinlock tickslock;
 uint ticks;
 
+#ifdef MLFQ
+struct spinlock boostlock;
+uint last_boost_time = 0;
+#endif
+
 extern char trampoline[], uservec[];
 
 // in kernelvec.S, calls kerneltrap().
@@ -20,6 +25,9 @@ void
 trapinit(void)
 {
   initlock(&tickslock, "time");
+#ifdef MLFQ
+  initlock(&boostlock, "boost");
+#endif
 }
 
 // set up to take exceptions and traps while in the kernel.
@@ -87,30 +95,52 @@ usertrap(void)
     p->ticks_curr_slice++;
     p->run_time++;
 
-    if (p->curr_queue == 0 && p->ticks_curr_slice >= 1) {
-      p->curr_queue = 1;
-      p->ticks_curr_slice = 0;
-      p->arrival_time = ticks;
-      yield();
-    } else if (p->curr_queue == 1 && p->ticks_curr_slice >= 4) {
-      p->curr_queue = 2;
-      p->ticks_curr_slice = 0;
-      p->arrival_time = ticks;
-      yield();
-    } else if (p->curr_queue == 2 && p->ticks_curr_slice >= 8) {
-      p->curr_queue = 3;
-      p->ticks_curr_slice = 0;
-      p->arrival_time = ticks;
-      yield();
-    } else if (p->curr_queue == 3 && p->ticks_curr_slice >= 16) {
-      p->ticks_curr_slice = 0;
+    int should_boost = 0;
+    acquire(&boostlock);
+    if (ticks - last_boost_time >= 48) {
+      last_boost_time = ticks;
+      should_boost = 1;
+    }
+    release(&boostlock);
+
+    if (should_boost) {
+      extern struct proc proc[];
+      for (struct proc *ep = proc; ep < &proc[NPROC]; ep++) {
+        acquire(&ep->lock);
+        if (ep->state != UNUSED) {
+          ep->curr_queue = 0;
+          ep->ticks_curr_slice = 0;
+          ep->arrival_time = ticks;
+        }
+        release(&ep->lock);
+      }
       yield();
     } else {
-      extern struct proc proc[];
-      for (struct proc *ep=proc; ep<&proc[NPROC]; ep++) {
-        if (ep->state==RUNNABLE && ep->curr_queue<p->curr_queue) {
-          yield();
-          break;
+      if (p->curr_queue == 0 && p->ticks_curr_slice >= 1) {
+        p->curr_queue = 1;
+        p->ticks_curr_slice = 0;
+        p->arrival_time = ticks;
+        yield();
+      } else if (p->curr_queue == 1 && p->ticks_curr_slice >= 4) {
+        p->curr_queue = 2;
+        p->ticks_curr_slice = 0;
+        p->arrival_time = ticks;
+        yield();
+      } else if (p->curr_queue == 2 && p->ticks_curr_slice >= 8) {
+        p->curr_queue = 3;
+        p->ticks_curr_slice = 0;
+        p->arrival_time = ticks;
+        yield();
+      } else if (p->curr_queue == 3 && p->ticks_curr_slice >= 16) {
+        p->ticks_curr_slice = 0;
+        yield();
+      } else {
+        extern struct proc proc[];
+        for (struct proc *ep=proc; ep<&proc[NPROC]; ep++) {
+          if (ep->state==RUNNABLE && ep->curr_queue<p->curr_queue) {
+            yield();
+            break;
+          }
         }
       }
     }
@@ -194,37 +224,59 @@ kerneltrap()
     p->ticks_curr_slice++;
     p->run_time++;
 
-    if (p->curr_queue == 0 && p->ticks_curr_slice >= 1) {
-      p->curr_queue = 1;
-      p->ticks_curr_slice = 0;
-      p->arrival_time = ticks;
-      yield();
-    } else if (p->curr_queue == 1 && p->ticks_curr_slice >= 4) {
-      p->curr_queue = 2;
-      p->ticks_curr_slice = 0;
-      p->arrival_time = ticks;
-      yield();
-    } else if (p->curr_queue == 2 && p->ticks_curr_slice >= 8) {
-      p->curr_queue = 3;
-      p->ticks_curr_slice = 0;
-      p->arrival_time = ticks;
-      yield();
-    } else if (p->curr_queue == 3 && p->ticks_curr_slice >= 16) {
-      p->ticks_curr_slice = 0;
+    int should_boost = 0;
+    acquire(&boostlock);
+    if (ticks - last_boost_time >= 48) {
+      last_boost_time = ticks;
+      should_boost = 1;
+    }
+    release(&boostlock);
+
+    if (should_boost) {
+      extern struct proc proc[];
+      for (struct proc *ep = proc; ep < &proc[NPROC]; ep++) {
+        acquire(&ep->lock);
+        if (ep->state != UNUSED) {
+          ep->curr_queue = 0;
+          ep->ticks_curr_slice = 0;
+          ep->arrival_time = ticks;
+        }
+        release(&ep->lock);
+      }
       yield();
     } else {
-      extern struct proc proc[];
-      for (struct proc *ep=proc; ep<&proc[NPROC]; ep++) {
-        if (ep->state==RUNNABLE && ep->curr_queue<p->curr_queue) {
-          yield();
-          break;
+      if (p->curr_queue == 0 && p->ticks_curr_slice >= 1) {
+        p->curr_queue = 1;
+        p->ticks_curr_slice = 0;
+        p->arrival_time = ticks;
+        yield();
+      } else if (p->curr_queue == 1 && p->ticks_curr_slice >= 4) {
+        p->curr_queue = 2;
+        p->ticks_curr_slice = 0;
+        p->arrival_time = ticks;
+        yield();
+      } else if (p->curr_queue == 2 && p->ticks_curr_slice >= 8) {
+        p->curr_queue = 3;
+        p->ticks_curr_slice = 0;
+        p->arrival_time = ticks;
+        yield();
+      } else if (p->curr_queue == 3 && p->ticks_curr_slice >= 16) {
+        p->ticks_curr_slice = 0;
+        yield();
+      } else {
+        extern struct proc proc[];
+        for (struct proc *ep=proc; ep<&proc[NPROC]; ep++) {
+          if (ep->state==RUNNABLE && ep->curr_queue<p->curr_queue) {
+            yield();
+            break;
+          }
         }
       }
     }
 #else
     yield();
 #endif
-}
+  }
 
   // the yield() may have caused some traps to occur,
   // so restore trap registers for use by kernelvec.S's sepc instruction.
