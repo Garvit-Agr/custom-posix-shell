@@ -82,8 +82,34 @@ usertrap(void)
     kexit(-1);
 
   // give up the CPU if this is a timer interrupt.
-  if (which_dev == 2)
-    yield();
+  if (which_dev == 2) {
+  #ifdef MLFQ
+      p->ticks_curr_slice++;
+      p->run_time++;
+
+      if (p->curr_queue == 0 && p->ticks_curr_slice >= 1) {
+        p->curr_queue = 1;
+        p->ticks_curr_slice = 0;
+        p->arrival_time = ticks;
+        yield();
+      } else if (p->curr_queue == 1 && p->ticks_curr_slice >= 4) {
+        p->curr_queue = 2;
+        p->ticks_curr_slice = 0;
+        p->arrival_time = ticks;
+        yield();
+      } else if (p->curr_queue == 2 && p->ticks_curr_slice >= 8) {
+        p->curr_queue = 3;
+        p->ticks_curr_slice = 0;
+        p->arrival_time = ticks;
+        yield();
+      } else if (p->curr_queue == 3 && p->ticks_curr_slice >= 16) {
+        p->ticks_curr_slice = 0;
+        yield();
+      }
+  #else
+      yield();
+  #endif
+  }
 
   prepare_return();
 
@@ -154,8 +180,35 @@ kerneltrap()
   }
 
   // give up the CPU if this is a timer interrupt.
-  if (which_dev == 2 && myproc() != 0)
-    yield();
+  if (which_dev == 2 && myproc() != 0) {
+  #ifdef MLFQ
+      struct proc *p = myproc();
+      p->ticks_curr_slice++;
+      p->run_time++;
+
+      if (p->curr_queue == 0 && p->ticks_curr_slice >= 1) {
+        p->curr_queue = 1;
+        p->ticks_curr_slice = 0;
+        p->arrival_time = ticks;
+        yield();
+      } else if (p->curr_queue == 1 && p->ticks_curr_slice >= 4) {
+        p->curr_queue = 2;
+        p->ticks_curr_slice = 0;
+        p->arrival_time = ticks;
+        yield();
+      } else if (p->curr_queue == 2 && p->ticks_curr_slice >= 8) {
+        p->curr_queue = 3;
+        p->ticks_curr_slice = 0;
+        p->arrival_time = ticks;
+        yield();
+      } else if (p->curr_queue == 3 && p->ticks_curr_slice >= 16) {
+        p->ticks_curr_slice = 0;
+        yield();
+      }
+  #else
+      yield();
+  #endif
+  }
 
   // the yield() may have caused some traps to occur,
   // so restore trap registers for use by kernelvec.S's sepc instruction.
