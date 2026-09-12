@@ -15,8 +15,8 @@ int fg_timed_out = 0;
 
 void fg_alarm_handler(int sig) {
     if(fg_active_pid > 0) {
-        printf("\ncshell: fg job %d timed out after 15 seconds\n", fg_active_pid);
-        kill(-fg_active_pid, SIGKILL);
+        printf("\nresume: job timed out\n");
+        kill(-fg_active_pid, SIGTERM);
         fg_timed_out = 1;
     }
 }
@@ -47,6 +47,11 @@ void fg_cmd(tknll *head) {
     job fg_job=bg_jobs[found_idx];
     remove_job(fg_job.pid);
 
+    int timeout=0;
+    if(head->next->next!=NULL && head->next->next->type == WORD) {
+        timeout=atoi(head->next->next->tkn);
+    }
+
     printf("%s\n", fg_job.cmd);
 
     tcsetpgrp(STDIN_FILENO, fg_job.pid);
@@ -55,21 +60,31 @@ void fg_cmd(tknll *head) {
         perror("kill");
     }
 
-    fg_active_pid = fg_job.pid;
-    fg_timed_out = 0;
+    fg_active_pid=fg_job.pid;
+    fg_timed_out=0;
     
-    void (*old_alrm)(int) = signal(SIGALRM, fg_alarm_handler);
-    alarm(15); 
-
-    int stopped=0;
-    int status;
-    
-    while(waitpid(fg_job.pid, &status, WUNTRACED) < 0) {
-        if(errno != EINTR) break; 
+    void (*old_alrm)(int) = NULL;
+    if(timeout>0) {
+        old_alrm=signal(SIGALRM, fg_alarm_handler);
+        alarm(timeout); 
     }
 
-    alarm(0); 
-    signal(SIGALRM, old_alrm);
+    int stopped=0;
+    int status=0;
+    
+    for(int p=0; p<fg_job.num_pids; p++) {
+        int stat;
+        while(waitpid(fg_job.pids[p], &stat, WUNTRACED)<0) {
+            if(errno!=EINTR) break; 
+        }
+        
+        if(fg_job.pids[p]==fg_job.pid) status=stat;
+    }
+
+    if(timeout>0) {
+        alarm(0); 
+        signal(SIGALRM, old_alrm);
+    }
     fg_active_pid = -1;
 
     tcsetpgrp(STDIN_FILENO, getpid());
