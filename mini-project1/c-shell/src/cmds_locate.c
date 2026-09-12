@@ -3,14 +3,12 @@
 #include <string.h>
 #include <unistd.h>
 #include <dirent.h>
-#include <sys/param.h>
+#include <limits.h>
 
 #include "parser.h"
 #include "cmds_locate.h"
 
-void locate(tknll *head, char *homwd, char *prevwd) {
-    (void)homwd;
-    (void)prevwd;
+void locate(tknll *head) {
 
     tknll *ptr=head->next;
 
@@ -19,15 +17,15 @@ void locate(tknll *head, char *homwd, char *prevwd) {
         return;
     }
 
-    char cwd[MAXPATHLEN+5];
-    getcwd(cwd, MAXPATHLEN+5);
+    char cwd[PATH_MAX+5];
+    getcwd(cwd, PATH_MAX+5);
 
     //fixing builtins ignoring operators, because of problem statement part A3
     while(ptr!=NULL && ptr->type!=OP_PIPE && ptr->type!=OP_SEMI && ptr->type!=OP_AMP && ptr->type!=OP_LT && ptr->type!=OP_GT && ptr->type!=OP_GTGT) {
         char *tgt=ptr->tkn;
         int fnd=0;
         
-        char full_path[(2*MAXPATHLEN)+10]; 
+        char full_path[(2*PATH_MAX)+10]; 
 
         snprintf(full_path, sizeof(full_path), "%s/%s", cwd, tgt);
         
@@ -45,7 +43,7 @@ void locate(tknll *head, char *homwd, char *prevwd) {
             char *dir=path_dup;
             char *end=path_dup+strlen(path_dup);
             
-            while(dir<end) {
+            while(dir<=end) {
                 char *colon=strchr(dir, ':');
                 if(colon!=NULL) *colon='\0';
                 

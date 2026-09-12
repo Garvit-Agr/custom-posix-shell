@@ -3,6 +3,6 @@
 
 #include "parser.h"
 
-void peek(tknll *head, char *homwd, char *prevwd);
+void peek(tknll *head);
 
 #endif

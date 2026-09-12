@@ -220,16 +220,15 @@ void process_file(int fd, int n, int r, int *global_line_num) {
     }
 }
 
-void peek(tknll *head, char *homwd, char *prevwd) {
-    (void)homwd;
-    (void)prevwd;
-    
+void peek(tknll *head) {    
     tknll *ptr=head->next;
     
     int n=0;
     int r=0;
-    char *files[500];
+    int file_cap=10;
+    char **files=malloc(file_cap*sizeof(char *));
     int file_cnt=0;
+    if(files==NULL) return;
 
     //fixing builtins ignoring operators, because of problem statement part A3
     while(ptr!=NULL && ptr->type!=OP_PIPE && ptr->type!=OP_SEMI && ptr->type!=OP_AMP && ptr->type!=OP_LT && ptr->type!=OP_GT && ptr->type!=OP_GTGT) {
@@ -237,6 +236,7 @@ void peek(tknll *head, char *homwd, char *prevwd) {
             //fixing peek flags after filenames, because of doubt doc q18 strict naming
             if(file_cnt>0) {
                 printf("peek: invalid syntax\n");
+                free(files);
                 return;
             }
             int valid=1;
@@ -247,10 +247,23 @@ void peek(tknll *head, char *homwd, char *prevwd) {
             }
             if(valid==0) {
                 printf("peek: invalid syntax\n");
+                free(files);
                 return;
             }
         }
-        else files[file_cnt++]=ptr->tkn;
+        else {
+            if(file_cnt>=file_cap) {
+                int new_cap=file_cap*2;
+                char **tmp=realloc(files, new_cap*sizeof(char *));
+                if(tmp==NULL) {
+                    free(files);
+                    return;
+                }
+                files=tmp;
+                file_cap=new_cap;
+            }
+            files[file_cnt++]=ptr->tkn;
+        }
 
         ptr=ptr->next;
     }
@@ -288,4 +301,5 @@ void peek(tknll *head, char *homwd, char *prevwd) {
             }
         }
     }
+    free(files);
 }

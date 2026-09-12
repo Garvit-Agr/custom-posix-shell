@@ -3,6 +3,6 @@
 
 #include "parser.h"
 
-void locate(tknll *head, char *homwd, char *prevwd);
+void locate(tknll *head);
 
 #endif
