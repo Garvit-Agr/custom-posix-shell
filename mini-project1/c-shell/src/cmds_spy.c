@@ -97,6 +97,11 @@ void spy_cmd(tknll *head) {
                     else if(S_ISLNK(st.st_mode)) type_str="LNK";
                     else if(S_ISSOCK(st.st_mode)) type_str="SOCK";
                 }
+                else {
+                    if(strncmp(target_path, "pipe:", 5)==0) type_str="FIFO";
+                    else if(strncmp(target_path, "socket:", 7)==0) type_str="SOCK";
+                    else if(strncmp(target_path, "anon_inode:", 11)==0) type_str="CHR";
+                }
 
                 printf("%-6d %-6s %-6s %s\n", target_pid, dir->d_name, type_str, target_path);
             }

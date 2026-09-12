@@ -42,41 +42,28 @@ void locate(tknll *head, char *homwd, char *prevwd) {
         char *path_env=getenv("PATH");
         if(path_env!=NULL) {
             char *path_dup=strdup(path_env);
-            char *dir=strtok(path_dup, ":");
+            char *dir=path_dup;
+            char *end=path_dup+strlen(path_dup);
+            
+            while(dir<end) {
+                char *colon=strchr(dir, ':');
+                if(colon!=NULL) *colon='\0';
+                
+                char *current_dir=(strlen(dir)==0) ? "." : dir;
+                
+                if(current_dir[0]=='/') snprintf(full_path, sizeof(full_path), "%s/%s", current_dir, tgt);
+                else snprintf(full_path, sizeof(full_path), "%s/%s/%s", cwd, current_dir, tgt);
 
-            char *seen[500];
-            int seen_cnt=0;
-
-            while(dir!=NULL) {
-                char resolved_dir[MAXPATHLEN+5];
-                int skip=0;
-                if(realpath(dir, resolved_dir)!=NULL) {
-                    for(int i=0;i<seen_cnt;i++) {
-                        if(strcmp(seen[i], resolved_dir)==0) { skip=1; break; }
-                    }
-                    if(!skip) seen[seen_cnt++]=strdup(resolved_dir);
+                DIR *d_check=opendir(full_path);
+                if(d_check!=NULL) closedir(d_check);
+                else if(access(full_path, X_OK)==0) {
+                    printf("%s\n", full_path);
+                    fnd=1;
                 }
-
-                if(!skip) {
-                    if(dir[0]=='/') snprintf(full_path, sizeof(full_path), "%s/%s", dir, tgt);
-                    else snprintf(full_path, sizeof(full_path), "%s/%s/%s", cwd, dir, tgt);
-
-                    DIR *d_check=opendir(full_path);
-                    if(d_check!=NULL) closedir(d_check);
-
-                    else if(access(full_path, X_OK)==0) {
-                        char resolved_path[MAXPATHLEN+5];
-                        if(realpath(full_path, resolved_path)!=NULL)
-                            printf("%s\n", resolved_path);
-                        else
-                            printf("%s\n", full_path);
-                        fnd=1;
-                    }
-                }
-
-                dir=strtok(NULL, ":");
+                
+                if(colon==NULL) break;
+                dir=colon+1;
             }
-            for(int i=0;i<seen_cnt;i++) free(seen[i]);
             free(path_dup);
         }
 
