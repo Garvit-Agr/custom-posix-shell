@@ -33,11 +33,16 @@ void activities(tknll *head) {
             fclose(f);
 
             char st_chr='R';
+            char proc_name[256]="unknown";
             char *opn_par=strchr(buf, '(');
             char *cls_par=strrchr(buf, ')');
             
             if(opn_par!=NULL && cls_par!=NULL) {
-                st_chr=*(cls_par+2);
+                st_chr=*(cls_par+2);         
+                int name_len=cls_par-opn_par-1;
+                if(name_len>255) name_len=255;
+                strncpy(proc_name, opn_par+1, name_len);
+                proc_name[name_len]='\0';
             }
 
             if(st_chr=='Z' || st_chr=='X') continue;
@@ -50,7 +55,7 @@ void activities(tknll *head) {
             char *st_str="Running";
             if(st_chr=='T') st_str="Stopped";
 
-            printf("  %d  %s  %s\n", cur_p, bg_jobs[i].cmd, st_str);
+            printf("  %d  %s  %s\n", cur_p, proc_name, st_str);
         }
     }
 }

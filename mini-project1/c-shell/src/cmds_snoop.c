@@ -62,7 +62,7 @@ void snoop_cmd(tknll *head) {
     pid_t attach_pid=-1;
 
     if(strcmp(head->next->tkn, "-p")==0) {
-        if(head->next->next==NULL) {
+        if(head->next->next==NULL || head->next->next->next!=NULL) {
             printf("snoop: invalid syntax\n");
             return;
         }

@@ -8,7 +8,7 @@
 #include "jobs.h"
 
 void ping_cmd(tknll *head) {
-    if(head==NULL || head->next==NULL || head->next->next==NULL) {
+    if(head==NULL || head->next==NULL || head->next->next==NULL || head->next->next->next!=NULL) {
         printf("ping: invalid syntax\n");
         return;
     }
