@@ -3,55 +3,90 @@
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <sys/wait.h>
+#include <signal.h>
 
 #include "parser.h"
 #include "out_redir.h"
 
 int out_redir(tknll *head, pid_t *helper_pid) {
     *helper_pid=-1;
-    char *out_files[100];
-    int out_modes[100];
+
+    char **out_files=NULL;
+    int *out_modes=NULL;
     int out_cnt=0;
-    
-    tknll *ptr=head;
-    
-    while(ptr!=NULL && ptr->type!=OP_PIPE && ptr->type!=OP_SEMI && ptr->type!=OP_AMP) {
-        if(ptr->type==OP_GT || ptr->type==OP_GTGT) {
-            if(ptr->next!=NULL && ptr->next->type==WORD) {
-                out_files[out_cnt]=ptr->next->tkn;
-                if(ptr->type==OP_GTGT) out_modes[out_cnt]=1;
-                else out_modes[out_cnt]=0;
-                out_cnt++;
+    int cap=0;
+
+    for(tknll *ptr=head; ptr!=NULL && ptr->type!=OP_PIPE && ptr->type!=OP_SEMI && ptr->type!=OP_AMP; ptr=ptr->next) {
+        if(ptr->type!=OP_GT && ptr->type!=OP_GTGT) continue;
+        if(ptr->next==NULL || ptr->next->type!=WORD) continue;
+
+        if(out_cnt==cap) {
+            int new_cap=cap==0 ? 8 : cap*2;
+            char **new_files=malloc((size_t)new_cap*sizeof(char *));
+            int *new_modes=malloc((size_t)new_cap*sizeof(int));
+            if(new_files==NULL || new_modes==NULL) {
+                free(new_files);
+                free(new_modes);
+                free(out_files);
+                free(out_modes);
+                return -1;
             }
+            for(int i=0;i<out_cnt;i++) {
+                new_files[i]=out_files[i];
+                new_modes[i]=out_modes[i];
+            }
+            free(out_files);
+            free(out_modes);
+            out_files=new_files;
+            out_modes=new_modes;
+            cap=new_cap;
         }
-        ptr=ptr->next;
+
+        out_files[out_cnt]=ptr->next->tkn;
+        out_modes[out_cnt]=(ptr->type==OP_GTGT);
+        out_cnt++;
     }
 
-    if(out_cnt==0) return STDOUT_FILENO;
+    if(out_cnt==0) {
+        free(out_files);
+        free(out_modes);
+        return STDOUT_FILENO;
+    }
 
-    int fds[100];
-    for(int i=0; i<out_cnt; i++) {
-        int flags= O_WRONLY|O_CREAT;
-        if(out_modes[i]==0) flags= flags|O_TRUNC;
-        else flags= flags|O_APPEND;
-        
+    int *fds=malloc((size_t)out_cnt*sizeof(int));
+    if(fds==NULL) {
+        free(out_files);
+        free(out_modes);
+        return -1;
+    }
+
+    for(int i=0;i<out_cnt;i++) {
+        int flags=O_WRONLY|O_CREAT|(out_modes[i] ? O_APPEND : O_TRUNC);
         fds[i]=open(out_files[i], flags, 0644);
         if(fds[i]==-1) {
             printf("cshell: unable to create file for writing\n");
-            for(int j=0; j<i; j++) close(fds[j]);
+            for(int j=0;j<i;j++) close(fds[j]);
+            free(fds);
+            free(out_files);
+            free(out_modes);
             return -1;
         }
     }
 
+    free(out_files);
+    free(out_modes);
+
     if(out_cnt==1) {
-        return fds[0];
+        int fd=fds[0];
+        free(fds);
+        return fd;
     }
 
     int pfd[2];
     if(pipe(pfd)==-1) {
         perror("pipe");
-        for(int i=0; i<out_cnt; i++) close(fds[i]);
+        for(int i=0;i<out_cnt;i++) close(fds[i]);
+        free(fds);
         return -1;
     }
 
@@ -60,30 +95,39 @@ int out_redir(tknll *head, pid_t *helper_pid) {
         perror("fork");
         close(pfd[0]);
         close(pfd[1]);
-        for(int i=0; i<out_cnt; i++) close(fds[i]);
+        for(int i=0;i<out_cnt;i++) close(fds[i]);
+        free(fds);
         return -1;
     }
 
     if(pid==0) {
         close(pfd[1]);
-        
+        signal(SIGINT, SIG_DFL);
+        signal(SIGTSTP, SIG_DFL);
+        signal(SIGTTIN, SIG_DFL);
+        signal(SIGTTOU, SIG_DFL);
+
         char buf[4096];
-        int bytes;
+        ssize_t bytes;
         while((bytes=read(pfd[0], buf, sizeof(buf)))>0) {
-            for(int i=0; i<out_cnt; i++) {
-                write(fds[i], buf, bytes);
+            for(int i=0;i<out_cnt;i++) {
+                ssize_t written=0;
+                while(written<bytes) {
+                    ssize_t n=write(fds[i], buf+written, (size_t)(bytes-written));
+                    if(n<0) _exit(1);
+                    written+=n;
+                }
             }
         }
-        
+
         close(pfd[0]);
-        for(int i=0; i<out_cnt; i++) close(fds[i]);
-        _exit(0);
+        for(int i=0;i<out_cnt;i++) close(fds[i]);
+        _exit(bytes<0 ? 1 : 0);
     }
 
     close(pfd[0]);
-    for(int i=0; i<out_cnt; i++) close(fds[i]);
+    for(int i=0;i<out_cnt;i++) close(fds[i]);
+    free(fds);
     *helper_pid=pid;
-
-
     return pfd[1];
 }
