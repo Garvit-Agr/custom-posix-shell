@@ -27,42 +27,35 @@
 #define MAX_USER_INPUT_ALLOWED 1024
 
 int fg_running=0;
-char homewd[MAXPATHLEN+5]; // made global for sigchld prompt redraw
+char homewd[MAXPATHLEN+5];
 
 void sigchld_handler(int sig) {
+    (void)sig;
     int status;
     for(int i=0;i<job_cnt;i++) {
         
         for(int j=0; j<bg_jobs[i].num_pids; j++) {
             if(bg_jobs[i].pids[j]>0 && bg_jobs[i].pids[j]!=bg_jobs[i].pid) {
-                if(waitpid(bg_jobs[i].pids[j], &status, WNOHANG)>0) {
-                    bg_jobs[i].pids[j]=-1; 
+                int stat;
+                if(waitpid(bg_jobs[i].pids[j], &stat, WNOHANG | WUNTRACED | WCONTINUED)>0) {
+                    if(WIFEXITED(stat) || WIFSIGNALED(stat)) bg_jobs[i].pids[j]=-1; 
                 }
             }
         }
         
         if(bg_jobs[i].is_done==0) {
-            pid_t pid=waitpid(bg_jobs[i].pid, &status, WNOHANG);
+            int stat;
+            pid_t pid=waitpid(bg_jobs[i].pid, &stat, WNOHANG | WUNTRACED | WCONTINUED);
             if(pid>0) {
-                bg_jobs[i].is_done=1;
-                if(WIFEXITED(status) && WEXITSTATUS(status)==0) bg_jobs[i].exit_status=0;
-                else bg_jobs[i].exit_status=1;
-
-                if(fg_running==0) {
-                    char first_word[1024];
-                    sscanf(bg_jobs[i].cmd, "%s", first_word);
-                    if(bg_jobs[i].exit_status==0) {
-                        printf("\n%s with pid %d exited normally\n", first_word, pid);
-                    }
-                    else {
-                        printf("\n%s with pid %d exited abnormally\n", first_word, pid);
-                    }
-                    remove_job(pid);
-                    i--; 
-                    
-                    display_prompt(homewd);
-                    fflush(stdout);
+                if(WIFEXITED(stat) || WIFSIGNALED(stat)) {
+                    bg_jobs[i].is_done=1;
+                    if(WIFEXITED(stat) && WEXITSTATUS(stat)==0) bg_jobs[i].exit_status=0;
+                    else bg_jobs[i].exit_status=1;
                 }
+
+                else if(WIFSTOPPED(stat)) bg_jobs[i].state=0;
+                else if(WIFCONTINUED(stat)) bg_jobs[i].state=1;
+
             }
         }
     }

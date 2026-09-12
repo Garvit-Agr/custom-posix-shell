@@ -5,6 +5,7 @@
 #include <dirent.h>
 #include <sys/wait.h> // required for waitpid()
 #include <sys/param.h>
+#include <errno.h>
 
 #include "parser.h"
 #include "exec.h"
@@ -201,14 +202,18 @@ int execute(tknll *head, char *homwd, char *prevwd, int bg) {
         int stopped=0;
         for(int i=0; i<num_cmds; i++) {
             int status;
-            waitpid(pids[i], &status, WUNTRACED);
+            while(waitpid(pids[i], &status, WUNTRACED) < 0) {
+                if(errno!=EINTR) break;
+            }
             if(WIFEXITED(status) && WEXITSTATUS(status)==1) failed=1;
             if(WIFSTOPPED(status)) stopped=1;
         }
 
         for(int i=0; i<num_helpers; i++) {
             int status;
-            waitpid(helpers[i], &status, WUNTRACED);
+            while(waitpid(helpers[i], &status, WUNTRACED) < 0) {
+                if(errno!=EINTR) break;
+            }
         }
         
         tcsetpgrp(STDIN_FILENO, getpid()); 
@@ -222,6 +227,9 @@ int execute(tknll *head, char *homwd, char *prevwd, int bg) {
                 tmp=tmp->next;
             }
             
+            int len=strlen(full_cmd);
+            if(len>0 && full_cmd[len-1]==' ') full_cmd[len-1]='\0';
+            
             pid_t all_pids[300];
             int tot_pids=0;
             
@@ -229,7 +237,10 @@ int execute(tknll *head, char *homwd, char *prevwd, int bg) {
             for(int i=0; i<num_helpers; i++) all_pids[tot_pids++]=helpers[i];
             
             add_job(pids[0], all_pids, tot_pids, full_cmd);
-            printf("\n[%d] %d\n", next_job_num-1, pids[0]);
+            
+            bg_jobs[job_cnt-1].state = 0; 
+            
+            printf("\n[%d] + Stopped    %s\n", next_job_num-1, full_cmd);
         }
     }
     else {
