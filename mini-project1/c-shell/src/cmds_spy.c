@@ -31,7 +31,7 @@ void spy_cmd(tknll *head) {
 
     printf("%-6s %-6s %-6s %s\n", "PID", "FD", "TYPE", "PATH");
 
-    char link_path[512];
+    char link_path[4096];
     char target_path[MAXPATHLEN+5];
     ssize_t len;
 
@@ -81,7 +81,7 @@ void spy_cmd(tknll *head) {
         while((dir=readdir(fd_dir))!=NULL) {
             if(strcmp(dir->d_name, ".")==0 || strcmp(dir->d_name, "..")==0) continue;
 
-            char fd_link[512];
+            char fd_link[5000];
             snprintf(fd_link, sizeof(fd_link), "%s/%s", link_path, dir->d_name);
             len=readlink(fd_link, target_path, sizeof(target_path)-1);
             if(len!=-1) {

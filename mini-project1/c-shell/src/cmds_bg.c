@@ -13,11 +13,14 @@ void bg_cmd(tknll *head) {
         return;
     }
 
-    int j_num=atoi(head->next->tkn);
+    char *j_str=head->next->tkn;
+    if(j_str[0]=='%') j_str++;
+    int j_num=atoi(j_str);
     int found=0;
+    int i=0;
     pid_t target_pid=-1;
 
-    for(int i=0; i<job_cnt; i++) {
+    for(i=0; i<job_cnt; i++) {
         if(bg_jobs[i].job_num==j_num && bg_jobs[i].is_done==0) {
             target_pid=bg_jobs[i].pid;
             found=1;
@@ -30,7 +33,6 @@ void bg_cmd(tknll *head) {
         return;
     }
 
-    if(kill(-target_pid, SIGCONT)<0) {
-        perror("kill");
-    }
+    if(kill(-target_pid, SIGCONT)<0) perror("kill");
+    else printf("[%d] + Running %s\n", j_num, bg_jobs[i].cmd);
 }

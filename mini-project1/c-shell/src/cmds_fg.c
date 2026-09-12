@@ -27,7 +27,9 @@ void fg_cmd(tknll *head) {
         return;
     }
 
-    int j_num=atoi(head->next->tkn);
+    char *j_str=head->next->tkn;
+    if(j_str[0]=='%') j_str++;
+    int j_num=atoi(j_str);
     int found_idx=-1;
 
     for(int i=0; i<job_cnt; i++) {
