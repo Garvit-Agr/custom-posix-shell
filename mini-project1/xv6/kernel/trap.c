@@ -91,9 +91,9 @@ usertrap(void)
 
   // give up the CPU if this is a timer interrupt.
   if (which_dev == 2) {
+    p->run_time++;  // always track CPU time (needed by waitx for all schedulers)
 #ifdef MLFQ
     p->ticks_curr_slice++;
-    p->run_time++;
 
     int should_boost = 0;
     acquire(&boostlock);
@@ -110,7 +110,7 @@ usertrap(void)
         if (ep->state != UNUSED) {
           ep->curr_queue = 0;
           ep->ticks_curr_slice = 0;
-          ep->arrival_time = ticks;
+          ep->q_arrival_time = ticks;
         }
         release(&ep->lock);
       }
@@ -119,25 +119,25 @@ usertrap(void)
       if (p->curr_queue == 0 && p->ticks_curr_slice >= 1) {
         p->curr_queue = 1;
         p->ticks_curr_slice = 0;
-        p->arrival_time = ticks;
+        p->q_arrival_time = ticks;
         yield();
       } else if (p->curr_queue == 1 && p->ticks_curr_slice >= 4) {
         p->curr_queue = 2;
         p->ticks_curr_slice = 0;
-        p->arrival_time = ticks;
+        p->q_arrival_time = ticks;
         yield();
       } else if (p->curr_queue == 2 && p->ticks_curr_slice >= 8) {
         p->curr_queue = 3;
         p->ticks_curr_slice = 0;
-        p->arrival_time = ticks;
+        p->q_arrival_time = ticks;
         yield();
       } else if (p->curr_queue == 3 && p->ticks_curr_slice >= 16) {
         p->ticks_curr_slice = 0;
         yield();
       } else {
         extern struct proc proc[];
-        for (struct proc *ep=proc; ep<&proc[NPROC]; ep++) {
-          if (ep->state==RUNNABLE && ep->curr_queue<p->curr_queue) {
+        for (struct proc *ep = proc; ep < &proc[NPROC]; ep++) {
+          if (ep->state == RUNNABLE && ep->curr_queue < p->curr_queue) {
             yield();
             break;
           }
@@ -219,10 +219,10 @@ kerneltrap()
 
   // give up the CPU if this is a timer interrupt.
   if (which_dev == 2 && myproc() != 0) {
-#ifdef MLFQ
     struct proc *p = myproc();
+    p->run_time++;  // always track CPU time
+#ifdef MLFQ
     p->ticks_curr_slice++;
-    p->run_time++;
 
     int should_boost = 0;
     acquire(&boostlock);
@@ -239,7 +239,7 @@ kerneltrap()
         if (ep->state != UNUSED) {
           ep->curr_queue = 0;
           ep->ticks_curr_slice = 0;
-          ep->arrival_time = ticks;
+          ep->q_arrival_time = ticks;
         }
         release(&ep->lock);
       }
@@ -248,25 +248,25 @@ kerneltrap()
       if (p->curr_queue == 0 && p->ticks_curr_slice >= 1) {
         p->curr_queue = 1;
         p->ticks_curr_slice = 0;
-        p->arrival_time = ticks;
+        p->q_arrival_time = ticks;
         yield();
       } else if (p->curr_queue == 1 && p->ticks_curr_slice >= 4) {
         p->curr_queue = 2;
         p->ticks_curr_slice = 0;
-        p->arrival_time = ticks;
+        p->q_arrival_time = ticks;
         yield();
       } else if (p->curr_queue == 2 && p->ticks_curr_slice >= 8) {
         p->curr_queue = 3;
         p->ticks_curr_slice = 0;
-        p->arrival_time = ticks;
+        p->q_arrival_time = ticks;
         yield();
       } else if (p->curr_queue == 3 && p->ticks_curr_slice >= 16) {
         p->ticks_curr_slice = 0;
         yield();
       } else {
         extern struct proc proc[];
-        for (struct proc *ep=proc; ep<&proc[NPROC]; ep++) {
-          if (ep->state==RUNNABLE && ep->curr_queue<p->curr_queue) {
+        for (struct proc *ep = proc; ep < &proc[NPROC]; ep++) {
+          if (ep->state == RUNNABLE && ep->curr_queue < p->curr_queue) {
             yield();
             break;
           }

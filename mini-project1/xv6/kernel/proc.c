@@ -162,13 +162,16 @@ found:
   p->context.ra = (uint64)forkret;
   p->context.sp = p->kstack + PGSIZE;
 
+  // Always track timing metrics (needed by waitx for all schedulers)
+  p->arrival_time = ticks;
+  p->start_time = 0;
+  p->run_time = 0;
+  p->end_time = 0;
   #ifdef MLFQ
     p->curr_queue = 0;
     p->ticks_curr_slice = 0;
-    p->arrival_time = 0;
-    p->start_time = 0;
+    p->q_arrival_time = ticks;
     p->wait_time = 0;
-    p->run_time = 0;
   #endif
 
   return p;
@@ -377,6 +380,8 @@ kexit(int status)
   // Parent might be sleeping in wait().
   wakeup(p->parent);
 
+  p->end_time = ticks;  // record exit tick for turnaround time
+
   acquire(&p->lock);
 
   p->xstate = status;
@@ -443,6 +448,82 @@ kwait(uint64 addr)
   }
 }
 
+// Wait for a child process to exit; return pid, and copy timing data to caller.
+// wtime = wait time, rtime = response time, ttime = turnaround time (all in ticks).
+int
+kwaitx(uint64 addr, uint64 wtime_addr, uint64 rtime_addr, uint64 ttime_addr)
+{
+  struct proc *pp;
+  int havekids, pid;
+  struct proc *p = myproc();
+
+  acquire(&wait_lock);
+
+  for (;;) {
+    havekids = 0;
+    for (pp = proc; pp < &proc[NPROC]; pp++) {
+      if (pp->parent == p) {
+        acquire(&pp->lock);
+        havekids = 1;
+        if (pp->state == ZOMBIE) {
+          pid = pp->pid;
+
+          int t_time = pp->end_time - pp->arrival_time;
+          int r_time = (pp->start_time > 0) ? (pp->start_time - pp->arrival_time) : 0;
+          int w_time = t_time - pp->run_time;
+          if (w_time < 0) w_time = 0;
+
+          if (addr != 0 &&
+              copyout(p->pagetable, p->sz, addr, (char *)&pp->xstate,
+                      sizeof(pp->xstate)) < 0) {
+            release(&pp->lock);
+            release(&wait_lock);
+            return -1;
+          }
+          if (wtime_addr != 0 &&
+              copyout(p->pagetable, p->sz, wtime_addr, (char *)&w_time,
+                      sizeof(w_time)) < 0) {
+            release(&pp->lock);
+            release(&wait_lock);
+            return -1;
+          }
+          if (rtime_addr != 0 &&
+              copyout(p->pagetable, p->sz, rtime_addr, (char *)&r_time,
+                      sizeof(r_time)) < 0) {
+            release(&pp->lock);
+            release(&wait_lock);
+            return -1;
+          }
+          if (ttime_addr != 0 &&
+              copyout(p->pagetable, p->sz, ttime_addr, (char *)&t_time,
+                      sizeof(t_time)) < 0) {
+            release(&pp->lock);
+            release(&wait_lock);
+            return -1;
+          }
+
+          pp->parent = 0;
+          freeproc(pp);
+          release(&pp->lock);
+          release(&wait_lock);
+          return pid;
+        }
+        release(&pp->lock);
+      }
+    }
+
+    if (!havekids || killed(p)) {
+      release(&wait_lock);
+      return -1;
+    }
+
+    sleep_prepare(p);
+    release(&wait_lock);
+    sleep();
+    acquire(&wait_lock);
+  }
+}
+
 // Per-CPU process scheduler.
 // Each CPU calls scheduler() after setting itself up.
 // Scheduler never returns.  It loops, doing:
@@ -471,14 +552,15 @@ scheduler(void)
 #ifdef MLFQ
     struct proc *best_p = 0;
     int best_queue = 4;
-    int best_arrival = (1<<31)-1;
+    int best_arrival = 0x7fffffff;
 
     for (p = proc; p < &proc[NPROC]; p++) {
       acquire(&p->lock);
       if (p->state == RUNNABLE) {
-        if (p->curr_queue < best_queue || (p->curr_queue == best_queue && p->arrival_time < best_arrival)) {
+        if (p->curr_queue < best_queue ||
+            (p->curr_queue == best_queue && p->q_arrival_time < best_arrival)) {
           best_queue = p->curr_queue;
-          best_arrival = p->arrival_time;
+          best_arrival = p->q_arrival_time;
           best_p = p;
         }
       }
@@ -487,7 +569,11 @@ scheduler(void)
 
     if (best_p != 0) {
       acquire(&best_p->lock);
-      if (best_p->state == RUNNABLE && best_p->curr_queue == best_queue && best_p->arrival_time == best_arrival) {
+      if (best_p->state == RUNNABLE && best_p->curr_queue == best_queue &&
+          best_p->q_arrival_time == best_arrival) {
+        if (best_p->start_time == 0)
+          best_p->start_time = ticks;
+        printk("TRACE: %d %d %d\n", ticks, best_p->pid, best_p->curr_queue);
         best_p->state = RUNNING;
         c->proc = best_p;
         swtch(&c->context, &best_p->context);
@@ -501,18 +587,12 @@ scheduler(void)
     for (p = proc; p < &proc[NPROC]; p++) {
       acquire(&p->lock);
       if (p->state == RUNNABLE) {
-        // Switch to chosen process.  It is the process's job
-        // to release its lock and then reacquire it
-        // before jumping back to us.
+        if (p->start_time == 0)
+          p->start_time = ticks;
         p->state = RUNNING;
         c->proc = p;
         swtch(&c->context, &p->context);
-
-        // Don't re-enable interrupts on release.
         mycpu()->intena = 0;
-
-        // Process is done running for now.
-        // It should have changed its p->state before coming back.
         c->proc = 0;
         found = 1;
       }
@@ -563,7 +643,7 @@ yield(void)
   p->state = RUNNABLE;
 #ifdef MLFQ
   if (p->curr_queue == 3) {
-    p->arrival_time = ticks;
+    p->q_arrival_time = ticks;
   }
 #endif
   sched();
@@ -656,7 +736,7 @@ wakeup(void *chan)
       if (p->state == SLEEPING) {
         p->state = RUNNABLE;
 #ifdef MLFQ
-        p->arrival_time=ticks;
+        p->q_arrival_time = ticks;
 #endif
       }
     }
@@ -765,7 +845,9 @@ procdump(void)
     else
       state = "???";
 #ifdef MLFQ
-    printk("%d %s %s | Q: %d | slice_ticks: %d | arr: %d", p->pid, state, p->name, p->curr_queue, p->ticks_curr_slice, p->arrival_time);
+    printk("%d %s %s | Q: %d | slice: %d | q_arr: %d | run: %d",
+           p->pid, state, p->name, p->curr_queue,
+           p->ticks_curr_slice, p->q_arrival_time, p->run_time);
 #else
     printk("%d %s %s", p->pid, state, p->name);
 #endif

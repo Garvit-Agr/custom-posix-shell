@@ -101,12 +101,17 @@ struct proc {
   struct file *ofile[NOFILE];  // Open files
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
+
+  // Scheduling metrics (always present for waitx support)
+  int arrival_time;    // tick when process was created (set once, never changed)
+  int start_time;      // tick when process first got the CPU (0 = not yet)
+  int run_time;        // total timer ticks spent on the CPU
+  int end_time;        // tick when process called exit()
+
 #ifdef MLFQ
-  int curr_queue;
-  int ticks_curr_slice;
-  int arrival_time;
-  int start_time;
-  int wait_time;
-  int run_time;
+  int curr_queue;      // current MLFQ queue (0=highest, 3=lowest)
+  int ticks_curr_slice; // ticks consumed in the current time-slice
+  int q_arrival_time;  // tick when last inserted into curr_queue (for FIFO tie-break)
+  int wait_time;       // accumulated wait-time bookkeeping
 #endif
 };

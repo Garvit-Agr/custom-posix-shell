@@ -160,6 +160,7 @@ UPROGS=\
 	$U/_dorphan\
 	$U/_sync\
 	$U/_schedulertest\
+	$U/_benchmark\
 
 fs.img: mkfs/mkfs README $(UPROGS)
 	mkfs/mkfs fs.img README $(UPROGS)
