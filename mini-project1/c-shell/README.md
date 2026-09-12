@@ -18,3 +18,11 @@ Here are the hardcoded limits I used:
 * **File reading & Redirection:** Commands that read files (`peek`, I/O redirection) process data in 4096-byte chunks.
 * **Spy Command Buffers:** When reading system files in `/proc`, it uses a 2048-byte buffer for status/cmdline files, and a 5000-byte buffer to resolve file descriptors.
 * **Small buffers:** Minor formatting buffers (like building paths in `activities` or `spy`) are safely capped at 256 bytes.
+
+## How to Run & Exit
+
+* **To compile and run:** 
+  1. Open a terminal in the `c-shell` directory.
+  2. Run `make all` to compile the shell.
+  3. Run `./cshell` to start the custom shell.
+* **To exit:** Simply type `exit` in the shell or press `Ctrl+D` (EOF).

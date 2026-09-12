@@ -54,3 +54,16 @@ I ran the provided `benchmark` program on both schedulers to compare them. Here 
 
 **What this means:**
 MLFQ performed better across the board. The most obvious difference is the response time (1 tick for MLFQ vs 2 for Round Robin). Because MLFQ throws every new process into Queue 0 with a very short 1-tick slice, new jobs get to run almost immediately. The wait times are also lower because MLFQ gets I/O jobs out of the way quickly instead of making them wait in one giant line like Round Robin does. Round Robin relies entirely on a fixed quantum, but MLFQ actually adapts—it pushes heavy tasks to the background and rewards quick interactive tasks, which speeds up the whole system.
+
+---
+
+## How to Run & Exit
+
+* **To compile and run (Default Round Robin):**
+  1. Open a terminal in the `xv6` directory.
+  2. Run `make clean; make qemu`.
+* **To compile and run (MLFQ Scheduler):**
+  1. Open a terminal in the `xv6` directory.
+  2. Run `make clean; make qemu SCHEDULER=MLFQ`.
+* **To exit xv6 (QEMU):** 
+  * Press `Ctrl-A`, let go, and then press `X`.
