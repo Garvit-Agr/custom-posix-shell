@@ -67,6 +67,11 @@ _*
 .gdbinit
 TAGS
 
+# UV Files
+mini-project1/xv6/.python-version
+mini-project1/xv6/pyproject.toml
+mini-project1/xv6/uv.lock
+
 
 .hop_history.csv
 
