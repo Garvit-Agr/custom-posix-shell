@@ -3,14 +3,14 @@
 #include <string.h>
 #include <unistd.h>
 #include <time.h>
-#include <sys/param.h> // used for MAXPATHLEN
+#include <limits.h>
 #include <dirent.h> // used for DIR commands like opendir and closedir
 
 #include "parser.h"
 #include "cmds_hop.h"
 
 void record_frecency(char *target_dir, char *homewd) {
-    char db_path[MAXPATHLEN+25];
+    char db_path[PATH_MAX+25];
     snprintf(db_path, sizeof(db_path), "%s/.hop_history.csv", homewd);
 
     FILE *f=fopen(db_path, "r");
@@ -25,7 +25,7 @@ void record_frecency(char *target_dir, char *homewd) {
     time_t curtime=time(NULL);
 
     if (f!=NULL) {
-        char line[MAXPATHLEN+100];
+        char line[PATH_MAX+100];
         while (fgets(line, sizeof(line), f)!=NULL) {
             line[strcspn(line, "\n")]='\0';
             
@@ -93,7 +93,7 @@ void record_frecency(char *target_dir, char *homewd) {
 
 
 int resolve_frecency(char *name, char *best, char *homewd) {
-    char db_path[MAXPATHLEN+25];
+    char db_path[PATH_MAX+25];
     snprintf(db_path, sizeof(db_path), "%s/.hop_history.csv", homewd);
 
     FILE *f=fopen(db_path, "r");
@@ -102,7 +102,7 @@ int resolve_frecency(char *name, char *best, char *homewd) {
     double best_score=-1;
     time_t best_time=0;
     int matched=0;
-    char line[MAXPATHLEN+100];
+    char line[PATH_MAX+100];
     time_t cur_time=time(NULL);
 
     while (fgets(line, sizeof(line), f)!=NULL) {
@@ -168,8 +168,8 @@ void hop(tknll *head, char *homwd, char *prevwd) {
     ptr=ptr->next;
 
     if (ptr==NULL) {
-        char curwd[MAXPATHLEN+5];
-        getcwd(curwd, MAXPATHLEN+5);
+        char curwd[PATH_MAX+5];
+        getcwd(curwd, PATH_MAX+5);
         if (chdir(homwd)==0) {
             strcpy(prevwd, curwd);
             record_frecency(homwd, homwd);
@@ -179,8 +179,8 @@ void hop(tknll *head, char *homwd, char *prevwd) {
     
     //fixing builtins ignoring operators, because of problem statement part A3
     while(ptr!=NULL && ptr->type!=OP_PIPE && ptr->type!=OP_SEMI && ptr->type!=OP_AMP && ptr->type!=OP_LT && ptr->type!=OP_GT && ptr->type!=OP_GTGT) {
-        char curwd[MAXPATHLEN+5];
-        getcwd(curwd, MAXPATHLEN+5);
+        char curwd[PATH_MAX+5];
+        getcwd(curwd, PATH_MAX+5);
         int success=0;
         
         if(strcmp(ptr->tkn, "~")==0) {
@@ -200,7 +200,7 @@ void hop(tknll *head, char *homwd, char *prevwd) {
         }
        else if(strcmp(ptr->tkn, "-")==0) {
             if(prevwd[0]!='\0') {
-                char target[MAXPATHLEN+5];
+                char target[PATH_MAX+5];
                 strcpy(target, prevwd);
 
                 if (chdir(target)==0) {
@@ -215,7 +215,7 @@ void hop(tknll *head, char *homwd, char *prevwd) {
                 success=1;
             }
             else {
-                char best[MAXPATHLEN+5];
+                char best[PATH_MAX+5];
                 if (resolve_frecency(ptr->tkn, best, homwd)) {
                     if(chdir(best)==0) {
                         strcpy(prevwd, curwd);
@@ -230,8 +230,8 @@ void hop(tknll *head, char *homwd, char *prevwd) {
         }
         
         if (success) {
-            char new_cwd[MAXPATHLEN+5];
-            getcwd(new_cwd, MAXPATHLEN+5);
+            char new_cwd[PATH_MAX+5];
+            getcwd(new_cwd, PATH_MAX+5);
             record_frecency(new_cwd, homwd);
         }
 

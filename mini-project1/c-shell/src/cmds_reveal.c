@@ -22,13 +22,13 @@ int cmp(const void *a, const void *b) {
     return la-lb;
 }
 
-void fetch_paths(char *base, char *rel, char ***lst, int *cnt, int *cap, int a, int t) {
+int fetch_paths(char *base, char *rel, char ***lst, int *cnt, int *cap, int a, int t) {
     char full_path[(2*MAXPATHLEN)+10];
     if(rel[0]=='\0') strcpy(full_path, base);
     else snprintf(full_path, sizeof(full_path), "%s/%s", base, rel);
 
     DIR *d=opendir(full_path);
-    if(d==NULL) return;
+    if(d==NULL) return -1;
 
     struct dirent *dir;
     while((dir=readdir(d))!=NULL) {
@@ -59,7 +59,10 @@ void fetch_paths(char *base, char *rel, char ***lst, int *cnt, int *cap, int a, 
                 (*lst)[*cnt]=strdup(rel_slash);
                 (*cnt)++;
                 
-                fetch_paths(base, rel_slash, lst, cnt, cap, a, t);
+                if(fetch_paths(base, rel_slash, lst, cnt, cap, a, t)<0) {
+                    closedir(d);
+                    return -1;
+                }
             } else {
                 if(*cnt>=*cap) {
                     *cap*=2;
@@ -79,6 +82,7 @@ void fetch_paths(char *base, char *rel, char ***lst, int *cnt, int *cap, int a, 
         }
     }
     closedir(d);
+    return 0;
 }
 
 void reveal(tknll *head, char *homwd, char *prevwd) {
@@ -149,7 +153,11 @@ void reveal(tknll *head, char *homwd, char *prevwd) {
     int cnt=0;
     char **lst=malloc(cap*sizeof(char*));
 
-    fetch_paths(res_path, "", &lst, &cnt, &cap, a, t);
+    if(fetch_paths(res_path, "", &lst, &cnt, &cap, a, t)<0) {
+        printf("reveal: no such directory\n");
+        free(lst);
+        return;
+    }
 
     qsort(lst, cnt, sizeof(char*), cmp);
 
