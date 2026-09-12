@@ -135,6 +135,9 @@ int execute(tknll *head, char *homwd, char *prevwd, int bg) {
         }
 
         if(pid==0) {
+            signal(SIGTTIN, SIG_DFL);
+            signal(SIGTTOU, SIG_DFL);
+
             if(lead_pgid==-1) lead_pgid=getpid();
             setpgid(0, lead_pgid);
             if(bg==0) tcsetpgrp(STDIN_FILENO, lead_pgid);
@@ -222,7 +225,14 @@ int execute(tknll *head, char *homwd, char *prevwd, int bg) {
             char full_cmd[1024]="";
             tknll *tmp=head;
             while(tmp!=NULL && tmp->type!=OP_SEMI && tmp->type!=OP_AMP) {
-                strcat(full_cmd, tmp->tkn);
+                if (tmp->tkn != NULL) strcat(full_cmd, tmp->tkn);
+
+                else {
+                    if (tmp->type==OP_PIPE) strcat(full_cmd, "|");
+                    else if (tmp->type==OP_LT) strcat(full_cmd, "<");
+                    else if (tmp->type==OP_GT) strcat(full_cmd, ">");
+                    else if (tmp->type==OP_GTGT) strcat(full_cmd, ">>");
+                }
                 strcat(full_cmd, " ");
                 tmp=tmp->next;
             }
@@ -247,10 +257,17 @@ int execute(tknll *head, char *homwd, char *prevwd, int bg) {
         char full_cmd[1024]="";
         tknll *tmp=head;
         while(tmp!=NULL && tmp->type!=OP_SEMI && tmp->type!=OP_AMP) {
-            strcat(full_cmd, tmp->tkn);
-            strcat(full_cmd, " ");
-            tmp=tmp->next;
-        }
+                if (tmp->tkn!=NULL) strcat(full_cmd, tmp->tkn);
+                
+                else {
+                    if (tmp->type==OP_PIPE) strcat(full_cmd, "|");
+                    else if (tmp->type==OP_LT) strcat(full_cmd, "<");
+                    else if (tmp->type==OP_GT) strcat(full_cmd, ">");
+                    else if (tmp->type==OP_GTGT) strcat(full_cmd, ">>");
+                }
+                strcat(full_cmd, " ");
+                tmp=tmp->next;
+            }
         
         if(num_cmds>0) {
             pid_t all_pids[300];

@@ -127,10 +127,8 @@ int main() {
                 }
 
                 for(int i=0;i<job_cnt;i++) {
-                    if(bg_jobs[i].is_done==0) {
-                        for(int j=0;j<bg_jobs[i].num_pids;j++) {
-                            if(bg_jobs[i].pids[j]>0) kill(bg_jobs[i].pids[j], SIGKILL);
-                        }
+                    if(bg_jobs[i].is_done==0 && bg_jobs[i].pid > 0) {
+                        kill(-bg_jobs[i].pid, SIGHUP); 
                     }
                 }
 
