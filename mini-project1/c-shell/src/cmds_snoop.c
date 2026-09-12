@@ -6,11 +6,13 @@
 #include <sys/ptrace.h>
 #include <sys/user.h>
 #include <time.h>
+#include <fcntl.h>
+#include <errno.h>
 
 #include "parser.h"
 #include "cmds_snoop.h"
 
-#define MAX_SYSCALLS 350
+#define MAX_SYSCALLS 512
 
 typedef struct {
     unsigned long long id;
@@ -61,17 +63,42 @@ void snoop_cmd(tknll *head) {
     int is_attach=0;
     pid_t attach_pid=-1;
 
+    if(head->next->type!=WORD) {
+        printf("snoop: invalid syntax\n");
+        return;
+    }
+
     if(strcmp(head->next->tkn, "-p")==0) {
-        if(head->next->next==NULL || head->next->next->next!=NULL) {
+        if(head->next->next==NULL || head->next->next->type!=WORD || head->next->next->next!=NULL) {
             printf("snoop: invalid syntax\n");
             return;
         }
+
+        char *pid_str=head->next->next->tkn;
+        if(*pid_str=='\0') {
+            printf("snoop: invalid syntax\n");
+            return;
+        }
+        long value=0;
+        for(int i=0;pid_str[i]!='\0';i++) {
+            if(pid_str[i]<'0' || pid_str[i]>'9' || value>(2147483647-(pid_str[i]-'0'))/10) {
+                printf("snoop: invalid syntax\n");
+                return;
+            }
+            value=value*10+(pid_str[i]-'0');
+        }
+        if(value<=0) {
+            printf("snoop: no such process\n");
+            return;
+        }
+
         is_attach=1;
-        attach_pid=atoi(head->next->next->tkn);
+        attach_pid=(pid_t)value;
     }
 
     pid_t pid;
     char **argv=NULL;
+    int exec_failed=0;
 
     if(is_attach) {
         pid=attach_pid;
@@ -79,17 +106,27 @@ void snoop_cmd(tknll *head) {
             printf("snoop: no such process\n");
             return;
         }
-        int status;
-        waitpid(pid, &status, 0); 
-    } else {
+
+        int status=0;
+        if(waitpid(pid, &status, 0)<0) {
+            printf("snoop: no such process\n");
+            return;
+        }
+    }
+    else {
         int argc=0;
         tknll *tmp=head->next;
         while(tmp!=NULL && tmp->type==WORD) {
             argc++;
             tmp=tmp->next;
         }
+        if(argc==0 || tmp!=NULL) {
+            printf("snoop: invalid syntax\n");
+            return;
+        }
 
-        argv=malloc((argc+1)*sizeof(char*));
+        argv=malloc((argc+1)*sizeof(char *));
+        if(argv==NULL) return;
         tmp=head->next;
         for(int i=0;i<argc;i++) {
             argv[i]=tmp->tkn;
@@ -97,25 +134,63 @@ void snoop_cmd(tknll *head) {
         }
         argv[argc]=NULL;
 
+        int err_pipe[2];
+        if(pipe(err_pipe)==-1) {
+            free(argv);
+            return;
+        }
+        int flags=fcntl(err_pipe[1], F_GETFD);
+        if(flags!=-1) fcntl(err_pipe[1], F_SETFD, flags|FD_CLOEXEC);
+
         pid=fork();
         if(pid==-1) {
-            perror("fork");
+            close(err_pipe[0]);
+            close(err_pipe[1]);
             free(argv);
             return;
         }
 
         if(pid==0) {
-            ptrace(PTRACE_TRACEME, 0, NULL, NULL);
+            close(err_pipe[0]);
+            if(ptrace(PTRACE_TRACEME, 0, NULL, NULL)<0) _exit(1);
             execvp(argv[0], argv);
-            printf("snoop: command not found\n");
-            exit(1);
+            char failed=1;
+            write(err_pipe[1], &failed, 1);
+            close(err_pipe[1]);
+            _exit(1);
         }
-        
-        int status;
-        waitpid(pid, &status, 0); 
+
+        close(err_pipe[1]);
+
+        int status=0;
+        if(waitpid(pid, &status, 0)<0) {
+            close(err_pipe[0]);
+            free(argv);
+            return;
+        }
+
+        if(WIFEXITED(status) || WIFSIGNALED(status)) {
+            char failed=0;
+            ssize_t n=read(err_pipe[0], &failed, 1);
+            if(n>0 && failed!=0) exec_failed=1;
+            close(err_pipe[0]);
+            if(exec_failed!=0) {
+                printf("snoop: command not found\n");
+                free(argv);
+                return;
+            }
+            free(argv);
+            return;
+        }
+
+        /* The initial stop is the exec/trace stop. */
+        close(err_pipe[0]);
     }
-    
-    ptrace(PTRACE_SETOPTIONS, pid, 0, PTRACE_O_TRACESYSGOOD);
+
+    if(ptrace(PTRACE_SETOPTIONS, pid, 0, PTRACE_O_TRACESYSGOOD)<0) {
+        if(!is_attach && argv!=NULL) free(argv);
+        return;
+    }
 
     syscall_stat stats[MAX_SYSCALLS];
     memset(stats, 0, sizeof(stats));
@@ -128,37 +203,36 @@ void snoop_cmd(tknll *head) {
     unsigned long long curr_syscall=0;
     struct timespec start_time, end_time;
     int occurrence_counter=0;
-    int status;
+    int status=0;
 
     while(1) {
-        ptrace(PTRACE_SYSCALL, pid, NULL, NULL);
-        waitpid(pid, &status, 0);
-        
-        if(WIFEXITED(status) || WIFSIGNALED(status)) {
-            break;
-        }
+        if(ptrace(PTRACE_SYSCALL, pid, NULL, NULL)<0) break;
+        if(waitpid(pid, &status, 0)<0) break;
+
+        if(WIFEXITED(status) || WIFSIGNALED(status)) break;
+        if(!WIFSTOPPED(status)) continue;
 
         struct user_regs_struct regs;
-        ptrace(PTRACE_GETREGS, pid, NULL, &regs);
-        
+        if(ptrace(PTRACE_GETREGS, pid, NULL, &regs)<0) break;
+
         if(!in_syscall) {
             curr_syscall=regs.orig_rax;
             clock_gettime(CLOCK_MONOTONIC, &start_time);
             in_syscall=1;
-        } else {
+        }
+        else {
             clock_gettime(CLOCK_MONOTONIC, &end_time);
             double elapsed=(end_time.tv_sec-start_time.tv_sec)+((end_time.tv_nsec-start_time.tv_nsec)/1e9);
-            
+
             if(curr_syscall<MAX_SYSCALLS) {
                 if(stats[curr_syscall].count==0) stats[curr_syscall].first_occurrence=occurrence_counter++;
-
                 stats[curr_syscall].count++;
                 stats[curr_syscall].total_time+=elapsed;
             }
             in_syscall=0;
         }
     }
-    
+
     if(!is_attach && argv!=NULL) free(argv);
 
     qsort(stats, MAX_SYSCALLS, sizeof(syscall_stat), compare_syscalls);
