@@ -162,7 +162,7 @@ found:
   p->context.ra = (uint64)forkret;
   p->context.sp = p->kstack + PGSIZE;
 
-  // Always track timing metrics (needed by waitx for all schedulers)
+  
   p->arrival_time = ticks;
   p->start_time = 0;
   p->run_time = 0;

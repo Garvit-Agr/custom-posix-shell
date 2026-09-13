@@ -57,7 +57,7 @@ MLFQ performed better across the board. The most obvious difference is the respo
 
 ---
 
-## How to Run & Exit
+## How to Run, Benchmark, and Plot
 
 * **To compile and run (Default Round Robin):**
   1. Open a terminal in the `xv6` directory.
@@ -67,3 +67,19 @@ MLFQ performed better across the board. The most obvious difference is the respo
   2. Run `make clean; make qemu SCHEDULER=MLFQ`.
 * **To exit xv6 (QEMU):** 
   * Press `Ctrl-A`, let go, and then press `X`.
+
+### Running the Benchmarks
+Once you are inside the xv6 shell (after running `make qemu` with your chosen scheduler), simply type:
+`$ benchmark`
+This will spawn the test processes, wait for them to finish, and print out the table with the turnaround, wait, and response times for you to compare.
+
+### Generating the MLFQ Plot
+To recreate the timeline plot for the MLFQ scheduler, follow these exact steps:
+1. Run QEMU and save the output to a text file so the python script can read the TRACE logs:
+   `make clean; make qemu SCHEDULER=MLFQ 2>&1 | tee mlfq.txt`
+2. Inside the xv6 shell, run the scheduler test:
+   `$ schedulertest`
+3. Wait for it to say "Scheduler test finished", then exit QEMU (`Ctrl-A`, then `X`).
+4. Back in your normal terminal, run the python plotting script:
+   `uv run mlfq_plot.py` (or `python3 mlfq_plot.py`)
+5. This will read `mlfq.txt` and save the new graph as `mlfq_plot.png` in the directory.
