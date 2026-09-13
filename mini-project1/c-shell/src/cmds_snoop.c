@@ -3,11 +3,14 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
-#include <sys/ptrace.h>
-#include <sys/user.h>
 #include <time.h>
 #include <fcntl.h>
 #include <errno.h>
+
+#ifdef __linux__
+#include <sys/ptrace.h>
+#include <sys/user.h>
+#endif
 
 #include "parser.h"
 #include "cmds_snoop.h"
@@ -54,6 +57,12 @@ int compare_syscalls(const void *a, const void *b) {
     return statA->first_occurrence-statB->first_occurrence;
 }
 
+#ifndef __linux__
+void snoop_cmd(tknll *head) {
+    (void)head;
+    printf("snoop: not supported on this platform\n");
+}
+#else
 void snoop_cmd(tknll *head) {
     if(head==NULL || head->next==NULL) {
         printf("snoop: invalid syntax\n");
@@ -69,7 +78,12 @@ void snoop_cmd(tknll *head) {
     }
 
     if(strcmp(head->next->tkn, "-p")==0) {
-        if(head->next->next==NULL || head->next->next->type!=WORD || head->next->next->next!=NULL) {
+        if(head->next->next==NULL || head->next->next->type!=WORD) {
+            printf("snoop: invalid syntax\n");
+            return;
+        }
+        tknll *after_pid=head->next->next->next;
+        if(after_pid!=NULL && after_pid->type==WORD) {
             printf("snoop: invalid syntax\n");
             return;
         }
@@ -250,3 +264,4 @@ void snoop_cmd(tknll *head) {
         }
     }
 }
+#endif /* __linux__ */

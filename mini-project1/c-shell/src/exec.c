@@ -399,6 +399,7 @@ int execute(tknll *head, char *homwd, char *prevwd, int bg) {
             for(int i=0;i<num_cmds;i++) job_pids[job_pids_cnt++]=pids[i];
             add_job(lead_pgid, job_pids, job_pids_cnt, names, full_cmd);
             printf("[%d] %d\n", next_job_num-1, lead_pgid);
+            fflush(stdout);
         }
     }
 

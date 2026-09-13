@@ -125,6 +125,7 @@ int main() {
     struct sigaction sa;
     memset(&sa, 0, sizeof(sa));
     sa.sa_handler=sigchld_handler;
+    sa.sa_flags=SA_RESTART;
     sigemptyset(&sa.sa_mask);
     sigaction(SIGCHLD, &sa, NULL);
 

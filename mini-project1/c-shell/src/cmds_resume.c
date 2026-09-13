@@ -166,9 +166,15 @@ void resume_cmd(tknll *head) {
     }
     else if(strcmp(mode_tkn->tkn,"fg")==0) {
         if(extra!=NULL) {
+            tknll *timeout_tkn=(extra->type==WORD && strcmp(extra->tkn,"--timeout")==0) ? extra->next : NULL;
             if(extra->type!=WORD || strcmp(extra->tkn,"--timeout")!=0 ||
-               extra->next==NULL || extra->next->type!=WORD ||
-               extra->next->next!=NULL || !parse_number(extra->next->tkn, &timeout)) {
+               timeout_tkn==NULL || timeout_tkn->type!=WORD ||
+               !parse_number(timeout_tkn->tkn, &timeout)) {
+                printf("resume: invalid syntax\n");
+                return;
+            }
+            tknll *after_timeout=timeout_tkn->next;
+            if(after_timeout!=NULL && after_timeout->type==WORD) {
                 printf("resume: invalid syntax\n");
                 return;
             }

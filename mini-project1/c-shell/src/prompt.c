@@ -1,13 +1,20 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <limits.h>
 #include <string.h>
+#include <pwd.h>
 
 #include "prompt.h"
 
 void display_prompt(char *homewd) {
-    char *usr;
-    usr=getlogin();
+    char *usr=getlogin();
+    if(usr==NULL || usr[0]=='\0') usr=getenv("USER");
+    if(usr==NULL || usr[0]=='\0') {
+        struct passwd *pw=getpwuid(getuid());
+        if(pw!=NULL) usr=pw->pw_name;
+    }
+    if(usr==NULL || usr[0]=='\0') usr="unknown";
 
     char hst[PATH_MAX+5];
     char cwd[PATH_MAX+5];
@@ -17,8 +24,7 @@ void display_prompt(char *homewd) {
 
     if(getcwd(cwd,sizeof(cwd))==NULL) strcpy(cwd,"?");
 
-    if(usr==NULL) usr="unknown";
-    
+
     if(strcmp(cwd,homewd)==0) strcpy(cwd,"~\0");
     else if(strcmp(homewd,"/")==0 && cwd[0]=='/') {
         char temp[PATH_MAX+5];
@@ -36,5 +42,5 @@ void display_prompt(char *homewd) {
     }
 
     printf("<%s@%s:%s> ",usr,hst,cwd);
-
+    fflush(stdout);
 }

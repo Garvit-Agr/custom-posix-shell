@@ -35,8 +35,12 @@ int parse_signal(const char *str) {
 
 void ping_cmd(tknll *head) {
     if(head==NULL || head->next==NULL || head->next->type!=WORD ||
-       head->next->next==NULL || head->next->next->type!=WORD ||
-       head->next->next->next!=NULL) {
+       head->next->next==NULL || head->next->next->type!=WORD) {
+        printf("ping: invalid syntax\n");
+        return;
+    }
+    tknll *third=head->next->next->next;
+    if(third!=NULL && third->type==WORD) {
         printf("ping: invalid syntax\n");
         return;
     }

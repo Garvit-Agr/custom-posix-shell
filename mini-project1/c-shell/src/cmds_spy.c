@@ -28,8 +28,7 @@ int spy_parse_pid(char *str, pid_t *value) {
 void spy_cmd(tknll *head) {
     if(head==NULL) return;
 
-    if(head->next!=NULL && head->next->type!=WORD &&
-       head->next->type!=OP_LT && head->next->type!=OP_GT && head->next->type!=OP_GTGT) return;
+    if(head->next!=NULL && head->next->type!=WORD) return;
     if(head->next!=NULL && head->next->type==WORD &&
        head->next->next!=NULL && head->next->next->type==WORD) {
         printf("spy: invalid syntax\n");
