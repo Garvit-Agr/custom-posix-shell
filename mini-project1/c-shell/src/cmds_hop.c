@@ -173,7 +173,6 @@ void hop(tknll *head, char *homwd, char *prevwd) {
         if (chdir(homwd)==0) {
             strcpy(prevwd, curwd);
             record_frecency(homwd, homwd);
-            printf("%s\n", homwd);
         }
         return;
     }
@@ -194,7 +193,6 @@ void hop(tknll *head, char *homwd, char *prevwd) {
             //fixing hop . should not record frecency, because of doubt doc q23
             char new_cwd[PATH_MAX+5];
             getcwd(new_cwd, PATH_MAX+5);
-            printf("%s\n", new_cwd);
         }
         else if(strcmp(ptr->tkn, "..")==0) {
             if(strcmp(curwd, "/")!=0 && chdir("..")==0) {
@@ -237,7 +235,6 @@ void hop(tknll *head, char *homwd, char *prevwd) {
             char new_cwd[PATH_MAX+5];
             getcwd(new_cwd, PATH_MAX+5);
             record_frecency(new_cwd, homwd);
-            printf("%s\n", new_cwd);
         }
 
         ptr=ptr->next;

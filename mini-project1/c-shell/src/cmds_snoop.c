@@ -10,6 +10,8 @@
 #ifdef __linux__
 #include <sys/ptrace.h>
 #include <sys/user.h>
+#include <sys/uio.h>
+#include <linux/elf.h>
 #endif
 
 #include "parser.h"
@@ -26,25 +28,25 @@ typedef struct {
 
 const char* get_syscall_name(unsigned long long id) {
     switch(id) {
-        case 0: return "read";
-        case 1: return "write";
-        case 2: return "open";
-        case 3: return "close";
-        case 4: return "stat";
-        case 5: return "fstat";
-        case 8: return "lseek";
-        case 9: return "mmap";
-        case 10: return "mprotect";
-        case 11: return "munmap";
-        case 12: return "brk";
-        case 13: return "rt_sigaction";
-        case 14: return "rt_sigprocmask";
-        case 16: return "ioctl";
-        case 35: return "nanosleep";
-        case 39: return "getpid";
-        case 59: return "execve";
-        case 60: return "exit";
-        case 231: return "exit_group";
+        case 63: return "read";
+        case 64: return "write";
+        case 56: return "openat";
+        case 57: return "close";
+        case 79: return "newfstatat";
+        case 80: return "fstat";
+        case 62: return "lseek";
+        case 222: return "mmap";
+        case 226: return "mprotect";
+        case 215: return "munmap";
+        case 214: return "brk";
+        case 134: return "rt_sigaction";
+        case 135: return "rt_sigprocmask";
+        case 29: return "ioctl";
+        case 101: return "nanosleep";
+        case 172: return "getpid";
+        case 221: return "execve";
+        case 93: return "exit";
+        case 94: return "exit_group";
         default: return NULL; 
     }
 }
@@ -227,10 +229,13 @@ void snoop_cmd(tknll *head) {
         if(!WIFSTOPPED(status)) continue;
 
         struct user_regs_struct regs;
-        if(ptrace(PTRACE_GETREGS, pid, NULL, &regs)<0) break;
+        struct iovec iov;
+        iov.iov_base = &regs;
+        iov.iov_len = sizeof(regs);
+        if(ptrace(PTRACE_GETREGSET, pid, (void*)NT_PRSTATUS, &iov)<0) break;
 
         if(!in_syscall) {
-            curr_syscall=regs.orig_rax;
+            curr_syscall=regs.regs[8];
             clock_gettime(CLOCK_MONOTONIC, &start_time);
             in_syscall=1;
         }

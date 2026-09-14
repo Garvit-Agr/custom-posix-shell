@@ -145,6 +145,8 @@ usertrap(void)
         }
       }
     }
+#elif defined(FIFO)
+    // No yield in FIFO
 #else
     yield();
 #endif
@@ -275,6 +277,8 @@ kerneltrap()
         }
       }
     }
+#elif defined(FIFO)
+    // No yield in FIFO
 #else
     yield();
 #endif

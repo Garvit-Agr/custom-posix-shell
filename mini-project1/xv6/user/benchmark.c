@@ -12,7 +12,7 @@ int main(int argc, char *argv[]){
             exit(1);
         }
         if(pid==0){
-            for(volatile int j=0;j<100000000;j++){}
+            for(volatile int j=0;j<1000000000;j++){}
             exit(0);
         }
     }

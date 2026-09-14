@@ -72,6 +72,9 @@ CFLAGS = -Wall -Werror -Wno-unknown-attributes -O -fno-omit-frame-pointer -ggdb 
 ifeq ($(SCHEDULER),MLFQ)
 CFLAGS += -DMLFQ
 endif
+ifeq ($(SCHEDULER),FIFO)
+CFLAGS += -DFIFO
+endif
 
 CFLAGS += $(DETFLAGS)
 CFLAGS += -march=rv64gc

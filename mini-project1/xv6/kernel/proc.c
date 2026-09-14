@@ -583,6 +583,32 @@ scheduler(void)
       }
       release(&best_p->lock);
     }
+#elif defined(FIFO)
+    struct proc *best_p = 0;
+    int best_arrival = 0x7fffffff;
+
+    for (p = proc; p < &proc[NPROC]; p++) {
+      acquire(&p->lock);
+      if (p->state == RUNNABLE && p->arrival_time < best_arrival) {
+        best_arrival = p->arrival_time;
+        best_p = p;
+      }
+      release(&p->lock);
+    }
+
+    if (best_p != 0) {
+      acquire(&best_p->lock);
+      if (best_p->state == RUNNABLE && best_p->arrival_time == best_arrival) {
+        if (best_p->start_time == 0)
+          best_p->start_time = ticks;
+        best_p->state = RUNNING;
+        c->proc = best_p;
+        swtch(&c->context, &best_p->context);
+        c->proc = 0;
+        found = 1;
+      }
+      release(&best_p->lock);
+    }
 #else
     for (p = proc; p < &proc[NPROC]; p++) {
       acquire(&p->lock);

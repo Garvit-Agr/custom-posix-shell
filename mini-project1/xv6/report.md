@@ -46,14 +46,16 @@ Looking at the plot, you can see the MLFQ logic doing its job. The CPU-heavy pro
 
 I ran the provided `benchmark` program on both schedulers to compare them. Here are the average times I got:
 
-| Metric | Round Robin | MLFQ |
-| :--- | :--- | :--- |
-| Average Turnaround Time | 6 | 5 |
-| Average Wait Time | 4 | 3 |
-| Average Response Time | 2 | 1 |
+| Metric (in ticks) | Round Robin | MLFQ | FIFO |
+| :--- | :--- | :--- | :--- |
+| Average Turnaround Time | 73 | 67 | 49 |
+| Average Wait Time | 50 | 44 | 26 |
+| Average Response Time | 2 | 1 | 26 |
 
 **What this means:**
-MLFQ performed better across the board. The most obvious difference is the response time (1 tick for MLFQ vs 2 for Round Robin). Because MLFQ throws every new process into Queue 0 with a very short 1-tick slice, new jobs get to run almost immediately. The wait times are also lower because MLFQ gets I/O jobs out of the way quickly instead of making them wait in one giant line like Round Robin does. Round Robin relies entirely on a fixed quantum, but MLFQ actually adapts—it pushes heavy tasks to the background and rewards quick interactive tasks, which speeds up the whole system.
+MLFQ performed better overall. The most obvious difference is the response time (1 tick for MLFQ vs 2 for Round Robin vs 26 for FIFO). Because MLFQ throws every new process into Queue 0 with a very short 1-tick slice, new jobs get to run almost immediately. The wait times are also lower because MLFQ gets I/O jobs out of the way quickly instead of making them wait in one giant line like Round Robin does. Round Robin relies entirely on a fixed quantum, but MLFQ actually adapts—it pushes heavy tasks to the background and rewards quick interactive tasks, which speeds up the whole system.
+
+**A note on FIFO:** As expected for a non-preemptive scheduler, FIFO has identical Wait and Response times (26 ticks). This perfectly proves its behavior: once a process starts (Response time), it never yields or waits again! However, its Turnaround and Wait times are mathematically lower than Round Robin because it completely avoids the overhead and interleaving delays of context switching. But in return, its response time is much worse since new processes must wait for the currently running process to completely finish before they even start.
 
 ---
 
