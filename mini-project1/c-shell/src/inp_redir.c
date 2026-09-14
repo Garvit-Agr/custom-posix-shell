@@ -9,7 +9,7 @@
 #include "parser.h"
 #include "inp_redir.h"
 
-int inp_redir(tknll *head, pid_t *helper_pid) { //FIX2
+int inp_redir(tknll *head, pid_t *helper_pid) {
     *helper_pid=-1;
 
     int cap=10;

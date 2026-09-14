@@ -17,8 +17,10 @@ def generate_plot():
                     tick=int(parts[1])
                     pid=int(parts[2])
                     queue=int(parts[3])
-                    if start_tick is None:
+                    if start_tick is None and pid > 3:
                         start_tick=tick
+                    if start_tick is None:
+                        continue
                     normalized_tick=tick-start_tick
                     if pid not in pid_data:
                         pid_data[pid]={'x':[],'y':[]}

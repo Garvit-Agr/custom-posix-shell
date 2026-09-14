@@ -111,6 +111,7 @@ usertrap(void)
           ep->curr_queue = 0;
           ep->ticks_curr_slice = 0;
           ep->q_arrival_time = ticks;
+          printk("TRACE: %d %d %d\n", ticks, ep->pid, ep->curr_queue);
         }
         release(&ep->lock);
       }
@@ -240,6 +241,7 @@ kerneltrap()
           ep->curr_queue = 0;
           ep->ticks_curr_slice = 0;
           ep->q_arrival_time = ticks;
+          printk("TRACE: %d %d %d\n", ticks, ep->pid, ep->curr_queue);
         }
         release(&ep->lock);
       }
