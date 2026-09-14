@@ -69,9 +69,21 @@ MLFQ performed better across the board. The most obvious difference is the respo
   * Press `Ctrl-A`, let go, and then press `X`.
 
 ### Running the Benchmarks
-Once you are inside the xv6 shell (after running `make qemu` with your chosen scheduler), simply type:
-`$ benchmark`
-This will spawn the test processes, wait for them to finish, and print out the table with the turnaround, wait, and response times for you to compare.
+The benchmark must be run **twice** — once under each scheduler — to produce the comparison table.
+
+**Step 1: Run under Round Robin (default)**
+```
+make clean; make qemu
+```
+Inside the xv6 shell, type `benchmark` and note down the printed averages. Then exit QEMU (`Ctrl-A`, then `X`).
+
+**Step 2: Run under MLFQ**
+```
+make clean; make qemu SCHEDULER=MLFQ
+```
+Inside the xv6 shell, type `benchmark` again and note down the printed averages. Then exit QEMU.
+
+The two sets of averages are what go into the comparison table in section 2.3.3.
 
 ### Generating the MLFQ Plot
 To recreate the timeline plot for the MLFQ scheduler, follow these exact steps:
